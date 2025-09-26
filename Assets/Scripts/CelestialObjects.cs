@@ -2,12 +2,19 @@ using UnityEngine;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
 
+/// <summary>
+/// Base class for all celestial bodies in the game.
+/// Author: Tommy Rodriguez
+/// Created 9/21/2025
+/// Refactored 9/25/2025
+/// </summary>
+
 namespace Stargazers.Unity
 {
     public abstract class CelestialBodyBase : MonoBehaviour
     {
         protected EquatorialCelestialBody equatorialBody;
-        protected HorizontalBody horizontalBody
+        protected HorizontalBody horizontalBody;
 
         // Horizontal properties
         /// <summary>

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "com.copernisync.chargerastronomyengine",
+    "dllPath": "../ChargerAstronomyEngine/ChargerAstronomyEngine/bin/Debug/netstandard2.1/ChargerAstronomyEngine.dll",
+    "remoteRef": "https://github.com/you/ChargerAstronomyEngine.git#v1.0.0"
+  }
+]

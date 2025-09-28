@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.copernisync.chargerastronomyengine": "file:GeneratedPackages/com.copernisync.chargerastronomyengine",
     "com.unity.ai.navigation": "2.0.8",
     "com.unity.collab-proxy": "2.9.3",
     "com.unity.ide.rider": "3.0.36",

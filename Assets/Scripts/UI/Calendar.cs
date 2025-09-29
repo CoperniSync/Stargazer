@@ -1,12 +1,10 @@
 using Assets.Scripts.UI;
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.Rendering.DebugUI.Table;
+
 
 public class Calendar : MonoBehaviour
 {
@@ -31,7 +29,9 @@ public class Calendar : MonoBehaviour
             for (int row = 0; row < 6; row++)
             {
                 buttons[column, row] = gameObject.transform.GetChild(1).transform.GetChild(column).transform.GetChild(row + 1).gameObject;
-                
+                buttons[column, row].AddComponent<Text>();
+
+
             }
         }
   
@@ -43,8 +43,6 @@ public class Calendar : MonoBehaviour
     //calculate and display what number each button should have
     public void UpdateButtons()
     {
-        Debug.Log("r ran");
-        Debug.LogWarning(inputs.Time);
         //show current year
         gameObject.transform.GetChild(0).transform.GetChild(4).GetComponent<Text>().text = monthList[inputs.Time.Month - 1] + " " + inputs.Time.Year.ToString();
 
@@ -136,5 +134,26 @@ public class Calendar : MonoBehaviour
                     counter++;
             }
         }
+    }
+    public void YearUp()
+    {
+        inputs.Time = inputs.Time.AddYears(1);
+        UpdateButtons();
+    }
+    public void YearDown()
+    {
+        inputs.Time = inputs.Time.AddYears(-1);
+        UpdateButtons();
+    }
+
+    public void MonthUp()
+    {
+        inputs.Time = inputs.Time.AddMonths(1);
+        UpdateButtons();
+    }
+    public void MonthDown()
+    {
+        inputs.Time = inputs.Time.AddMonths(-1);
+        UpdateButtons();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,15 +11,27 @@ namespace Assets.Scripts.UI
 {
 
 
-    public class InputContainer : MonoBehaviour
+    public class InputContainer
     {
         // make a singleton
-        public static InputContainer container;
-        private void Awake()
+        private static InputContainer container = null;
+
+        private InputContainer()
         {
-            if (container == null)
-                container = this;
         }
+        public static InputContainer Container
+        {
+            get
+            {
+                if (container == null)
+                {
+                    container = new InputContainer();
+                }
+                return container;
+            }
+        }
+
+
 
         //location
         public int LongitudeDeg {  get; set; }
@@ -27,7 +40,8 @@ namespace Assets.Scripts.UI
         public int LatitudeMin { get; set; }
 
         //time
-        public DateTime Time { get; set; }
+        public DateTime time = DateTime.Now;
+        public DateTime Time { get => time; set => time = value; }
 
         //labels
         public bool AzimuthLabel { get; set; }

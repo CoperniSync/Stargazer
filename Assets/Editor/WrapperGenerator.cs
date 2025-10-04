@@ -140,48 +140,7 @@ static class WrapperGenerator
         return false;
     }
 
-    public static void BuildAllSolutions()
-    {
-        foreach (var lib in LoadEntries())
-        {
-            // 1) Resolve the solution or project folder
-            var dllFull = Path.GetFullPath(
-                Path.Combine(Application.dataPath, "../" + lib.dllPath));
-            var binDir = Path.GetDirectoryName(dllFull);           // …/bin/Debug/netstandard2.1
-            var projectDir = Directory.GetParent(binDir).Parent.Parent.FullName; // …/ChargerAstronomyEngine
-            var slnOrProj = Directory
-                .EnumerateFiles(projectDir, "*.sln")
-                .Concat(Directory.EnumerateFiles(projectDir, "*.csproj"))
-                .FirstOrDefault();
-
-            if (slnOrProj == null)
-            {
-                UnityEngine.Debug.LogError($"[WrapperGenerator] No .sln or .csproj found in {projectDir}");
-                continue;
-            }
-
-            // 2) Build it
-            var psi = new ProcessStartInfo("dotnet", $"build \"{slnOrProj}\" -c Debug")
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            using (var proc = Process.Start(psi))
-            {
-                proc.WaitForExit();
-                if (proc.ExitCode != 0)
-                {
-                    var error = proc.StandardError.ReadToEnd();
-                    throw new Exception($"[WrapperGenerator] dotnet build failed for {lib.id}:\n{error}");
-                }
-            }
-
-            UnityEngine.Debug.Log($"[WrapperGenerator] Built {lib.id}");
-        }
-    }
-
+ 
 
 
     // Inside WrapperGenerator.cs

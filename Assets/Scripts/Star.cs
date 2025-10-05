@@ -47,7 +47,7 @@ namespace Stargazers.Unity
             horizontalBody = hstar;
             equatorialStar = hstar.EquatorialBody as EquatorialStar;
             equatorialBody = hstar.EquatorialBody;
-            DrawnDistance = drawnDistance;
+            DrawnDistance  = drawnDistance;
 
             UpdateTransformFromHorizontal();
         }
@@ -101,13 +101,13 @@ namespace Stargazers.Unity
         {
             const float Deg2Rad = Mathf.PI / 180f;
 
-            float alt = altitudeDeg * Deg2Rad;
-            float az = azimuthDeg * Deg2Rad;
+            float alt           = altitudeDeg * Deg2Rad;
+            float az            = azimuthDeg * Deg2Rad;
 
-            float cosAlt = Mathf.Cos(alt);
-            float sinAlt = Mathf.Sin(alt);
-            float cosAz = Mathf.Cos(az);
-            float sinAz = Mathf.Sin(az);
+            float cosAlt        = Mathf.Cos(alt);
+            float sinAlt        = Mathf.Sin(alt);
+            float cosAz         = Mathf.Cos(az);
+            float sinAz         = Mathf.Sin(az);
 
             return new Vector3(
                 radius * (cosAz * cosAlt),

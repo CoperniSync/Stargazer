@@ -11,20 +11,20 @@ namespace Stargazers.Unity
     /// </summary>
     public sealed class Moon : CelestialBodyBase
     {
-        private HorizontalMoon? horizontalMoon;
-        private HorizontalBody? horizontalBody;
-        private EquatorialCelestialBody? equatorialBodyTyped;
+        private HorizontalMoon?             horizontalMoon;
+        private HorizontalBody?             horizontalBody;
+        private EquatorialCelestialBody?    equatorialBodyTyped;
 
         // Public display name
-        public string MoonName => "Moon";
+        public string MoonName  => "Moon";
 
         // Moon's brightness magnitude
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
+        public float Magnitude  => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
 
-        // Phase angle of the 
+        // Phase angle of the Moon
         public float PhaseAngle => (float)(horizontalMoon?.Phase ?? 0.0);
 
-        // ositions
+        // Positions for rendering
         public Vector3 Position3D { get; private set; }
         public Vector2 Position2D { get; private set; }
 
@@ -33,11 +33,11 @@ namespace Stargazers.Unity
         /// </summary>
         public void FromHorizontal(HorizontalMoon hMoon, float drawnDistance = 95f)
         {
-            horizontalMoon = hMoon;
-            horizontalBody = hMoon;
-            equatorialBodyTyped = hMoon.EquatorialBody;
-            equatorialBody = hMoon.EquatorialBody;
-            DrawnDistance = drawnDistance;
+            horizontalMoon       = hMoon;
+            horizontalBody       = hMoon;
+            equatorialBodyTyped  = hMoon.EquatorialBody;
+            equatorialBody       = hMoon.EquatorialBody;
+            DrawnDistance        = drawnDistance;
 
             UpdateTransformFromHorizontal();
         }
@@ -47,10 +47,10 @@ namespace Stargazers.Unity
         /// </summary>
         public void ApplyHorizontal(HorizontalMoon hMoon)
         {
-            horizontalMoon = hMoon;
-            horizontalBody = hMoon;
+            horizontalMoon      = hMoon;
+            horizontalBody      = hMoon;
             equatorialBodyTyped = hMoon.EquatorialBody;
-            equatorialBody = hMoon.EquatorialBody;
+            equatorialBody      = hMoon.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -70,15 +70,15 @@ namespace Stargazers.Unity
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputeMoonScale(Magnitude, PhaseAngle);
+            transform.position      = Position3D;
+            transform.localScale    = ComputeMoonScale(Magnitude, PhaseAngle);
 
             // Screen-space position
-            var cam = Camera.main;
+            var cam         = Camera.main;
             if (cam != null)
             {
-                var sp = cam.WorldToScreenPoint(Position3D);
-                Position2D = new Vector2(sp.x, sp.y);
+                var sp      = cam.WorldToScreenPoint(Position3D);
+                Position2D  = new Vector2(sp.x, sp.y);
             }
         }
 
@@ -88,13 +88,13 @@ namespace Stargazers.Unity
         private static Vector3 ComputeWorldPosition(float altitudeDeg, float azimuthDeg, float radius)
         {
             const float Deg2Rad = Mathf.PI / 180f;
-            float alt = altitudeDeg * Deg2Rad;
-            float az = azimuthDeg * Deg2Rad;
+            float alt           = altitudeDeg * Deg2Rad;
+            float az            = azimuthDeg * Deg2Rad;
 
-            float cosAlt = Mathf.Cos(alt);
-            float sinAlt = Mathf.Sin(alt);
-            float cosAz = Mathf.Cos(az);
-            float sinAz = Mathf.Sin(az);
+            float cosAlt        = Mathf.Cos(alt);
+            float sinAlt        = Mathf.Sin(alt);
+            float cosAz         = Mathf.Cos(az);
+            float sinAz         = Mathf.Sin(az);
 
             return new Vector3(
                 radius * cosAz * cosAlt,
@@ -105,16 +105,16 @@ namespace Stargazers.Unity
 
         /// <summary>
         /// Computes a fixed but slightly dynamic Moon scale based on its phase.
-        /// -- Can be dropped if we dont want a dynamic Moon or does cosine kitty handle this -- Tommy
+        /// -- Can be dropped if we dont want a dynamic Moon or does cosine kitty handle this? -- Tommy
         /// </summary>
         private static Vector3 ComputeMoonScale(float magnitude, float phaseAngle)
         {
             // Base size scaling relative to brightness
-            float size = Mathf.Clamp(1.2f - 0.05f * (magnitude + 12.7f), 0.5f, 1.4f);
+            float size              = Mathf.Clamp(1.2f - 0.05f * (magnitude + 12.7f), 0.5f, 1.4f);
 
-            // Compute illumination fraction based on phase (cosine curve approximation)
-            float illumination = 0.5f * (1 - Mathf.Cos(phaseAngle * Mathf.Deg2Rad)); // 0=new, 1=full
-            float illuminatedScale = Mathf.Lerp(0.6f, 1.0f, illumination);
+            // Compute illumination fraction based on phase
+            float illumination      = 0.5f * (1 - Mathf.Cos(phaseAngle * Mathf.Deg2Rad)); // 0=new, 1=full
+            float illuminatedScale  = Mathf.Lerp(0.6f, 1.0f, illumination);
 
             size *= illuminatedScale;
             return new Vector3(size, size, size);

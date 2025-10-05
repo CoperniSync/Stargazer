@@ -11,15 +11,15 @@ namespace Stargazers.Unity
     /// </summary>
     public sealed class Sun : CelestialBodyBase
     {
-        private HorizontalSun? horizontalSun;
-        private HorizontalBody? horizontalBody;
-        private EquatorialCelestialBody? equatorialBodyTyped;
+        private HorizontalSun?              horizontalSun;
+        private HorizontalBody?             horizontalBody;
+        private EquatorialCelestialBody?    equatorialBodyTyped;
 
         // The Sun's name
-        public string SunName => "Sun";
+        public string SunName   => "Sun";
 
         // The Sun's brightness magnitude
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
+        public float Magnitude  => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
  
 
         // Positions for rendering
@@ -31,11 +31,11 @@ namespace Stargazers.Unity
         /// </summary>
         public void FromHorizontal(HorizontalSun hSun, float drawnDistance = 100f)
         {
-            horizontalSun = hSun;
-            horizontalBody = hSun;
+            horizontalSun       = hSun;
+            horizontalBody      = hSun;
             equatorialBodyTyped = hSun.EquatorialBody;
-            equatorialBody = hSun.EquatorialBody;
-            DrawnDistance = drawnDistance;
+            equatorialBody      = hSun.EquatorialBody;
+            DrawnDistance       = drawnDistance;
 
             UpdateTransformFromHorizontal();
         }
@@ -45,10 +45,10 @@ namespace Stargazers.Unity
         /// </summary>
         public void ApplyHorizontal(HorizontalSun hSun)
         {
-            horizontalSun = hSun;
-            horizontalBody = hSun;
+            horizontalSun       = hSun;
+            horizontalBody      = hSun;
             equatorialBodyTyped = hSun.EquatorialBody;
-            equatorialBody = hSun.EquatorialBody;
+            equatorialBody      = hSun.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -67,15 +67,15 @@ namespace Stargazers.Unity
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputeSunScale(Magnitude);
+            transform.position      = Position3D;
+            transform.localScale    = ComputeSunScale(Magnitude);
 
             // Screen-space for UI
             var cam = Camera.main;
             if (cam != null)
             {
-                var sp = cam.WorldToScreenPoint(Position3D);
-                Position2D = new Vector2(sp.x, sp.y);
+                var sp      = cam.WorldToScreenPoint(Position3D);
+                Position2D  = new Vector2(sp.x, sp.y);
             }
         }
 
@@ -85,13 +85,13 @@ namespace Stargazers.Unity
         private static Vector3 ComputeWorldPosition(float altitudeDeg, float azimuthDeg, float radius)
         {
             const float Deg2Rad = Mathf.PI / 180f;
-            float alt = altitudeDeg * Deg2Rad;
-            float az = azimuthDeg * Deg2Rad;
+            float alt           = altitudeDeg * Deg2Rad;
+            float az            = azimuthDeg * Deg2Rad;
 
-            float cosAlt = Mathf.Cos(alt);
-            float sinAlt = Mathf.Sin(alt);
-            float cosAz = Mathf.Cos(az);
-            float sinAz = Mathf.Sin(az);
+            float cosAlt        = Mathf.Cos(alt);
+            float sinAlt        = Mathf.Sin(alt);
+            float cosAz         = Mathf.Cos(az);
+            float sinAz         = Mathf.Sin(az);
 
             return new Vector3(
                 radius * cosAz * cosAlt,
@@ -106,11 +106,10 @@ namespace Stargazers.Unity
         /// </summary>
         private static Vector3 ComputeSunScale(float magnitude)
         {
-            // The Sun is always the largest light source — 
-            // you can tweak this for visual preference.
-            float baseSize = 5.0f;
-            float brightnessAdjust = Mathf.Clamp(1.0f - (magnitude / -26.74f), 0.85f, 1.15f);
-            float finalSize = baseSize * brightnessAdjust;
+
+            float baseSize          = 5.0f;
+            float brightnessAdjust  = Mathf.Clamp(1.0f - (magnitude / -26.74f), 0.85f, 1.15f);
+            float finalSize         = baseSize * brightnessAdjust;
 
             return new Vector3(finalSize, finalSize, finalSize);
         }

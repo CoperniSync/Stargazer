@@ -12,18 +12,18 @@ namespace Stargazers.Unity
     public sealed class Planet : CelestialBodyBase
     {
    
-        private EquatorialCelestialBody? equatorialBodyTyped;
-        private HorizontalPlanet? horizontalPlanet;
-        private HorizontalBody? horizontalBody;
+        private EquatorialCelestialBody?    equatorialBodyTyped;
+        private HorizontalPlanet?           horizontalPlanet;
+        private HorizontalBody?             horizontalBody;
 
         // Public properties
-        public string PlanetName => horizontalPlanet?.Name ?? "Unnamed Planet";
+        public string PlanetName    => horizontalPlanet?.Name ?? "Unnamed Planet";
 
         // Planet phase angle (in common name for planets)
-        public float PhaseAngle => (float)(horizontalPlanet?.PhaseAngle ?? 0.0);
+        public float PhaseAngle     => (float)(horizontalPlanet?.PhaseAngle ?? 0.0);
 
         // Planet's brightness magnitude(Try from HorizontalPlanet first, then EquatorialBody)
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude ?? 0.0);
+        public float Magnitude      => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude ?? 0.0);
 
         //Positions for 3D and screen-space
         public Vector3 Position3D { get; private set; }
@@ -34,11 +34,11 @@ namespace Stargazers.Unity
         /// </summary>
         public void FromHorizontal(HorizontalPlanet hPlanet, float drawnDistance = 50f)
         {
-            horizontalPlanet = hPlanet;
-            horizontalBody = hPlanet;
+            horizontalPlanet    = hPlanet;
+            horizontalBody      = hPlanet;
             equatorialBodyTyped = hPlanet.EquatorialBody;
-            equatorialBody = hPlanet.EquatorialBody;
-            DrawnDistance = drawnDistance;
+            equatorialBody      = hPlanet.EquatorialBody;
+            DrawnDistance       = drawnDistance;
 
             UpdateTransformFromHorizontal();
         }
@@ -48,10 +48,10 @@ namespace Stargazers.Unity
         /// </summary>
         public void ApplyHorizontal(HorizontalPlanet hPlanet)
         {
-            horizontalPlanet = hPlanet;
-            horizontalBody = hPlanet;
+            horizontalPlanet    = hPlanet;
+            horizontalBody      = hPlanet;
             equatorialBodyTyped = hPlanet.EquatorialBody;
-            equatorialBody = hPlanet.EquatorialBody;
+            equatorialBody      = hPlanet.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -70,14 +70,14 @@ namespace Stargazers.Unity
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputePlanetScale(Magnitude, PhaseAngle);
+            transform.position      = Position3D;
+            transform.localScale    = ComputePlanetScale(Magnitude, PhaseAngle);
 
             var cam = Camera.main;
             if (cam != null)
             {
-                Vector3 sp = cam.WorldToScreenPoint(Position3D);
-                Position2D = new Vector2(sp.x, sp.y);
+                Vector3 sp          = cam.WorldToScreenPoint(Position3D);
+                Position2D          = new Vector2(sp.x, sp.y);
             }
         }
 
@@ -87,13 +87,13 @@ namespace Stargazers.Unity
         private static Vector3 ComputeWorldPosition(float altitudeDeg, float azimuthDeg, float radius)
         {
             const float Deg2Rad = Mathf.PI / 180f;
-            float alt = altitudeDeg * Deg2Rad;
-            float az = azimuthDeg * Deg2Rad;
+            float alt           = altitudeDeg * Deg2Rad;
+            float az            = azimuthDeg * Deg2Rad;
 
-            float cosAlt = Mathf.Cos(alt);
-            float sinAlt = Mathf.Sin(alt);
-            float cosAz = Mathf.Cos(az);
-            float sinAz = Mathf.Sin(az);
+            float cosAlt        = Mathf.Cos(alt);
+            float sinAlt        = Mathf.Sin(alt);
+            float cosAz         = Mathf.Cos(az);
+            float sinAz         = Mathf.Sin(az);
 
             return new Vector3(
                 radius * cosAz * cosAlt,
@@ -108,10 +108,10 @@ namespace Stargazers.Unity
         private static Vector3 ComputePlanetScale(float magnitude, float phaseAngle)
         {
             // Base size mapping 
-            float size = Mathf.Clamp(1.0f - 0.05f * magnitude, 0.4f, 1.5f);
+            float size          = Mathf.Clamp(1.0f - 0.05f * magnitude, 0.4f, 1.5f);
 
             // Add subtle phase scaling
-            float phaseFactor = Mathf.Clamp01(Mathf.Cos(phaseAngle * Mathf.Deg2Rad));
+            float phaseFactor   = Mathf.Clamp01(Mathf.Cos(phaseAngle * Mathf.Deg2Rad));
 
             size *= Mathf.Lerp(0.7f, 1.0f, phaseFactor);
             return new Vector3(size, size, size);

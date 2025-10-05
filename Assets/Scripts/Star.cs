@@ -117,8 +117,7 @@ namespace Stargazers.Unity
         }
 
         /// <summary>
-        /// Simple magnitude-to-scale mapping. Clamp to keep visible.
-        /// Brighter (lower/negative) magnitude => slightly larger scale.
+        /// Magnitude-to-scale mapping.
         /// </summary>
         private static Vector3 ComputeStarScale(float magnitude)
         {

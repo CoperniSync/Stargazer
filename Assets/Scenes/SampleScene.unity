@@ -1231,8 +1231,9 @@ GameObject:
   - component: {fileID: 180025991}
   - component: {fileID: 180025990}
   - component: {fileID: 180025989}
+  - component: {fileID: 180025992}
   m_Layer: 5
-  m_Name: Minutes
+  m_Name: LongMinutes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1315,7 +1316,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnDidEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 180025992}
+        m_TargetAssemblyTypeName: LongChange, Assembly-CSharp
+        m_MethodName: updateLongitudeMin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1365,6 +1378,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180025987}
   m_CullTransparentMesh: 1
+--- !u!114 &180025992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180025987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f96dfdb63f0414da2bf8cfaf91514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LongChange
 --- !u!1 &180852961
 GameObject:
   m_ObjectHideFlags: 0
@@ -3874,8 +3899,9 @@ GameObject:
   - component: {fileID: 539438923}
   - component: {fileID: 539438922}
   - component: {fileID: 539438921}
+  - component: {fileID: 539438924}
   m_Layer: 5
-  m_Name: Degree
+  m_Name: LongDegree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3952,13 +3978,25 @@ MonoBehaviour:
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 1
-  m_CharacterLimit: 3
+  m_CharacterLimit: 4
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
   m_OnDidEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 539438924}
+        m_TargetAssemblyTypeName: LongChange, Assembly-CSharp
+        m_MethodName: updateLongitudeDeg
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4008,6 +4046,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539438919}
   m_CullTransparentMesh: 1
+--- !u!114 &539438924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539438919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f96dfdb63f0414da2bf8cfaf91514f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LongChange
 --- !u!1 &539503836
 GameObject:
   m_ObjectHideFlags: 0
@@ -4737,8 +4787,9 @@ GameObject:
   - component: {fileID: 687365555}
   - component: {fileID: 687365554}
   - component: {fileID: 687365553}
+  - component: {fileID: 687365556}
   m_Layer: 5
-  m_Name: Degree
+  m_Name: LatDegree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4821,7 +4872,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnDidEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 687365556}
+        m_TargetAssemblyTypeName: LatChange, Assembly-CSharp
+        m_MethodName: updateLatitudeDeg
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4871,6 +4934,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 687365551}
   m_CullTransparentMesh: 1
+--- !u!114 &687365556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687365551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa85cea8042bc4849beece260d1a2b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LatChange
 --- !u!1 &720515838
 GameObject:
   m_ObjectHideFlags: 0
@@ -6530,8 +6605,9 @@ GameObject:
   - component: {fileID: 1000173767}
   - component: {fileID: 1000173766}
   - component: {fileID: 1000173765}
+  - component: {fileID: 1000173768}
   m_Layer: 5
-  m_Name: Minutes
+  m_Name: LatMinutes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6614,7 +6690,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnDidEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1000173768}
+        m_TargetAssemblyTypeName: LatChange, Assembly-CSharp
+        m_MethodName: updateLatitudeMin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6664,6 +6752,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000173763}
   m_CullTransparentMesh: 1
+--- !u!114 &1000173768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000173763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa85cea8042bc4849beece260d1a2b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LatChange
 --- !u!1 &1015724767
 GameObject:
   m_ObjectHideFlags: 0

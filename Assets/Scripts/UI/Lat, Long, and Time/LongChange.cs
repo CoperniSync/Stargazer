@@ -10,9 +10,14 @@ public class LongChange : MonoBehaviour
 {
     //get user input sigleton
     private InputContainer inputs = InputContainer.Container;
-
     public void updateLongitudeDeg()
     {
+        // check if string is empty
+        if (this.gameObject.transform.GetComponent<InputField>().text == "")
+        {
+            return;
+        }
+
         int newLong = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
         if (newLong > 180)
         {
@@ -29,6 +34,12 @@ public class LongChange : MonoBehaviour
 
     public void updateLongitudeMin()
     {
+        // check if string is empty
+        if (this.gameObject.transform.GetComponent<InputField>().text == "")
+        {
+            return;
+        }
+
         int newLong = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
         if (newLong > 60)
         {

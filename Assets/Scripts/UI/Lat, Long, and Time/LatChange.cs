@@ -8,11 +8,18 @@ using UnityEngine.UIElements;
 
 public class LatChange : MonoBehaviour
 {
+
     //get user input sigleton
     private InputContainer inputs = InputContainer.Container;
     
     public void updateLatitudeDeg()
     {
+        // check if string is empty
+        if (this.gameObject.transform.GetComponent<InputField>().text == "")
+        {
+            return;
+        }
+
         int newLat = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
         if(newLat>90)
         {
@@ -29,6 +36,12 @@ public class LatChange : MonoBehaviour
 
     public void updateLatitudeMin()
     {
+        // check if string is empty
+        if (this.gameObject.transform.GetComponent<InputField>().text == "")
+        {
+            return;
+        }
+
         int newLat = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
         if (newLat > 60)
         {

@@ -13,6 +13,7 @@ public class Calendar : MonoBehaviour
     
     private InputContainer inputs = InputContainer.Container; //singleton for input container
     private DateTime time = DateTime.Now;                     // holds time for calender display
+    private int year = DateTime.Now.Year; 
     private CalendarButtons[,] buttons = new CalendarButtons[7, 6];  
     static private string[] monthList = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
@@ -46,9 +47,9 @@ public class Calendar : MonoBehaviour
     private void UpdateButtons()
     {
         //show current month and current year
-        gameObject.transform.GetChild(0).transform.GetChild(4).GetComponent<Text>().text = monthList[time.Month - 1] + " " + time.Year.ToString();
+        gameObject.transform.GetChild(0).transform.GetChild(4).GetComponent<Text>().text = monthList[time.Month - 1] + " " + year.ToString();
 
-        int yearpoint = (time.Year % 100 + ((time.Year % 100) / 4)) % 7;  // determine the year factor for the weekday offset
+        int yearpoint = (year % 100 + ((year % 100) / 4)) % 7;  // determine the year factor for the weekday offset
         int monthpoint = 0;
         int centpoint = 0;
         int leappoint = 0;
@@ -86,7 +87,7 @@ public class Calendar : MonoBehaviour
         }
 
         // determine the century factor for the weekday offset
-        switch (time.Year % 400 / 100)
+        switch (year % 400 / 100)
         {
             case 0:
                 centpoint = 6;
@@ -104,7 +105,7 @@ public class Calendar : MonoBehaviour
         }
         
         //determine if it is a leap year for weekday offset
-        if (DateTime.IsLeapYear(time.Year))
+        if (IsLeapYear(year))
         {
             leappoint = 1;
         }
@@ -127,14 +128,14 @@ public class Calendar : MonoBehaviour
                     if (prevmonth < 1)
                     { 
                         prevmonth = 12;
-                        buttons[column, row].year = time.Year-1;
+                        buttons[column, row].year = year - 1;
                     }
                     else
                     {
-                        buttons[column, row].year = time.Year;
+                        buttons[column, row].year = year;
                     }
 
-                        buttons[column, row].day = DateTime.DaysInMonth(time.Year, prevmonth) - (offset - counter) + 1;
+                        buttons[column, row].day = DaysInMonth(year, prevmonth) - (offset - counter) + 1;
                     buttons[column, row].month = prevmonth;
                     
                     buttons[column, row].button.transform.GetChild(0).gameObject.GetComponent<Text>().text = buttons[column, row].day.ToString();
@@ -144,31 +145,31 @@ public class Calendar : MonoBehaviour
                 {
                     buttons[column, row].day = 1;
                     buttons[column, row].month = time.Month;
-                    buttons[column, row].year = time.Year;
+                    buttons[column, row].year = year;
                     buttons[column, row].button.transform.GetChild(0).gameObject.GetComponent<Text>().text = "1";
                     counter = 1;
                     offset = -1;
                 }
-                else if (counter <= DateTime.DaysInMonth(time.Year, time.Month)) // if the date is in the month
+                else if (counter <= DaysInMonth(year, time.Month)) // if the date is in the month
                 {
                     buttons[column, row].button.transform.GetChild(0).gameObject.GetComponent<Text>().text = counter.ToString();
                     buttons[column, row].day = counter;
                     buttons[column, row].month = time.Month;
-                    buttons[column, row].year = time.Year;
+                    buttons[column, row].year = year;
                 }
                 else // if the date is in the next month
                 {
-                    buttons[column, row].day = counter - DateTime.DaysInMonth(time.Year, time.Month);
+                    buttons[column, row].day = counter - DaysInMonth(year, time.Month);
                     if (time.Month + 1 > 12) 
                     {
                         buttons[column, row].month = 1;
-                        buttons[column, row].year = time.Year + 1;
+                        buttons[column, row].year = year + 1;
                         
                     }
                     else  
                     {                        
                         buttons[column, row].month = time.Month + 1;
-                        buttons[column, row].year = time.Year;
+                        buttons[column, row].year = year;
                     }
                     buttons[column, row].button.transform.GetChild(0).gameObject.GetComponent<Text>().text = buttons[column, row].day.ToString();
                 }
@@ -180,14 +181,16 @@ public class Calendar : MonoBehaviour
     //method for incrementing the year on the calendar display
     public void YearUp()
     {
-        time = time.AddYears(1);
+        year= year+1;
+        inputs.Year = year;
         UpdateButtons();
     }
 
     //method for decrementing the year on the calendar display
     public void YearDown()
     {
-        time = time.AddYears(-1);
+        year = year - 1;
+        inputs.Year = year;
         UpdateButtons();
     }
 
@@ -214,11 +217,55 @@ public class Calendar : MonoBehaviour
             {
                 if (buttons[column, row].button == buttonPressed)
                 {
-                    inputs.time = new(buttons[column, row].year, buttons[column, row].month, buttons[column, row].day, inputs.Time.Hour, inputs.Time.Minute, inputs.Time.Second, inputs.Time.Millisecond, inputs.Time.Kind);
+                    inputs.Time = new(buttons[column, row].year, buttons[column, row].month, buttons[column, row].day, inputs.Time.Hour, inputs.Time.Minute, inputs.Time.Second, inputs.Time.Millisecond, inputs.Time.Kind);
                     Debug.Log(inputs.Time.ToString() +"\n" +DateTime.Now.ToString());
                     return;
                 }
             }
         }
+    }
+
+    private bool IsLeapYear(int testyear)
+    {
+        return testyear % 4 == 0 && (testyear % 100 != 0 || testyear % 400 == 0);
+    }
+    private int DaysInMonth(int testyear, int testmonth)
+    {
+        switch(testmonth)
+        {
+            case 1:
+                return 31;
+            case 2:
+                if (IsLeapYear(testyear))
+                {
+                    return 29;
+                }
+                else
+                {
+                    return 28;
+                }
+            case 3:
+                return 31;
+            case 4:
+                return 30;
+            case 5:
+                return 31;
+            case 6:
+                return 30;
+            case 7:
+                return 31;
+            case 8:
+                return 31;
+            case 9:
+                return 30;
+            case 10:
+                return 31;
+            case 11:
+                return 30;
+            case 12:
+                return 31;
+        }
+
+        return 1000;
     }
 }

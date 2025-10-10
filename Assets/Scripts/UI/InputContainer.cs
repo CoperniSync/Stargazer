@@ -40,8 +40,10 @@ namespace Assets.Scripts.UI
         public int LatitudeMin { get; set; }
 
         //time
-        public DateTime time = DateTime.Now;
-        public DateTime Time { get => time; set => time = value; }
+        private DateTime time = DateTime.Now;
+        public DateTime Time { get => time; set => time = value; } // do not use the built in year
+
+        public int Year { get; set; }  // seperate variable for year to bypass date
 
         //labels
         public bool AzimuthLabel { get; set; }

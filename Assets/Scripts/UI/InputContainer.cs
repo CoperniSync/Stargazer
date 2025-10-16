@@ -13,6 +13,12 @@ namespace Assets.Scripts.UI
 
     public class InputContainer
     {
+        ///<summary>
+        /// Singleton Container for storing user inputs from the UI and transfering them to the Core to be processed.
+        ///</summary>
+
+
+
         // make a singleton
         private static InputContainer container = null;
 

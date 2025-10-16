@@ -9,6 +9,9 @@ using static UnityEngine.Rendering.DebugUI.Table;
 // Author: Morgan Hendon
 public class Calendar : MonoBehaviour
 {
+    /// <summary>
+    /// class for controlling the calender widget
+    /// </summary>
 
     
     private InputContainer inputs = InputContainer.Container; //singleton for input container
@@ -46,9 +49,14 @@ public class Calendar : MonoBehaviour
     //method for calculating and displaying what number each button should have
     private void UpdateButtons()
     {
+        /// <summary>
+        /// method for updating the display for the calender widget
+        /// </summary>
+        /// 
         //show current month and current year
         gameObject.transform.GetChild(0).transform.GetChild(4).GetComponent<Text>().text = monthList[time.Month - 1] + " " + year.ToString();
 
+        // variables for calculating day of week offset
         int yearpoint = (year % 100 + ((year % 100) / 4)) % 7;  // determine the year factor for the weekday offset
         int monthpoint = 0;
         int centpoint = 0;
@@ -118,6 +126,8 @@ public class Calendar : MonoBehaviour
         offset = (yearpoint + monthpoint + centpoint + 1 - leappoint) % 7;
         int counter = 0;
 
+
+        // populate the day buttons' text
         for (int row = 0; row < 6; row++)
         {
             for (int column = 0; column < 7; column++)
@@ -125,7 +135,7 @@ public class Calendar : MonoBehaviour
                 if (counter < offset)   // if the date is the last month
                 {
                     int prevmonth = time.Month - 1;
-                    if (prevmonth < 1)
+                    if (prevmonth < 1)  // wrap around to December
                     { 
                         prevmonth = 12;
                         buttons[column, row].year = year - 1;
@@ -135,7 +145,7 @@ public class Calendar : MonoBehaviour
                         buttons[column, row].year = year;
                     }
 
-                        buttons[column, row].day = DaysInMonth(year, prevmonth) - (offset - counter) + 1;
+                    buttons[column, row].day = DaysInMonth(year, prevmonth) - (offset - counter) + 1; 
                     buttons[column, row].month = prevmonth;
                     
                     buttons[column, row].button.transform.GetChild(0).gameObject.GetComponent<Text>().text = buttons[column, row].day.ToString();
@@ -160,7 +170,7 @@ public class Calendar : MonoBehaviour
                 else // if the date is in the next month
                 {
                     buttons[column, row].day = counter - DaysInMonth(year, time.Month);
-                    if (time.Month + 1 > 12) 
+                    if (time.Month + 1 > 12) // wrap around to january if current month is December
                     {
                         buttons[column, row].month = 1;
                         buttons[column, row].year = year + 1;
@@ -181,7 +191,10 @@ public class Calendar : MonoBehaviour
     //method for incrementing the year on the calendar display
     public void YearUp()
     {
-        year= year+1;
+        /// <summary>
+        /// method for incrementing the year on the calendar display
+        /// </summary>
+        year = year+1;
         inputs.Year = year;
         UpdateButtons();
     }
@@ -189,6 +202,9 @@ public class Calendar : MonoBehaviour
     //method for decrementing the year on the calendar display
     public void YearDown()
     {
+        /// <summary>
+        /// method for decrementing the year on the calendar display
+        /// </summary>
         year = year - 1;
         inputs.Year = year;
         UpdateButtons();
@@ -197,6 +213,9 @@ public class Calendar : MonoBehaviour
     //method for incrementing the month on the calendar display
     public void MonthUp()
     {
+        /// <summary>
+        /// method for incrementing the month on the calendar display
+        /// </summary>
         time = time.AddMonths(1);
         UpdateButtons();
     }
@@ -204,6 +223,9 @@ public class Calendar : MonoBehaviour
     //method for decrementing the month on the calendar display
     public void MonthDown()
     {
+        /// <summary>
+        /// method for decrementing the month on the calendar display
+        /// </summary>
         time = time.AddMonths(-1);
         UpdateButtons();
     }
@@ -211,6 +233,9 @@ public class Calendar : MonoBehaviour
     //method for handling button input
     public void UpdateDate(GameObject buttonPressed)
     {
+        ///<summary>
+        /// method used for when one of the day buttons are pressed. Updates the date in InputContainer
+        ///</summary>
         for (int row = 0; row < 6; row++)
         {
             for (int column = 0; column < 7; column++)
@@ -227,11 +252,17 @@ public class Calendar : MonoBehaviour
 
     private bool IsLeapYear(int testyear)
     {
+        ///<summary>
+        /// method to determine if a year is a leap year. The DateTime version breaks on years greater than 9999
+        ///</summary>
         return testyear % 4 == 0 && (testyear % 100 != 0 || testyear % 400 == 0);
     }
     private int DaysInMonth(int testyear, int testmonth)
     {
-        switch(testmonth)
+        ///<summary>
+        /// method that returns the days in a given month on a given year. The DateTime version breaks on years greater than 9999
+        ///</summary>
+        switch (testmonth)
         {
             case 1:
                 return 31;

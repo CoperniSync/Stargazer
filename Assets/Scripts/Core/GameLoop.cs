@@ -1,3 +1,4 @@
+using Assets.Scripts.CelestialBodies;
 using ChargerAstronomyShared.Contracts.Models;
 using System.Collections;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class UnityInterface : MonoBehaviour
     //class that holds the core game loop
 
     PageRequest starPageRequest; //used for requesting Stars
-    PageResult starPageResult;
+    PageResult<Star?> starPageResult;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

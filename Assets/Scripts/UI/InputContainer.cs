@@ -65,5 +65,12 @@ namespace Assets.Scripts.UI
         public uint MinPerSec { get; set; }
         public uint SecPerSec { get; set; }
 
+
+        //camera
+        public float MinHours { get; set; }
+        public float MinAzimuth { get; set; }
+        public float MaxHours { get; set; }
+        public float MaxAzimuth { get; set; }
+
     }
 }

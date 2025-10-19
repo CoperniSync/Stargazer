@@ -57,10 +57,12 @@ public class CameraControls : MonoBehaviour
 
         if (horizontalChange != 0 || verticalChange != 0)
         { //add rotation inputs to the degree storage
+
+            //
             yAxisDegrees = yAxisDegrees + horizontalChange;
             xAxisDegrees = xAxisDegrees + verticalChange;
             //zAxisDegrees = zAxisDegrees + tiltChange;
-
+            
             //update rotation
             transform.rotation = Quaternion.Euler(xAxisDegrees, yAxisDegrees,0);
 
@@ -88,17 +90,29 @@ public class CameraControls : MonoBehaviour
 
     private void UpdateInputContaner()
     {
-        if (yAxisDegrees < 0)
+        // calculate fov bounds and pass them to the input container in terms of RA and Declination
+
+        // calculate the bounds of field of view as far as right ascention
+        float minChangeA = (360f-((yAxisDegrees + (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)/2f))%360f)) % 360f;
+        float maxChangeA = (360f - ((yAxisDegrees - (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f) / 2f))%360f))%360f;
+        if(minChangeA < 0f)
         {
-            inputs.MaxHours = (360 - yAxisDegrees + Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)) % 360 * (24f / 360f);
-            inputs.MinHours = (360 - yAxisDegrees - Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)) % 360 * (24f / 360f);
+            minChangeA = 360f - minChangeA;
         }
-        else
+        inputs.MaxAscension = maxChangeA*(24f/360f);
+        inputs.MinAscension = minChangeA * (24f / 360f);
+
+        // calculate the bounds of field of view in terms of declination
+        float degDec = 360f - xAxisDegrees;
+        if (degDec - 90f > 0f)
         {
-            inputs.MaxHours = (yAxisDegrees + Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)) % 360 * (24f / 360f);
-            inputs.MinHours = (yAxisDegrees - Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)) % 360 * (24f / 360f);
+            degDec = degDec - 360f;
         }
-        //TODO: Add input container updating for azimuth
+        inputs.MinDeclination = degDec - fieldOfView / 2f;
+        inputs.MaxDeclination = degDec + fieldOfView / 2f;
+
+        Debug.Log("minA: " + inputs.MinAscension + " maxA: "+inputs.MaxAscension + " minD: "+ inputs.MinDeclination + " maxD: " + inputs.MaxDeclination);
+
     }
     
 }

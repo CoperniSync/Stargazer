@@ -67,10 +67,10 @@ namespace Assets.Scripts.UI
 
 
         //camera
-        public float MinHours { get; set; }
-        public float MinAzimuth { get; set; }
-        public float MaxHours { get; set; }
-        public float MaxAzimuth { get; set; }
+        public float MinAscension { get; set; }
+        public float MinDeclination { get; set; }
+        public float MaxAscension { get; set; }
+        public float MaxDeclination { get; set; }
 
     }
 }

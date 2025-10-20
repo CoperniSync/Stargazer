@@ -67,10 +67,8 @@ namespace Assets.Scripts.UI
 
 
         //camera
-        public float MinAscension { get; set; }
-        public float MinDeclination { get; set; }
-        public float MaxAscension { get; set; }
-        public float MaxDeclination { get; set; }
+        public Vector3 RotationVector { get; set; }
+        public float DiagonalFOV { get; set; }
 
     }
 }

@@ -1,7 +1,6 @@
 using Assets.Scripts.UI;
 using System;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 // Morgan Hendon 10/17/2025
 public class CameraControls : MonoBehaviour
 {
@@ -93,6 +92,7 @@ public class CameraControls : MonoBehaviour
         // calculate fov bounds and pass them to the input container in terms of RA and Declination
 
         // calculate the bounds of field of view as far as right ascention
+        /*
         float minChangeA = (360f-((yAxisDegrees + (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)/2f))%360f)) % 360f;
         float maxChangeA = (360f - ((yAxisDegrees - (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f) / 2f))%360f))%360f;
         if(minChangeA < 0f)
@@ -110,9 +110,11 @@ public class CameraControls : MonoBehaviour
         }
         inputs.MinDeclination = degDec - fieldOfView / 2f;
         inputs.MaxDeclination = degDec + fieldOfView / 2f;
+        */
 
-        Debug.Log("minA: " + inputs.MinAscension + " maxA: "+inputs.MaxAscension + " minD: "+ inputs.MinDeclination + " maxD: " + inputs.MaxDeclination);
-
+        inputs.RotationVector = transform.forward;
+      
+        inputs.DiagonalFOV = Mathf.Rad2Deg * 2f * Mathf.Atan( Mathf.Sqrt(Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) + (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f/9f) * (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f / 9f) ) );
     }
     
 }

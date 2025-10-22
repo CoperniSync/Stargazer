@@ -10,19 +10,10 @@ public class UnityInterface : MonoBehaviour
     //class that holds the core game loop
 
 
-    //star instantiation
-    PageRequest starPageRequest; //used for requesting Stars
-    BoundedInitializationQueue<PageResult<EquatorialStar>> initQueue;
-    PageResult<EquatorialStar> starPageResult;
-    CsvStarRepository starRepo;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        starPageRequest = new();
-        initQueue = new(5);
-
+        new StarQueue(1000, "");
         
     }
 

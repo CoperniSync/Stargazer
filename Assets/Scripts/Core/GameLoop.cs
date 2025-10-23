@@ -1,28 +1,27 @@
 using Assets.Scripts.CelestialBodies;
-using ChargerAstronomyShared.Contracts.Models;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using ChargerAstronomyShared.Domain.Equatorial;
-using ChargerAstronomyEngine.Streaming;
-using ChargerAstronomyEngine.Data;
-public class UnityInterface : MonoBehaviour
+using System.IO;
+
+public class GameLoop : MonoBehaviour
 {
-    //class that holds the core game loop
+    /// <summary>
+    /// Class that controls the core flow of the program.
+    /// Assigns tasks to both the frontend and the backend
+    /// </summary>
+    
+    // Author: Morgan Hendon 10/2025
 
 
-    //star instantiation
-    PageRequest starPageRequest; //used for requesting Stars
-    BoundedInitializationQueue<PageResult<EquatorialStar>> initQueue;
-    PageResult<EquatorialStar> starPageResult;
-    CsvStarRepository starRepo;
-
+    StarQueue starQueue;
+    List<Star> starList;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        starPageRequest = new();
-        initQueue = new(5);
-
+        starQueue = new StarQueue(1000);
+        starList = new();
         
     }
 
@@ -30,16 +29,34 @@ public class UnityInterface : MonoBehaviour
     void Update()
     {
         UpdateSimulation(Time.deltaTime);
+        
     }
 
 
     public void UpdateSimulation(float deltaTime)
     {
-    /// <summary>
-    /// Main method to handle all things that need to be done in a frame
-    /// </summary>
-    
+        /// <summary>
+        /// Main method to handle all things that need to be done in a frame
+        /// </summary>
 
+        if(starQueue.TryDequeue(ref starList))
+        {
+            Debug.Log(starList.Count);
+        }
+
+    }
+
+    static public void Print(string str)
+    {
+        Debug.Log(str);
+    }
+
+    static public string GetProjectPath()
+    {
+        ///<summary>
+        /// Should return the path to the folder that this repo is in as a <see cref="string"/>
+        /// </summary>
+        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
     }
 
     IEnumerator GetStars()

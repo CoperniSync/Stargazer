@@ -3,14 +3,13 @@ using ChargerAstronomyEngine.Data;
 using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Domain.Equatorial;
+using ChargerAstronomyShared.Domain.Horizontal;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
-
-
 public class StarQueue
 {
     private CsvStarRepository starRepo;
@@ -22,14 +21,14 @@ public class StarQueue
     public StarQueue(int amountToTake ,string fileName = "AllStars" + ".csv")
     {
         starRepo = new(FindCsvPath(fileName));
-        BoundedInitializationQueue<PageResult<EquatorialStar>> queue = new(capacity: 5);
-        fillQueue(amountToTake, queue, starRepo);
+        queue = new(capacity: 5);
+        FillQueue(amountToTake, queue, starRepo);
     }
 
     /// <summary>
     /// The method that stars pulling data from the repo using BoundedInitialization Queue
     /// </summary>
-    private async Task fillQueue( int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
+    private async Task FillQueue( int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
     {
         _ = Task.Run(() => starRepo.ProducePagesAsync(queue, new PageRequest(0, amountToTake), CancellationToken.None));
         await Task.Delay(1);
@@ -40,14 +39,16 @@ public class StarQueue
     /// </summary>
     private static string FindCsvPath(string fileName = "AllStars" + ".csv")
     {
-        var direct = Path.Combine(AppContext.BaseDirectory, fileName);
+        
+        var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(),"ChargerAstronomyEngine","ChargerAstronomyEngine", "Data") ,"Star" , fileName);
         if (File.Exists(direct)) return direct;
 
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        var dir = new DirectoryInfo(GameLoop.GetProjectPath());
         for (int i = 0; i < 8 && dir != null; i++, dir = dir.Parent)
         {
             var candidate = Directory.EnumerateFiles(dir.FullName, fileName, SearchOption.AllDirectories)
                 .FirstOrDefault();
+            
             if (candidate != null) return candidate;
         }
 
@@ -61,14 +62,20 @@ public class StarQueue
     /// </summary>
     public bool TryDequeue(ref List<Star> starList)
     {
-        if (queue.TryDequeue(out var pr))
+        if (queue != null && queue.TryDequeue(out var pr))
         {
-            List<EquatorialStar> equatorialList = (List<EquatorialStar>)pr.Items;
-            foreach( EquatorialStar equatorialStar in equatorialList)
-            {
-                //Star newstar = new(new HorizontalStar(equatorialStar)));
-            }
-            return true;
+             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
+             foreach( EquatorialStar equatorialStar in equatorialList)
+             {
+
+                 Star newStar = new();
+
+                 //TODO: this needs to be updated when Tommy adds the proper constructor?
+                 //HorizontalStar hStar = new HorizontalStar(equatorialStar);
+                 //newStar.FromHorizontal(hStar);
+                 starList.Add(newStar);
+             }
+             return true;
         }
         else
         {

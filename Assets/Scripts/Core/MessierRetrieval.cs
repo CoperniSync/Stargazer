@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 
 
-public class MessierRetrival
+public class MessierRetrieval
 {
     /// <summary>
     /// Gets the messier object data from the file 

@@ -17,11 +17,16 @@ public class GameLoop : MonoBehaviour
     StarQueue starQueue;
     List<Star> starList;
     List<MessierObject> messierList;
+    List<Planet> planetList;
+    Sun sun;
+    Moon moon;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         starList = new();
+        messierList = MessierRetrieval.GetMessier();
+        LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
         StartCoroutine(InitalizeSky());
     }
 
@@ -71,7 +76,7 @@ public class GameLoop : MonoBehaviour
             }
             yield return null;
         }
-        messierList = MessierRetrival.GetMessier();
+        
 
 
 

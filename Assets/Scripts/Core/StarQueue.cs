@@ -1,15 +1,13 @@
 using Assets.Scripts.CelestialBodies;
-using ChargerAstronomyEngine.Data;
+using ChargerAstronomyEngine.Data.Star;
 using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Domain.Equatorial;
-using ChargerAstronomyShared.Domain.Horizontal;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 public class StarQueue
 {
     private CsvStarRepository starRepo;
@@ -18,7 +16,7 @@ public class StarQueue
     /// <summary>
     /// Construct a new instance of StarQueue and have it start pulling data from the designated repo
     /// </summary>
-    public StarQueue(int amountToTake ,string fileName = "AllStars" + ".csv")
+    public StarQueue(int amountToTake, string fileName = "AllStars" + ".csv")
     {
         starRepo = new(FindCsvPath(fileName));
         queue = new(capacity: 5);
@@ -28,7 +26,7 @@ public class StarQueue
     /// <summary>
     /// The method that stars pulling data from the repo using BoundedInitialization Queue
     /// </summary>
-    private async Task FillQueue( int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
+    private async Task FillQueue(int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
     {
         _ = Task.Run(() => starRepo.ProducePagesAsync(queue, new PageRequest(0, amountToTake), CancellationToken.None));
         await Task.Delay(1);
@@ -39,8 +37,8 @@ public class StarQueue
     /// </summary>
     private static string FindCsvPath(string fileName = "AllStars" + ".csv")
     {
-        
-        var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(),"ChargerAstronomyEngine","ChargerAstronomyEngine", "Data") ,"Star" , fileName);
+
+        var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(), "ChargerAstronomyEngine", "ChargerAstronomyEngine", "Data"), "Star", fileName);
         if (File.Exists(direct)) return direct;
 
         var dir = new DirectoryInfo(GameLoop.GetProjectPath());
@@ -48,7 +46,7 @@ public class StarQueue
         {
             var candidate = Directory.EnumerateFiles(dir.FullName, fileName, SearchOption.AllDirectories)
                 .FirstOrDefault();
-            
+
             if (candidate != null) return candidate;
         }
 
@@ -64,22 +62,36 @@ public class StarQueue
     {
         if (queue != null && queue.TryDequeue(out var pr))
         {
-             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
-             foreach( EquatorialStar equatorialStar in equatorialList)
-             {
+            IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
+            foreach (EquatorialStar equatorialStar in equatorialList)
+            {
+                
+                
+                
+                
+            }
+            Star newStar = new();
 
-                 Star newStar = new();
+            //TODO: this needs to be updated when Tommy adds the proper constructor?
+            //HorizontalStar hStar = new HorizontalStar(equatorialStar);
+            //newStar.FromHorizontal(hStar);
 
-                 //TODO: this needs to be updated when Tommy adds the proper constructor?
-                 //HorizontalStar hStar = new HorizontalStar(equatorialStar);
-                 //newStar.FromHorizontal(hStar);
-                 starList.Add(newStar);
-             }
-             return true;
+            starList.Add(newStar);
+            return true;
         }
         else
         {
             return false;
         }
+    }
+
+    public bool IsCompleted()
+    {
+        return queue.IsCompleted;
+    }
+
+    public void Dispose()
+    {
+        queue.Dispose();
     }
 }

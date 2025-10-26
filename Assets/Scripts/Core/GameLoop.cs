@@ -20,9 +20,8 @@ public class GameLoop : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        starQueue = new StarQueue(1000);
         starList = new();
-        
+        StartCoroutine(InitalizeSky());
     }
 
     // Update is called once per frame
@@ -39,11 +38,6 @@ public class GameLoop : MonoBehaviour
         /// Main method to handle all things that need to be done in a frame
         /// </summary>
 
-        if(starQueue.TryDequeue(ref starList))
-        {
-            Debug.Log(starList.Count);
-        }
-
     }
 
     static public void Print(string str)
@@ -59,13 +53,27 @@ public class GameLoop : MonoBehaviour
         return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
     }
 
-    IEnumerator GetStars()
+    IEnumerator InitalizeSky()
     {
         /// <summary>
-        /// coroutine for getting all the stars
+        /// coroutine for getting all the objects for the sky
         /// </summary>
         /// 
 
-        return null;
+        // get the stars and put them in star list
+        starQueue = new StarQueue(1000);
+        while (!starQueue.IsCompleted())
+        {
+            if (starQueue.TryDequeue(ref starList))
+            {
+                Debug.Log(starList.Count);
+            }
+            yield return null;
+        }
+
+
+
+        
+        
     }
 }

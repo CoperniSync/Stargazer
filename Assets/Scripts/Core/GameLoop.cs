@@ -1,5 +1,4 @@
 using Assets.Scripts.CelestialBodies;
-using 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +17,16 @@ public class GameLoop : MonoBehaviour
     StarQueue starQueue;
     List<Star> starList;
     List<MessierObject> messierList;
+    List<Planet> planetList;
+    Sun sun;
+    Moon moon;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         starList = new();
-        messierList = MessierRetrival.GetMessier();
-
+        messierList = MessierRetrieval.GetMessier();
+        LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
         StartCoroutine(InitalizeSky());
     }
 

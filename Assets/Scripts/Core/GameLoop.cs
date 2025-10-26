@@ -1,4 +1,5 @@
 using Assets.Scripts.CelestialBodies;
+using 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,8 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
         starList = new();
+        messierList = MessierRetrival.GetMessier();
+
         StartCoroutine(InitalizeSky());
     }
 
@@ -71,7 +74,7 @@ public class GameLoop : MonoBehaviour
             }
             yield return null;
         }
-        messierList = MessierRetrival.GetMessier();
+        
 
 
 

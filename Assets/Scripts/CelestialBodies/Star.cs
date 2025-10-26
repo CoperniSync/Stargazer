@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.CelestialBodies
 {
@@ -12,6 +14,10 @@ namespace Assets.Scripts.CelestialBodies
     /// </summary>
     public sealed class Star : CelestialBodyBase
     {
+        // registry of spawned stars
+        private static readonly List<Star> activeStars = new List<Star>();
+        public static IReadOnlyList<Star> ActiveStars => activeStars;
+
         // Strongly typed identity from the catalog
         private EquatorialStar? equatorialStar;
 
@@ -116,6 +122,20 @@ namespace Assets.Scripts.CelestialBodies
             );
         }
 
+
+        // <summary>
+        // Instantiates a Star prefab, initializes it from a HorizontalStar, registers it, and returns the instance.
+        // </summary>
+        public static Star CreateFromHorizontal(Star prefab, HorizontalStar hstar, float drawnDistance = 74f, Transform parent = null)
+        {
+            var inst = Object.Instantiate(prefab, parent);
+            inst.FromHorizontal(hstar, drawnDistance);
+
+            // stores it after it is made
+            activeStars.Add(inst);
+            return inst;
+        }
+
         /// <summary>
         /// Magnitude-to-scale mapping.
         /// </summary>
@@ -126,5 +146,7 @@ namespace Assets.Scripts.CelestialBodies
             float size = Mathf.Clamp(1.2f - 0.1f * (magnitude + 1.5f), 0.35f, 1.2f);
             return new Vector3(size, size, size);
         }
+
+
     }
 }

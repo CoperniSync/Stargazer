@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GameLoop">
+    <Position X="4.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AASCBAgAADAQAAQBAAAAAAAAAAAAAAAAAAAAAAAEQAA=</HashCode>
+      <FileName>Assets\Scripts\Core\GameLoop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LocalObjectRetrieval">
+    <Position X="0.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Core\LocalObjectRetrieval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MessierRetrieval">
+    <Position X="0.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Core\MessierRetrieval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StarQueue">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACAAAAUAAABAAAAAAAAAARAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Core\StarQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Calendar">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="Calendar.CalendarButtons" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\UI\Calendar.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAFAAAAQSgAAAAAIAAgMAAAAAAAABAAEACAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\Calendar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CalendarButton">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\CalendarButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraControls">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABABACAAAAAAAAAAAA4ACAAAABAAAAAAAggCAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\CameraControls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.UI.InputContainer">
+    <Position X="8.75" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAFAEQABAAAAAAAAAAAISAALAAAAAACIACAECAQAQA=</HashCode>
+      <FileName>Assets\Scripts\UI\InputContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LatChange">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\Lat, Long, and Time\LatChange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LongChange">
+    <Position X="15.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAgAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\Lat, Long, and Time\LongChange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeChange">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAQAQAAAAAAAAAAAAABADAAACAEAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\UI\Lat, Long, and Time\TimeChange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.UI.Visual.VisualToggle">
+    <Position X="13.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAIAAAAAAAAAABAAIAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\UI\Visual\VisualToggle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.Sun">
+    <Position X="0.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAABEAIAAAAAAAABAoAAAAAEQACg=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\Sun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.MessierObject">
+    <Position X="2.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAQAAAAgAAAAABAQKAEgAAAAABBgQAAAAEQACA=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\MessierObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.Planet">
+    <Position X="4" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAEAAABAAYAAAAAAAABggAACAAEQACA=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\Planet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.Star">
+    <Position X="5.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAgAAAAABAAIAAAAQAAABAgAAgAAEQACA=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\Star.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.Moon">
+    <Position X="7.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAABEAAABAAYAAAAAAAABAgAAAAAEQACA=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\Moon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.CelestialBodies.CelestialBodyBase" Collapsed="true">
+    <Position X="4.75" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACCAAAACCAAAAIAgAAAAAAEAABAAAAAAAEACCA=</HashCode>
+      <FileName>Assets\Scripts\CelestialBodies\CelestialBodyBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="IUserContextObserver">
+    <Position X="8.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Contracts\IUserContextObserver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IUserContextSubject">
+    <Position X="4.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\Scripts\Contracts\IUserContextObserver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

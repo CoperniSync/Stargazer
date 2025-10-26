@@ -65,18 +65,20 @@ public class StarQueue
             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
             foreach (EquatorialStar equatorialStar in equatorialList)
             {
-                
-                
-                
-                
+                Star newStar = new();
+
+                //TODO: this needs to be updated when Tommy adds the proper constructor?
+                //HorizontalStar hStar = new HorizontalStar(equatorialStar);
+                //newStar.FromHorizontal(hStar);
+
+                starList.Add(newStar);
+
+
             }
-            Star newStar = new();
 
-            //TODO: this needs to be updated when Tommy adds the proper constructor?
-            //HorizontalStar hStar = new HorizontalStar(equatorialStar);
-            //newStar.FromHorizontal(hStar);
 
-            starList.Add(newStar);
+
+
             return true;
         }
         else

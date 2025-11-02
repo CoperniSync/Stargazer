@@ -19,7 +19,7 @@ namespace Assets.Scripts.CelestialBodies
         //</summary>
 
         private GameObject go;
-        public Star(HorizontalStar hstar, float drawnDistance = 74f, GameObject starPrefab)
+        public Star(HorizontalStar hstar, GameObject starPrefab, float drawnDistance = 74f)
         {
             horizontalStar = hstar;
             horizontalBody = hstar;
@@ -151,7 +151,7 @@ namespace Assets.Scripts.CelestialBodies
         /// </summary>
         public void UpdateStar(HorizontalStar hstar)
         {
-            horizontalStar = hstar
+            horizontalStar = hstar;
             horizontalBody = hstar;
 
             UpdateTransformFromHorizontal();

@@ -14,6 +14,31 @@ namespace Assets.Scripts.CelestialBodies
     /// </summary>
     public sealed class Star : CelestialBodyBase
     {
+<<<<<<< Updated upstream
+=======
+
+        // <summary
+        // Constructor for queue initialization of star
+        //</summary>
+
+        private GameObject go;
+        public Star(HorizontalStar hstar, float drawnDistance = 74f)
+        {
+            GameObject starPrefab = Resources.Load<GameObject>("Prefabs/Star");
+            horizontalStar = hstar;
+            horizontalBody = hstar;
+            DrawnDistance = drawnDistance;
+
+            UpdateTransformFromHorizontal(); // sets Position3D
+
+            // spawn prefab
+            go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
+            // Add scale computation later
+
+            activeStars.Add(this);
+        }
+
+>>>>>>> Stashed changes
         // registry of spawned stars
         private static readonly List<Star> activeStars = new List<Star>();
         public static IReadOnlyList<Star> ActiveStars => activeStars;

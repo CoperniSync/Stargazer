@@ -3,6 +3,7 @@ using ChargerAstronomyEngine.Data.Star;
 using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Domain.Equatorial;
+using ChargerAstronomyShared.Domain.Horizontal;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,7 +66,7 @@ public class StarQueue
             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
             foreach (EquatorialStar equatorialStar in equatorialList)
             {
-                Star newStar = new();
+                Star newStar = new( new HorizontalStar(equatorialStar));
 
                 //TODO: this needs to be updated when Tommy adds the proper constructor?
                 //HorizontalStar hStar = new HorizontalStar(equatorialStar);

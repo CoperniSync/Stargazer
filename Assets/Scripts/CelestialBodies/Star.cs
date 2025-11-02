@@ -18,15 +18,19 @@ namespace Assets.Scripts.CelestialBodies
         // Constructor for queue initialization of star
         //</summary>
 
-        private GameObject starPrefab;
-        public Star(HorizontalStar hstar, float drawnDistance = 74f, GameObject starPrefab = null)
+        private GameObject go;
+        public Star(HorizontalStar hstar, float drawnDistance = 74f, GameObject starPrefab)
         {
             horizontalStar = hstar;
             horizontalBody = hstar;
             DrawnDistance = drawnDistance;
-            starPrefab = starPrefab;
 
-            UpdateTransformFromHorizontal();
+            UpdateTransformFromHorizontal(); // sets Position3D
+
+            // spawn prefab
+            go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
+            // Add scale computation later
+
             activeStars.Add(this);
         }
 
@@ -132,8 +136,32 @@ namespace Assets.Scripts.CelestialBodies
         }
 
         /// <summary>
-        /// 
+        /// Enable or disable the star's GameObject.
+        /// </summary>
+        public void ToggleState()
+        {
+            if (go != null)
+            {
+                go.SetActive(!go.activeSelf);
+            }
+        }
 
+        /// <summary>
+        /// Enable or disable the star's GameObject.
+        /// </summary>
+        public void UpdateStar(HorizontalStar hstar)
+        {
+            horizontalStar = hstar
+            horizontalBody = hstar;
+
+            UpdateTransformFromHorizontal();
+
+            // update GameObject transform
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+            }
+        }
 
     }
 }

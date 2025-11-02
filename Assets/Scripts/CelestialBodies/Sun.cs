@@ -24,6 +24,7 @@ namespace Assets.Scripts.CelestialBodies
 
         // Positions for rendering
         public Vector3 Position3D { get; private set; }
+        public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
         /// <summary>
@@ -33,8 +34,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalSun = hSun;
             horizontalBody = hSun;
-            equatorialBodyTyped = hSun.EquatorialBody;
-            equatorialBody = hSun.EquatorialBody;
             DrawnDistance = drawnDistance;
 
             UpdateTransformFromHorizontal();
@@ -47,8 +46,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalSun = hSun;
             horizontalBody = hSun;
-            equatorialBodyTyped = hSun.EquatorialBody;
-            equatorialBody = hSun.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -67,8 +64,7 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputeSunScale(Magnitude);
+            LocalScale = ComputeSunScale(Magnitude);
 
             // Screen-space for UI
             var cam = Camera.main;

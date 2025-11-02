@@ -27,6 +27,7 @@ namespace Assets.Scripts.CelestialBodies
 
         //Positions for 3D and screen-space
         public Vector3 Position3D { get; private set; }
+        public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
         /// <summary>
@@ -36,8 +37,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalPlanet = hPlanet;
             horizontalBody = hPlanet;
-            equatorialBodyTyped = hPlanet.EquatorialBody;
-            equatorialBody = hPlanet.EquatorialBody;
             DrawnDistance = drawnDistance;
 
             UpdateTransformFromHorizontal();
@@ -50,8 +49,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalPlanet = hPlanet;
             horizontalBody = hPlanet;
-            equatorialBodyTyped = hPlanet.EquatorialBody;
-            equatorialBody = hPlanet.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -70,8 +67,7 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputePlanetScale(Magnitude, PhaseAngle);
+            LocalScale = ComputePlanetScale(Magnitude, PhaseAngle);
 
             var cam = Camera.main;
             if (cam != null)

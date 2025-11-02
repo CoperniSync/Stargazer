@@ -27,6 +27,7 @@ namespace Assets.Scripts.CelestialBodies
 
         // Positions for rendering
         public Vector3 Position3D { get; private set; }
+        public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
         /// <summary>
@@ -36,8 +37,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalMoon = hMoon;
             horizontalBody = hMoon;
-            equatorialBodyTyped = hMoon.EquatorialBody;
-            equatorialBody = hMoon.EquatorialBody;
             DrawnDistance = drawnDistance;
 
             UpdateTransformFromHorizontal();
@@ -50,8 +49,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalMoon = hMoon;
             horizontalBody = hMoon;
-            equatorialBodyTyped = hMoon.EquatorialBody;
-            equatorialBody = hMoon.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -71,8 +68,7 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-            transform.localScale = ComputeMoonScale(Magnitude, PhaseAngle);
+            LocalScale = ComputeMoonScale(Magnitude, PhaseAngle);
 
             // Screen-space position
             var cam = Camera.main;

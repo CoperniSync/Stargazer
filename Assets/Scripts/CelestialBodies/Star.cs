@@ -10,21 +10,34 @@ namespace Assets.Scripts.CelestialBodies
     /// A star that converts its celestial coordinates to a Unity position.
     /// Author: Tommy Rodriguez
     /// Created: 2025-09-25
-    /// Refactored: 2025-09-28
     /// </summary>
     public sealed class Star : CelestialBodyBase
     {
+
+        // <summary
+        // Constructor for queue initialization of star
+        //</summary>
+
+        private GameObject starPrefab;
+        public Star(HorizontalStar hstar, float drawnDistance = 74f, GameObject starPrefab = null)
+        {
+            horizontalStar = hstar;
+            horizontalBody = hstar;
+            DrawnDistance = drawnDistance;
+            starPrefab = starPrefab;
+
+            UpdateTransformFromHorizontal();
+            activeStars.Add(this);
+        }
+
         // registry of spawned stars
         private static readonly List<Star> activeStars = new List<Star>();
         public static IReadOnlyList<Star> ActiveStars => activeStars;
 
         // Strongly typed identity from the catalog
         private EquatorialStar? equatorialStar;
-
         // Shared horizontal wrapper (provides Altitude, Azimuth, Magnitude, Distance)
         private HorizontalStar? horizontalStar;
-
-        // If your base also declares a HorizontalBody field, do NOT "new" it here.
         // Keep a local typed reference for star-specific fields.
         private HorizontalBody? horizontalBody;
 
@@ -41,22 +54,13 @@ namespace Assets.Scripts.CelestialBodies
 
         // Cached positions
         public Vector3 Position3D { get; private set; }
+        public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
-        /// <summary>
+        /// <summary>);
         /// One-time initializer from a HorizontalStar snapshot.
         /// Call this when you first create the GameObject/component.
-        /// </summary>
-        public void FromHorizontal(HorizontalStar hstar, float drawnDistance = 74f)
-        {
-            horizontalStar = hstar;
-            horizontalBody = hstar;
-            equatorialStar = hstar.EquatorialBody as EquatorialStar;
-            equatorialBody = hstar.EquatorialBody;
-            DrawnDistance = drawnDistance;
-
-            UpdateTransformFromHorizontal();
-        }
+        /// </summary
 
         /// <summary>
         /// Backend push: apply a fresh HorizontalStar.
@@ -65,8 +69,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalStar = hstar;
             horizontalBody = hstar;
-            equatorialStar = hstar.EquatorialBody as EquatorialStar;
-            equatorialBody = hstar.EquatorialBody;
 
             UpdateTransformFromHorizontal();
         }
@@ -85,10 +87,7 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
-            transform.position = Position3D;
-
-            // Scale by magnitude for a simple visual cue
-            transform.localScale = ComputeStarScale(Magnitude);
+            LocalScale = ComputeStarScale(Magnitude);
 
             // Cache screen-space for UI
             var cam = Camera.main;
@@ -123,29 +122,17 @@ namespace Assets.Scripts.CelestialBodies
         }
 
 
-        // <summary>
-        // Instantiates a Star prefab, initializes it from a HorizontalStar, registers it, and returns the instance.
-        // </summary>
-        public static Star CreateFromHorizontal(Star prefab, HorizontalStar hstar, float drawnDistance = 74f, Transform parent = null)
-        {
-            var inst = Object.Instantiate(prefab, parent);
-            inst.FromHorizontal(hstar, drawnDistance);
-
-            // stores it after it is made
-            activeStars.Add(inst);
-            return inst;
-        }
-
         /// <summary>
         /// Magnitude-to-scale mapping.
         /// </summary>
         private static Vector3 ComputeStarScale(float magnitude)
         {
-            // Map mags roughly into [0.35, 1.2]
-            // Example: mag -1.5 -> ~1.2; mag 6.0 -> ~0.35
             float size = Mathf.Clamp(1.2f - 0.1f * (magnitude + 1.5f), 0.35f, 1.2f);
             return new Vector3(size, size, size);
         }
+
+        /// <summary>
+        /// 
 
 
     }

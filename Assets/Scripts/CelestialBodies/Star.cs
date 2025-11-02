@@ -19,11 +19,12 @@ namespace Assets.Scripts.CelestialBodies
         //</summary>
 
         private GameObject go;
-        public Star(HorizontalStar hstar, GameObject starPrefab, float drawnDistance = 74f)
+        public Star(HorizontalStar hstar, float drawnDistance = 74f)
         {
             horizontalStar = hstar;
             horizontalBody = hstar;
             DrawnDistance = drawnDistance;
+            GameObject starPrefab = Resources.Load<GameObject>("Prefabs/Star");
 
             UpdateTransformFromHorizontal(); // sets Position3D
 
@@ -31,7 +32,7 @@ namespace Assets.Scripts.CelestialBodies
             go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
             // Add scale computation later
 
-            activeStars.Add(this);
+            //activeStars.Add(this);
         }
 
         // registry of spawned stars

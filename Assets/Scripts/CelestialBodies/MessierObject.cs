@@ -41,8 +41,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalMessier = hMessier;
             horizontalBody = hMessier;
-            equatorialMessier = hMessier.EquatorialBody as EquatorialMessierObject;
-            equatorialBody = hMessier.EquatorialBody;
             DrawnDistance = drawnDistance;
 
             UpdateTransformFromHorizontal();
@@ -55,9 +53,6 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalMessier = hMessier;
             horizontalBody = hMessier;
-            equatorialMessier = hMessier.EquatorialBody as EquatorialMessierObject;
-            equatorialBody = hMessier.EquatorialBody;
-
             UpdateTransformFromHorizontal();
         }
 
@@ -74,8 +69,6 @@ namespace Assets.Scripts.CelestialBodies
                 (float)horizontalBody.Azimuth,
                 DrawnDistance
             );
-
-            transform.position = Position3D;
 
             // Screen-space position
             var cam = Camera.main;

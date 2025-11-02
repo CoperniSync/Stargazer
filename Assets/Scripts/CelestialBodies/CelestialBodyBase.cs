@@ -11,7 +11,7 @@ using ChargerAstronomyShared.Domain.Horizontal;
 
 namespace Assets.Scripts.CelestialBodies
 {
-    public abstract class CelestialBodyBase : MonoBehaviour
+    public abstract class CelestialBodyBase
     {
         protected EquatorialCelestialBody equatorialBody;
         protected HorizontalBody horizontalBody;
@@ -38,6 +38,20 @@ namespace Assets.Scripts.CelestialBodies
 
 
         public float DrawnDistance { get; set; }
+
+        protected CelestialBodyBase() { }
+
+        protected CelestialBodyBase(HorizontalBody horizontal, float drawnDitance = 74f)
+        {
+            horizontalBody = horizontal;
+            DrawnDistance = DrawnDistance;
+        }
+
+        public void SetHorizontal(HorizontalBody horizontal, float? drawnDistance = null)
+        {
+            horizontalBody = horizontal;
+            if (drawnDistance.HasValue) DrawnDistance = drawnDistance.Value;
+        }
 
 
         /// <summary>

@@ -3,30 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Visual
 {
     internal class VisualToggle : MonoBehaviour
     {
-        public void ToggleConstellations()
+        InputContainer inputs;
+        void Start()
         {
+            inputs = InputContainer.Container; //get the input container instance
 
         }
-        public void ToggleMessierObjects()
+        public void ToggleConstellations(Toggle toggle)
         {
-
+            inputs.ConstellationsToggle = toggle.isOn;
         }
-        public void ToggleAzimuthGridlines()
+        public void ToggleMessierObjects(Toggle toggle)
         {
-
+            inputs.MessierToggle = toggle.isOn;
         }
-        public void ToggleEquatorialGridlines()
+        public void ToggleAzimuthGridlines(Toggle toggle)
         {
+            inputs.AzimuthLines = toggle.isOn;
         }
-        public void ToggleLabels()
+        public void ToggleEquatorialGridlines(Toggle toggle)
         {
+            inputs.EquatorialLines = toggle.isOn;
+        }
+        public void ToggleLabels(Toggle toggle)
+        {
+            inputs.ConstellationLabel = toggle.isOn;
 
         }
     }

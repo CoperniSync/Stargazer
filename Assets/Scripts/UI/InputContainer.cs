@@ -52,8 +52,8 @@ namespace Assets.Scripts.UI
         public int Year { get; set; }  // seperate variable for year to bypass date
 
         //labels
-        public bool AzimuthLabel { get; set; }
-        public bool EquatorialLabel { get; set; }
+        public bool AzimuthLines { get; set; }
+        public bool EquatorialLines { get; set; }
         public bool ConstellationLabel { get; set; }
 
         //space objects

@@ -3,8 +3,6 @@ using Assets.Scripts.UI;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
-using ChargerAstronomyShared.Domain;
-using ChargerAstronomyShared.Domain.Horizontal;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -130,25 +128,37 @@ public class GameLoop : MonoBehaviour
         //start engine service
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
 
-        for( int i = 0; i < 1000 && !ActivationQueue.IsCompleted; i++)
-        {
+ 
             TileId tileId;
-            ActivationQueue.TryTake(out tileId);
-            foreach (Star starToActivate in starList[tileId.Index])
+            while(ActivationQueue.TryTake(out tileId))
             {
-                //starToActivate.ToggleState();     // activate TODO: need new method
+                Debug.Log((starList.Count - 1) - tileId.Index );
+                if((starList.Count - 1) - tileId.Index >= 0)
+                    foreach (Star starToActivate in starList[tileId.Index])
+                    {
+                    //starToActivate.ToggleState();     // activate TODO: need new method
+                    }
             }
-            DeactivationQueue.TryTake(out tileId);
-            foreach (Star starToDeactivate in starList[tileId.Index])
+    
+            while(DeactivationQueue.TryTake(out tileId))
             {
-                //starToDeactivate.ToggleState();   // deactivate TODO: need new method
+                Debug.Log((starList.Count - 1) - tileId.Index);
+                if ((starList.Count - 1) - tileId.Index >= 0)
+                    foreach (Star starToDeactivate in starList[tileId.Index])
+                    {
+                    //starToDeactivate.ToggleState();   // deactivate TODO: need new method
+                    }
             }
-            UpdateTransformQueue.TryTake(out tileId);
-            foreach (Star starToUpdate in starList[tileId.Index])
+
+            while(UpdateTransformQueue.TryTake(out tileId))
             {
-                // starToUpdate.UpdateStar();          // update star TODO: need new method
+                Debug.Log((starList.Count - 1) - tileId.Index);
+                if ((starList.Count - 1) - tileId.Index >= 0)
+                    foreach (Star starToUpdate in starList[tileId.Index])
+                    {
+                    // starToUpdate.UpdateStar();          // update star TODO: need new method
+                    }
             }
-        }
 
 
 
@@ -191,7 +201,6 @@ public class GameLoop : MonoBehaviour
         {
             if (starQueue.TryDequeue(ref starList))
             {
-                Debug.Log(starList.Count);
             }
             yield return null;
         }

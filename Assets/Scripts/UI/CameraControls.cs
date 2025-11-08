@@ -59,11 +59,16 @@ public class CameraControls : MonoBehaviour
 
             //
             yAxisDegrees = yAxisDegrees + horizontalChange;
-            xAxisDegrees = xAxisDegrees + verticalChange;
+            xAxisDegrees = xAxisDegrees + verticalChange;  
+
+            if (xAxisDegrees < 271 && xAxisDegrees > 180)
+                xAxisDegrees = 271;
+            else if (xAxisDegrees > 89 && xAxisDegrees < 180)
+                xAxisDegrees = 89;
             //zAxisDegrees = zAxisDegrees + tiltChange;
-            
+
             //update rotation
-            transform.rotation = Quaternion.Euler(xAxisDegrees, yAxisDegrees,0);
+            transform.rotation = Quaternion.Euler(xAxisDegrees, yAxisDegrees, 0);
 
             //save angles to prevent potential overflow
             xAxisDegrees = transform.rotation.eulerAngles.x;

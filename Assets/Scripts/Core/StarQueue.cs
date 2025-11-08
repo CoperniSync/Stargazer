@@ -2,16 +2,30 @@ using Assets.Scripts.CelestialBodies;
 using ChargerAstronomyEngine.Data.Star;
 using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
+using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
+using ChargerAstronomyShared.Domain.Index;
+using ChargerAstronomyShared.Domain.SpatialIndex;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+// Author: Morgan Hendon FA 2025
+
 public class StarQueue
 {
-    private CsvStarRepository starRepo;
+    // Subdivision parameter for tile Index
+    private const int SUBDIVISIONS = 0;
+
+    private SpatialStarIndex starIndex;
+
+    private IEngineService engineService;
+    
+    private CsvStarRepository starRepo; // repository to pull stars from
+
     private BoundedInitializationQueue<PageResult<EquatorialStar>> queue;
 
     /// <summary>
@@ -21,6 +35,9 @@ public class StarQueue
     {
         starRepo = new(FindCsvPath(fileName));
         queue = new(capacity: 5);
+        ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
+        starIndex = new(tileIndex);
+        engineService = new EngineService(tileIndex);
         FillQueue(amountToTake, queue, starRepo);
     }
 
@@ -30,7 +47,7 @@ public class StarQueue
     private async Task FillQueue(int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
     {
         _ = Task.Run(() => starRepo.ProducePagesAsync(queue, new PageRequest(0, amountToTake), CancellationToken.None));
-        await Task.Delay(1);
+        await Task.Delay(0);
     }
 
     /// <summary>
@@ -59,26 +76,30 @@ public class StarQueue
     /// <summary>
     /// A star located by the Horizontal Coordinate method
     /// </summary>
-    public bool TryDequeue(ref List<Star> starList)
+    public bool TryDequeue(ref List<List<Star>> starList)
     {
         if (queue != null && queue.TryDequeue(out var pr))
         {
+
             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
             foreach (EquatorialStar equatorialStar in equatorialList)
             {
-                Star newStar = new(new HorizontalStar(equatorialStar));
 
-                //TODO: this needs to be updated when Tommy adds the proper constructor?
-                //HorizontalStar hStar = ;
-                //newStar.FromHorizontal(hStar);
+                // create star Object
+                HorizontalStar hstar = new HorizontalStar(equatorialStar);
+                Star newStar = new(hstar);
 
-                starList.Add(newStar);
+                starIndex.AddStar(hstar);
 
+                int newTileIndex = starIndex.GetTileForStar(hstar).Index;
+
+                while (starList.Count() <= newTileIndex)
+                {
+                    starList.Add(new List<Star>());
+                }
+                starList[newTileIndex].Add(newStar);
 
             }
-
-
-
 
             return true;
         }
@@ -86,6 +107,11 @@ public class StarQueue
         {
             return false;
         }
+    }
+
+    public IEngineService GetEngineService()
+    {
+        return engineService;
     }
 
     public bool IsCompleted()

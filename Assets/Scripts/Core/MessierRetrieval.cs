@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-
+// Author: Morgan Hendon FA 2025
 public class MessierRetrieval
 {
     /// <summary>

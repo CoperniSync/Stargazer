@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// Author: Morgan Hendon FA 2025
 /// <summary>
 /// Class for changing tabs on the side panel.
 /// </summary>

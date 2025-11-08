@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 
-
+// Author: Morgan Hendon FA 2025
 public class LongChange : MonoBehaviour
 {
     //get user input sigleton

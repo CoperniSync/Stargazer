@@ -5,6 +5,7 @@ using Assets.Scripts.CelestialBodies;
 using NUnit.Framework;
 using System.Collections.Generic;
 
+// Author: Morgan Hendon FA 2025
 public class LocalObjectRetrieval
 {
     public static void GetLocalObjects(ref Moon moon,ref List<Planet> planets,ref Sun sun)

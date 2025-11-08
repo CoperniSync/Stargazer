@@ -8,6 +8,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Author: Morgan Hendon FA 2025
+
 namespace Assets.Scripts.UI.Visual
 {
     internal class VisualToggle : MonoBehaviour

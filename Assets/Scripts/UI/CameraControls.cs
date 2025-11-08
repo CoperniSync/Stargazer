@@ -114,7 +114,9 @@ public class CameraControls : MonoBehaviour
 
         inputs.RotationVector = transform.forward;
       
-        inputs.DiagonalFOV = Mathf.Rad2Deg * 2f * Mathf.Atan( Mathf.Sqrt(Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) + (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f/9f) * (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f / 9f) ) );
+        //inputs.DiagonalFOV = Mathf.Rad2Deg * 2f * Mathf.Atan( Mathf.Sqrt(Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) + (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f/9f) * (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f / 9f) ) );
+
+        inputs.HorizontalFOV = (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f));
     }
     
 }

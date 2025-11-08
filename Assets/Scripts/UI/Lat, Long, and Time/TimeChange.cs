@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Author: Morgan Hendon FA 2025
 public class TimeChange : MonoBehaviour
 {
 

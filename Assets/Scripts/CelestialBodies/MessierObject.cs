@@ -48,7 +48,7 @@ namespace Assets.Scripts.CelestialBodies
 
             GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
 
-            go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            //go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
             go.name = $"Messier_{MessierId}";
         }
 

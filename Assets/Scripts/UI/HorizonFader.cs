@@ -9,7 +9,6 @@ using System;
 /// </summary>
 public class HorizonFader : MonoBehaviour
 {
-
     public bool enabled = true;
 
     // Update is called once per frame

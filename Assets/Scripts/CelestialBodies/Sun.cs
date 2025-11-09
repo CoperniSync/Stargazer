@@ -11,21 +11,65 @@ namespace Assets.Scripts.CelestialBodies
     /// </summary>
     public sealed class Sun : CelestialBodyBase
     {
+        // spawned instance
+        private GameObject go;
+
         private HorizontalSun? horizontalSun;
         private HorizontalBody? horizontalBody;
-        private EquatorialCelestialBody? equatorialBodyTyped;
-
-        // The Sun's name
-        public string SunName => "Sun";
 
         // The Sun's brightness magnitude
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
+        public float Magnitude => (float)(horizontalBody?.Magnitude);
 
 
         // Positions for rendering
         public Vector3 Position3D { get; private set; }
         public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
+
+        /// <summary>
+        /// Constructor for single Sun instantiation.
+        /// </summary>
+        public Sun(HorizontalSun hsun, float drawnDistance = 74f)
+        {
+
+            horizontalSun = hsun;
+            horizontalBody = hsun;
+            DrawnDistance = drawnDistance;
+
+            // Load prefab
+            GameObject sunPrefab = Resources.Load<GameObject>("Prefabs/Sun");
+
+            UpdateTransformFromHorizontal(); // sets Position3D/LocalScale/Position2D
+
+            // spawn prefab
+            go = Object.Instantiate(sunPrefab, Position3D, Quaternion.identity);
+            go.name = "Sun";
+        }
+
+        /// <summary>
+        /// Backend push: apply a fresh HorizontalSun.
+        /// </summary>
+        public void UpdateSun(HorizontalSun hsun)
+        {
+            horizontalSun = hsun;
+            horizontalBody = hsun;
+
+            UpdateTransformFromHorizontal();
+
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+                go.transform.localScale = LocalScale;
+            }
+        }
+
+        /// <summary>
+        /// Show/hide the Sun GameObject.
+        /// </summary>
+        public void ToggleState()
+        {
+            if (go != null) go.SetActive(!go.activeSelf);
+        }
 
         /// <summary>
         /// One-time initialization from horizontal data.
@@ -64,8 +108,6 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
-            LocalScale = ComputeSunScale(Magnitude);
-
             // Screen-space for UI
             var cam = Camera.main;
             if (cam != null)
@@ -96,18 +138,6 @@ namespace Assets.Scripts.CelestialBodies
             );
         }
 
-        /// <summary>
-        /// Computes a fixed but slightly dynamic Sun scale.
-        /// -- Can be dropped if we dont want a dynamic sun -- Tommy
-        /// </summary>
-        private static Vector3 ComputeSunScale(float magnitude)
-        {
 
-            float baseSize = 5.0f;
-            float brightnessAdjust = Mathf.Clamp(1.0f - (magnitude / -26.74f), 0.85f, 1.15f);
-            float finalSize = baseSize * brightnessAdjust;
-
-            return new Vector3(finalSize, finalSize, finalSize);
-        }
     }
 }

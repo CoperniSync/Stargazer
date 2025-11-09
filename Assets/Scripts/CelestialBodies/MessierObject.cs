@@ -14,7 +14,6 @@ namespace Assets.Scripts.CelestialBodies
     {
         private HorizontalMessierObject? horizontalMessier;
         private HorizontalBody? horizontalBody;
-        private EquatorialMessierObject? equatorialMessier;
 
         // ----------------------------
         // Identification
@@ -29,10 +28,56 @@ namespace Assets.Scripts.CelestialBodies
         public string CommonName => horizontalMessier?.CommonName ?? equatorialMessier?.CommonName ?? "Unnamed Object";
 
         //  Positions for rendering
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialMessier?.Magnitude ?? 6.0f);
+        public float Magnitude => (float)(horizontalBody?.Magnitude);
 
         public Vector3 Position3D { get; private set; }
         public Vector2 Position2D { get; private set; }
+
+        private GameObject go;
+
+        /// <summary>
+        /// Prefab-spawning constructor for Messier objects.
+        /// </summary>
+        public MessierObject(HorizontalMessierObject hMessier, float drawnDistance = 125f, GameObject prefab = null)
+        {
+            horizontalMessier = hMessier;
+            horizontalBody = hMessier;
+            DrawnDistance = drawnDistance;
+
+            UpdateTransformFromHorizontal();
+
+            GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
+
+            go = Object.Instantiate(prefab, Position3D, Quaternion.identity);
+            go.name = $"Messier_{MessierId}";
+        }
+
+        /// <summary>
+        /// Updates an existing Messier object's position and scale.
+        /// </summary>
+        public void UpdateMessier(HorizontalMessierObject hMessier)
+        {
+            horizontalMessier = hMessier;
+            horizontalBody = hMessier;
+
+            UpdateTransformFromHorizontal();
+
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+            }
+        }
+
+        /// <summary>
+        /// Enable or disable the Messier object GameObject.
+        /// </summary>
+        public void ToggleState()
+        {
+            if (go != null)
+            {
+                go.SetActive(!go.activeSelf);
+            }
+        }
 
         /// <summary>
         /// One-time initialization from horizontal data.

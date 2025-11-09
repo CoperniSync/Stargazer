@@ -11,24 +11,70 @@ namespace Assets.Scripts.CelestialBodies
     /// </summary>
     public sealed class Planet : CelestialBodyBase
     {
+        private GameObject go;
 
-        private EquatorialCelestialBody? equatorialBodyTyped;
         private HorizontalPlanet? horizontalPlanet;
         private HorizontalBody? horizontalBody;
 
         // Public properties
         public string PlanetName => horizontalPlanet?.Name ?? "Unnamed Planet";
-
-        // Planet phase angle (in common name for planets)
+        // Planet phase angle
         public float PhaseAngle => (float)(horizontalPlanet?.PhaseAngle ?? 0.0);
-
-        // Planet's brightness magnitude(Try from HorizontalPlanet first, then EquatorialBody)
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude ?? 0.0);
+        // Planet's brightness magnitude
+        public float Magnitude => (float)(horizontalBody?.Magnitude);
 
         //Positions for 3D and screen-space
         public Vector3 Position3D { get; private set; }
         public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
+
+        /// <summary>
+        /// Constructor for queue initialization of planet (like Star and Sun)
+        /// </summary>
+        public Planet(HorizontalPlanet hPlanet, float drawnDistance = 74f)
+        {
+            horizontalPlanet = hPlanet;
+            horizontalBody = hPlanet;
+            DrawnDistance = drawnDistance;
+
+            // Load prefab from Resources (same naming pattern)
+            GameObject planetPrefab = Resources.Load<GameObject>("Prefabs/Planet 1");
+
+            // compute initial world position
+            UpdateTransformFromHorizontal();
+
+            // spawn prefab
+            go = Object.Instantiate(planetPrefab, Position3D, Quaternion.identity);
+        }
+
+        /// <summary>
+        /// Enable or disable the planet’s GameObject.
+        /// </summary>
+        public void ToggleState()
+        {
+            if (go != null)
+            {
+                go.SetActive(!go.activeSelf);
+            }
+        }
+
+        /// <summary>
+        /// Update the planet’s world position based on a new HorizontalPlanet snapshot.
+        /// </summary>
+        public void UpdatePlanet(HorizontalPlanet hPlanet)
+        {
+            horizontalPlanet = hPlanet;
+            horizontalBody = hPlanet;
+
+            UpdateTransformFromHorizontal();
+
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+                go.transform.localScale = LocalScale;
+            }
+        }
+
 
         /// <summary>
         /// One-time initialization when first instantiated in Unity.

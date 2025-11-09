@@ -30,9 +30,6 @@ namespace Assets.Scripts.CelestialBodies
 
             // spawn prefab
             go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
-            // Add scale computation later
-
-            //activeStars.Add(this);
         }
 
         // registry of spawned stars
@@ -164,5 +161,8 @@ namespace Assets.Scripts.CelestialBodies
             }
         }
 
+        internal void UpdateStar()
+        {
+        }
     }
 }

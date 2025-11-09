@@ -3,6 +3,8 @@ using Assets.Scripts.UI;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
+using ChargerAstronomyShared.Domain;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -102,12 +104,16 @@ public class GameLoop : MonoBehaviour
         starList = new();
         // messierList = MessierRetrieval.GetMessier();   // Fix Messier instantiation than readd
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
-        starQueue = new StarQueue(1000);
+        starQueue = new StarQueue(500);
+
+        // set up engine service
         engineService = starQueue.GetEngineService();
         ActivationQueue = engineService.ActivationQueue;
         DeactivationQueue = engineService.DeactivationQueue;
         UpdateTransformQueue = engineService.UpdateTransformQueue;
         equatorialCalculator = engineService.StartServices();
+
+        //start pulling items from starQueue
         StartCoroutine(InitalizeSky());
         
     }
@@ -119,18 +125,18 @@ public class GameLoop : MonoBehaviour
         
     }
 
-
-    public void UpdateSimulation(float deltaTime)
+    /// <summary>
+    /// Main method to handle all things that need to be done in a frame
+    /// </summary>
+    /// 
+    private void UpdateSimulation(float deltaTime)
     {
-        /// <summary>
-        /// Main method to handle all things that need to be done in a frame
-        /// </summary>
-        /// 
-
+       
         equatorialCalculator.IncrementTime(deltaTime);
 
         // temporary way of accessing the inputs
         SetCameraPosition();
+        SetLocationAndTime();
 
         //start engine service
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
@@ -139,17 +145,17 @@ public class GameLoop : MonoBehaviour
             TileId tileId;
             while(ActivationQueue.TryTake(out tileId))
             {
-                Debug.Log((starList.Count - 1) - tileId.Index );
+                
                 if((starList.Count - 1) - tileId.Index >= 0)
                     foreach (Star starToActivate in starList[tileId.Index])
                     {
-                    //starToActivate.ToggleState();     // activate TODO: need new method
+                        //starToActivate.ToggleState();     // activate TODO: need new method
                     }
             }
     
             while(DeactivationQueue.TryTake(out tileId))
             {
-                Debug.Log((starList.Count - 1) - tileId.Index);
+                
                 if ((starList.Count - 1) - tileId.Index >= 0)
                     foreach (Star starToDeactivate in starList[tileId.Index])
                     {
@@ -174,6 +180,10 @@ public class GameLoop : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// Updates the engine's camera position based on the Input Container
+    /// </summary>
     public void SetCameraPosition()
     {
         var inputs = InputContainer.Container;
@@ -181,6 +191,23 @@ public class GameLoop : MonoBehaviour
         inputData.camDir = new System.Numerics.Vector3(inputs.RotationVector.x, inputs.RotationVector.y, inputs.RotationVector.z);
     }
 
+
+    /// <summary>
+    ///  Set 
+    /// </summary>
+    public void SetLocationAndTime()
+    {
+        var inputs = InputContainer.Container;
+        var newTime = new CalendarDateTime(inputs.Year, inputs.Time.Month, inputs.Time.Day, inputs.Time.Hour, inputs.Time.Minute, inputs.Time.Second);
+        var newObserver = new Observer(Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin)/60.0), Convert.ToDouble(inputs.LongitudeMin) + (Convert.ToDouble(inputs.LongitudeDeg) / 60.0), 0.0);
+        equatorialCalculator.UpdateTimeAndLocation(newTime,newObserver);
+    }
+
+
+    /// <summary>
+    /// method for accessing the folder that contains all the github repos
+    /// </summary>
+    /// <returns></returns>
     static public string GetProjectPath()
     {
         ///<summary>

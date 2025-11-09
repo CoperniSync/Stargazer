@@ -38,7 +38,7 @@ namespace Assets.Scripts.CelestialBodies
             DrawnDistance = drawnDistance;
 
             // Load prefab from Resources (same naming pattern)
-            GameObject planetPrefab = Resources.Load<GameObject>("Prefabs/Planet 1");
+            GameObject planetPrefab = Resources.Load<GameObject>("Prefabs/Planet");
 
             // compute initial world position
             UpdateTransformFromHorizontal();

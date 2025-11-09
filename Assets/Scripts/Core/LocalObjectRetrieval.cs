@@ -12,21 +12,18 @@ public class LocalObjectRetrieval
     {
         HorizontalMoon hMoon = MoonSingleton.Instance.CreateMoon();
         moon = new Moon(hMoon, 95f);
-        moon.ApplyHorizontal(hMoon);
         
-        /*
+        
         planets = new List<Planet>();
         foreach (HorizontalPlanet hPlanet in PlanetsSingleton.Instance.CreatePlanets())
         {
             Planet newPlanet = new Planet(hPlanet, 50f);
-            newPlanet.ApplyHorizontal(hPlanet);
             planets.Add(newPlanet);
         }
-        */
+        
 
         HorizontalSun hSun = SunSingleton.Instance.CreateSun();
         sun = new Sun(hSun, 100f);
-        sun.ApplyHorizontal(hSun);
 
     }
 

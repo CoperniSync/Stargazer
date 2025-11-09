@@ -75,7 +75,7 @@ public class GameLoop : MonoBehaviour
     // job related
     JobHandle engineHandle;
 
-
+    IEquatorialCalculator equatorialCalculator;
     IEngineService engineService;
     StarQueue starQueue;
     List<List<Star>> starList;
@@ -102,6 +102,12 @@ public class GameLoop : MonoBehaviour
         starList = new();
         messierList = MessierRetrieval.GetMessier();
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
+        starQueue = new StarQueue(1000);
+        engineService = starQueue.GetEngineService();
+        ActivationQueue = engineService.ActivationQueue;
+        DeactivationQueue = engineService.DeactivationQueue;
+        UpdateTransformQueue = engineService.UpdateTransformQueue;
+        equatorialCalculator = engineService.StartServices();
         StartCoroutine(InitalizeSky());
         
     }
@@ -121,6 +127,7 @@ public class GameLoop : MonoBehaviour
         /// </summary>
         /// 
 
+        equatorialCalculator.IncrementTime(deltaTime);
 
         // temporary way of accessing the inputs
         SetCameraPosition();
@@ -152,11 +159,10 @@ public class GameLoop : MonoBehaviour
 
             while(UpdateTransformQueue.TryTake(out tileId))
             {
-                Debug.Log((starList.Count - 1) - tileId.Index);
                 if ((starList.Count - 1) - tileId.Index >= 0)
                     foreach (Star starToUpdate in starList[tileId.Index])
                     {
-                    // starToUpdate.UpdateStar();          // update star TODO: need new method
+                        starToUpdate.UpdateStar();          // update star TODO: need new method
                     }
             }
 
@@ -191,12 +197,7 @@ public class GameLoop : MonoBehaviour
         /// 
 
         // get the stars and put them in star list
-        starQueue = new StarQueue(1000);
-        engineService = starQueue.GetEngineService();
-        ActivationQueue = engineService.ActivationQueue;
-        DeactivationQueue = engineService.DeactivationQueue;
-        UpdateTransformQueue = engineService.UpdateTransformQueue;
-        engineService.StartServices();
+        
         while (!starQueue.IsCompleted())
         {
             if (starQueue.TryDequeue(ref starList))

@@ -18,14 +18,14 @@ namespace Assets.Scripts.CelestialBodies
         // ----------------------------
         // Identification
         // ----------------------------
-        public string MessierId => horizontalMessier?.MessierId ?? equatorialMessier?.MessierId ?? "Unknown M#";
-        public string NewGeneralCatalog => horizontalMessier?.NewGeneralCatalog ?? equatorialMessier?.NewGeneralCatalog ?? "—";
-        public string Type => horizontalMessier?.Type ?? equatorialMessier?.Type ?? "Unspecified";
-        public string Constellation => horizontalMessier?.Constellation ?? equatorialMessier?.Constellation ?? "Unknown";
-        public string Size => horizontalMessier?.Size ?? equatorialMessier?.Size ?? "—";
-        public string ViewingSeason => horizontalMessier?.ViewingSeason ?? equatorialMessier?.ViewingSeason ?? "All Year";
-        public string ViewingDifficulty => horizontalMessier?.ViewingDifficulty ?? equatorialMessier?.ViewingDifficulty ?? "Moderate";
-        public string CommonName => horizontalMessier?.CommonName ?? equatorialMessier?.CommonName ?? "Unnamed Object";
+        public string MessierId => horizontalMessier?.MessierId ?? "Unknown M#";
+        public string NewGeneralCatalog => horizontalMessier?.NewGeneralCatalog ?? "—";
+        public string Type => horizontalMessier?.Type ??  "Unspecified";
+        public string Constellation => horizontalMessier?.Constellation ??  "Unknown";
+        public string Size => horizontalMessier?.Size ??  "—";
+        public string ViewingSeason => horizontalMessier?.ViewingSeason ?? "All Year";
+        public string ViewingDifficulty => horizontalMessier?.ViewingDifficulty ??  "Moderate";
+        public string CommonName => horizontalMessier?.CommonName ??  "Unnamed Object";
 
         //  Positions for rendering
         public float Magnitude => (float)(horizontalBody?.Magnitude);

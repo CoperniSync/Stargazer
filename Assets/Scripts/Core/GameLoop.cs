@@ -102,7 +102,7 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
         starList = new();
-        // messierList = MessierRetrieval.GetMessier();   // Fix Messier instantiation than readd
+        messierList = MessierRetrieval.GetMessier(); 
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
         starQueue = new StarQueue(500);
 

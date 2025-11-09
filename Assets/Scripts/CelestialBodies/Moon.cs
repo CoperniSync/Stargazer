@@ -12,15 +12,15 @@ namespace Assets.Scripts.CelestialBodies
     /// </summary>
     public sealed class Moon : CelestialBodyBase
     {
+
+        private GameObject go;
+        
         private HorizontalMoon? horizontalMoon;
         private HorizontalBody? horizontalBody;
-        private EquatorialCelestialBody? equatorialBodyTyped;
 
-        // Public display name
-        public string MoonName => "Moon";
 
         // Moon's brightness magnitude
-        public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialBodyTyped?.Magnitude);
+        public float Magnitude => (float)(horizontalBody?.Magnitude);
 
         // Phase angle of the Moon
         public float PhaseAngle => (float)(horizontalMoon?.Phase ?? 0.0);
@@ -29,6 +29,36 @@ namespace Assets.Scripts.CelestialBodies
         public Vector3 Position3D { get; private set; }
         public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
+
+        /// <summary>
+        /// Constructor for single Moon instantiation.
+        /// </summary>
+        public Moon(HorizontalMoon hMoon, float drawnDistance = 95f)
+        {
+            horizontalMoon = hMoon;
+            horizontalBody = hMoon;
+            DrawnDistance = drawnDistance;
+
+            UpdateTransformFromHorizontal();
+
+            GameObject moonPrefab = Resources.Load<GameObject>("Prefabs/Moon");
+
+            go = Object.Instantiate(moonPrefab, Position3D, Quaternion.identity);
+            go.name = "Moon";
+      
+        }
+
+        public void UpdateMoon(HorizontalMoon hMoon)
+        {
+            horizontalMoon = hMoon;
+            horizontalBody = hMoon;
+            UpdateTransformFromHorizontal();
+
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+            }
+        }
 
         /// <summary>
         /// One-time initialization from horizontal data.

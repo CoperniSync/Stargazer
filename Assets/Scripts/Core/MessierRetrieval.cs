@@ -18,14 +18,16 @@ public class MessierRetrieval
     /// The filepath to a csv to get the data from
     /// </param>
     /// <returns> a list of all the Messier Objects in the file in type MessierObject </returns> 
+   
+    
     public static List<MessierObject> GetMessier(string fileName = "messier-catalog" + ".csv")
     {
         List<MessierObject> messierList = new();
         IMessierRepository messierRepo = new StarLustMessierCsvRepository(FindCsvPath(fileName));
         foreach(EquatorialMessierObject eMessier in messierRepo.GetMessierObjects())
         {
-            MessierObject messier = new();
             HorizontalMessierObject hMessier = new(eMessier);
+            MessierObject messier = new(hMessier);
             messier.ApplyHorizontal(hMessier);
             messierList.Add(messier);
         }

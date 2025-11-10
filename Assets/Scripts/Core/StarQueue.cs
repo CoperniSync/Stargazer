@@ -36,8 +36,9 @@ public class StarQueue
         starRepo = new(FindCsvPath(fileName));
         queue = new(capacity: 5);
         ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
-        starIndex = new(tileIndex);
+        
         engineService = new EngineService(tileIndex);
+        starIndex = new(tileIndex);
         FillQueue(amountToTake, queue, starRepo);
     }
 

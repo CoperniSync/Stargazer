@@ -149,7 +149,7 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Enable or disable the star's GameObject.
         /// </summary>
-        public void UpdateStar(HorizontalStar hstar)
+        public void UpdateStar()
         {
 
             UpdateTransformFromHorizontal();
@@ -161,10 +161,10 @@ namespace Assets.Scripts.CelestialBodies
             }
         }
 
-        internal void UpdateStar()
+        /*internal void UpdateStar()
         {
         }
-
+        */
 
         
     }

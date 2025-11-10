@@ -61,10 +61,8 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Update the planet’s world position based on a new HorizontalPlanet snapshot.
         /// </summary>
-        public void UpdatePlanet(HorizontalPlanet hPlanet)
+        public void UpdatePlanet()
         {
-            horizontalPlanet = hPlanet;
-            horizontalBody = hPlanet;
 
             UpdateTransformFromHorizontal();
 

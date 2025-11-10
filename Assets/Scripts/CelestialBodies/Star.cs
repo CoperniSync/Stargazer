@@ -3,6 +3,7 @@ using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
 using NUnit.Framework;
 using System.Collections.Generic;
+using ChargerAstronomyShared.Contracts.Models;
 
 namespace Assets.Scripts.CelestialBodies
 {
@@ -11,12 +12,13 @@ namespace Assets.Scripts.CelestialBodies
     /// Author: Tommy Rodriguez
     /// Created: 2025-09-25
     /// </summary>
-    public sealed class Star : CelestialBodyBase
+    public sealed class Star : CelestialBodyBase, IHorizontal
     {
-
         // <summary
         // Constructor for queue initialization of star
         //</summary>
+
+        public HorizontalBody HorizontalBody { get; }
 
         private GameObject go;
         public Star(HorizontalStar hstar, float drawnDistance = 74f)
@@ -149,8 +151,6 @@ namespace Assets.Scripts.CelestialBodies
         /// </summary>
         public void UpdateStar(HorizontalStar hstar)
         {
-            horizontalStar = hstar;
-            horizontalBody = hstar;
 
             UpdateTransformFromHorizontal();
 
@@ -164,5 +164,8 @@ namespace Assets.Scripts.CelestialBodies
         internal void UpdateStar()
         {
         }
+
+
+        
     }
 }

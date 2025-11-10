@@ -48,10 +48,8 @@ namespace Assets.Scripts.CelestialBodies
       
         }
 
-        public void UpdateMoon(HorizontalMoon hMoon)
+        public void UpdateMoon()
         {
-            horizontalMoon = hMoon;
-            horizontalBody = hMoon;
             UpdateTransformFromHorizontal();
 
             if (go != null)

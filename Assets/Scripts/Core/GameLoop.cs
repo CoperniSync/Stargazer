@@ -104,7 +104,7 @@ public class GameLoop : MonoBehaviour
         starList = new();
         messierList = MessierRetrieval.GetMessier(); 
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
-        starQueue = new StarQueue(500);
+        starQueue = new StarQueue(1000 , "AllStars.csv");
 
         // set up engine service
         engineService = starQueue.GetEngineService();
@@ -160,7 +160,13 @@ public class GameLoop : MonoBehaviour
             }
 
 
-        moon.UpdateMoon() ;
+        moon.UpdateMoon();
+        sun.UpdateSun();
+
+        foreach (Planet planet in planetList)
+        {
+            planet.UpdatePlanet();
+        }
 
 
 

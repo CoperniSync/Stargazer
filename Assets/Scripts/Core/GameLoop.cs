@@ -25,7 +25,7 @@ struct EngineUpdate : IJob
     public System.Numerics.Vector3 cameraDirection;
     public float horizontalFOV;
 
-    public IEngineService engineService;
+    public IEngineService<Star> engineService;
 
     public float deltaTime;
     public void Execute()
@@ -78,16 +78,16 @@ public class GameLoop : MonoBehaviour
     JobHandle engineHandle;
 
     IEquatorialCalculator equatorialCalculator;
-    IEngineService engineService;
+    IEngineService<Star> engineService;
     StarQueue starQueue;
     List<List<Star>> starList;
     List<MessierObject> messierList;
     List<Planet> planetList;
 
 
-    BlockingCollection<TileId> ActivationQueue;
-    BlockingCollection<TileId> DeactivationQueue;
-    BlockingCollection<TileId> UpdateTransformQueue;
+    BlockingCollection<Star> ActivationQueue;
+    BlockingCollection<Star> DeactivationQueue;
+    BlockingCollection<Star> UpdateTransformQueue;
 
 
     Sun sun;
@@ -142,36 +142,23 @@ public class GameLoop : MonoBehaviour
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
 
  
-            TileId tileId;
-            while(ActivationQueue.TryTake(out tileId))
-            {
-                
-                if((starList.Count - 1) - tileId.Index >= 0)
-                    foreach (Star starToActivate in starList[tileId.Index])
-                    {
-                        //starToActivate.ToggleState();     // activate TODO: need new method
-                    }
+            Star pulledStar;
+            while(ActivationQueue.TryTake(out pulledStar))
+            {  
+                //pulledStar.ToggleState();     // activate TODO: need new method
             }
     
-            while(DeactivationQueue.TryTake(out tileId))
+            while(DeactivationQueue.TryTake(out pulledStar))
             {
-                
-                if ((starList.Count - 1) - tileId.Index >= 0)
-                    foreach (Star starToDeactivate in starList[tileId.Index])
-                    {
-                    //starToDeactivate.ToggleState();   // deactivate TODO: need new method
-                    }
+
+                //pulledStar.ToggleState();   // deactivate TODO: need new method
             }
 
-            while(UpdateTransformQueue.TryTake(out tileId))
+            while(UpdateTransformQueue.TryTake(out pulledStar))
             {
-                Debug.Log(tileId.Index);
-                if ((starList.Count - 1) - tileId.Index >= 0)
-                    foreach (Star starToUpdate in starList[tileId.Index])
-                    {
-                        starToUpdate.UpdateStar();
-                    }
+                pulledStar.UpdateStar();
             }
+
 
         moon.UpdateMoon() ;
 

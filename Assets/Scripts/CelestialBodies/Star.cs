@@ -18,7 +18,7 @@ namespace Assets.Scripts.CelestialBodies
         // Constructor for queue initialization of star
         //</summary>
 
-        public HorizontalBody HorizontalBody { get; }
+        public HorizontalBody HorizontalBody => horizontalBody;
 
         private GameObject go;
         public Star(HorizontalStar hstar, float drawnDistance = 74f)

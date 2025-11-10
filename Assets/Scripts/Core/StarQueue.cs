@@ -20,14 +20,14 @@ public class StarQueue
     // Subdivision parameter for tile Index
     private const int SUBDIVISIONS = 0;
 
-    private SpatialStarIndex starIndex;
+    private SpatialStarIndex<Star> starIndex;
 
-    private IEngineService engineService;
+    private IEngineService<Star> engineService;
     
     private CsvStarRepository starRepo; // repository to pull stars from
 
     private BoundedInitializationQueue<PageResult<EquatorialStar>> queue;
-
+    
     /// <summary>
     /// Construct a new instance of StarQueue and have it start pulling data from the designated repo
     /// </summary>
@@ -37,8 +37,8 @@ public class StarQueue
         queue = new(capacity: 5);
         ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
         
-        engineService = new EngineService(tileIndex);
-        starIndex = new(tileIndex);
+        engineService = new EngineService<Star>(tileIndex);
+        starIndex = engineService.SpatialStarIndex;
         FillQueue(amountToTake, queue, starRepo);
     }
 
@@ -89,17 +89,16 @@ public class StarQueue
                 // create star Object
                 HorizontalStar hstar = new HorizontalStar(equatorialStar);
                 Star newStar = new(hstar);
+                starIndex.AddStar(newStar);
 
-                starIndex.AddStar(hstar);
-
-                int newTileIndex = starIndex.GetTileForStar(hstar).Index;
+              /*  int newTileIndex = starIndex.GetTileForStar(newStar).Index;
 
                 while (starList.Count() <= newTileIndex)
                 {
                     starList.Add(new List<Star>());
                 }
                 starList[newTileIndex].Add(newStar);
-
+              */
             }
 
             return true;
@@ -110,7 +109,7 @@ public class StarQueue
         }
     }
 
-    public IEngineService GetEngineService()
+    public IEngineService<Star> GetEngineService()
     {
         return engineService;
     }

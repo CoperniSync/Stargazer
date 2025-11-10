@@ -165,18 +165,19 @@ public class GameLoop : MonoBehaviour
 
             while(UpdateTransformQueue.TryTake(out tileId))
             {
+                Debug.Log(tileId.Index);
                 if ((starList.Count - 1) - tileId.Index >= 0)
                     foreach (Star starToUpdate in starList[tileId.Index])
                     {
-                        starToUpdate.UpdateStar();          // update star TODO: need new method
+                        starToUpdate.UpdateStar();
                     }
             }
 
+        moon.UpdateMoon() ;
 
 
 
-
-            task.Wait();
+        task.Wait();
 
     }
 

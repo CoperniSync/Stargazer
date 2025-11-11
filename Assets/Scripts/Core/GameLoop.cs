@@ -121,7 +121,7 @@ public class GameLoop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateSimulation(Time.deltaTime*1000);
+        UpdateSimulation(Time.deltaTime);
         
     }
 

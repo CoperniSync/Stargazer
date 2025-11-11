@@ -32,6 +32,7 @@ namespace Assets.Scripts.CelestialBodies
 
             // spawn prefab
             go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
+            SetState(false);
         }
 
         // registry of spawned stars
@@ -143,6 +144,14 @@ namespace Assets.Scripts.CelestialBodies
             if (go != null)
             {
                 go.SetActive(!go.activeSelf);
+            }
+        }
+
+        public void SetState(bool state)
+        {
+            if (go != null)
+            {
+                go.SetActive(state);
             }
         }
 

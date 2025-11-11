@@ -121,7 +121,7 @@ public class GameLoop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateSimulation(Time.deltaTime);
+        UpdateSimulation(Time.deltaTime*1000);
         
     }
 
@@ -132,11 +132,9 @@ public class GameLoop : MonoBehaviour
     private void UpdateSimulation(float deltaTime)
     {
        
-        equatorialCalculator.IncrementTime(deltaTime);
 
         // temporary way of accessing the inputs
         SetCameraPosition();
-        SetLocationAndTime();
 
         //start engine service
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
@@ -144,19 +142,22 @@ public class GameLoop : MonoBehaviour
  
             Star pulledStar;
             while(ActivationQueue.TryTake(out pulledStar))
-            {  
-                //pulledStar.ToggleState();     // activate TODO: need new method
+            {
+                //Debug.Log("Item From Activation Queue: " + pulledStar.HipparcosId);
+                pulledStar.SetState(true);     // activate TODO: need new method
             }
     
             while(DeactivationQueue.TryTake(out pulledStar))
             {
-
-                //pulledStar.ToggleState();   // deactivate TODO: need new method
+                //Debug.Log("Item From Deactivation Queue: " +pulledStar.HipparcosId);
+                pulledStar.SetState(false);   // deactivate TODO: need new method
             }
 
             while(UpdateTransformQueue.TryTake(out pulledStar))
             {
-                pulledStar.UpdateStar();
+                //Debug.Log("Item From Update Queue" + pulledStar.HipparcosId);
+            pulledStar.SetState(true);
+            pulledStar.UpdateStar();
             }
 
 

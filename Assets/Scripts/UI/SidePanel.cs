@@ -28,13 +28,13 @@ public class SidePanel : MonoBehaviour
         // update status of the whole panel
         if(toToggle.activeSelf == true && hidden == false)
         {
-            this.transform.Translate(new(250, 0, 0));
+            this.transform.Translate(new(300, 0, 0));
             hidden = true;
         }
         else if (hidden == true)
         {
             hidden = false;
-            this.transform.Translate(new(-250, 0, 0));
+            this.transform.Translate(new(-300, 0, 0));
         }
 
 

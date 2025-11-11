@@ -55,10 +55,8 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Updates an existing Messier object's position and scale.
         /// </summary>
-        public void UpdateMessier(HorizontalMessierObject hMessier)
+        public void UpdateMessier()
         {
-            horizontalMessier = hMessier;
-            horizontalBody = hMessier;
 
             UpdateTransformFromHorizontal();
 

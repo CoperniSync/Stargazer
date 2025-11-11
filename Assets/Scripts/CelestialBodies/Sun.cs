@@ -49,10 +49,8 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Backend push: apply a fresh HorizontalSun.
         /// </summary>
-        public void UpdateSun(HorizontalSun hsun)
+        public void UpdateSun()
         {
-            horizontalSun = hsun;
-            horizontalBody = hsun;
 
             UpdateTransformFromHorizontal();
 

@@ -18,7 +18,7 @@ namespace Assets.Scripts.CelestialBodies
         // Constructor for queue initialization of star
         //</summary>
 
-        public HorizontalBody HorizontalBody { get; }
+        public HorizontalBody HorizontalBody => horizontalBody;
 
         private GameObject go;
         public Star(HorizontalStar hstar, float drawnDistance = 74f)
@@ -149,7 +149,7 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Enable or disable the star's GameObject.
         /// </summary>
-        public void UpdateStar(HorizontalStar hstar)
+        public void UpdateStar()
         {
 
             UpdateTransformFromHorizontal();
@@ -161,10 +161,10 @@ namespace Assets.Scripts.CelestialBodies
             }
         }
 
-        internal void UpdateStar()
+        /*internal void UpdateStar()
         {
         }
-
+        */
 
         
     }

@@ -17,12 +17,9 @@ using System.Threading.Tasks;
 
 public class StarQueue
 {
-    // Subdivision parameter for tile Index
-    private const int SUBDIVISIONS = 0;
+   
 
-    private SpatialStarIndex<Star> starIndex;
-
-    private IEngineService<Star> engineService;
+    private SpatialStarIndex<IHorizontal> starIndex;
     
     private CsvStarRepository starRepo; // repository to pull stars from
 
@@ -31,17 +28,14 @@ public class StarQueue
     /// <summary>
     /// Construct a new instance of StarQueue and have it start pulling data from the designated repo
     /// </summary>
-    public StarQueue(int amountToTake, string fileName = "AllStars" + ".csv")
+    public StarQueue(IEngineService<IHorizontal> engineService, int amountToTake, string fileName = "AllStars" + ".csv")
     {
         starRepo = new(FindCsvPath(fileName));
         queue = new(capacity: 5);
-        ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
-        
-        engineService = new EngineService<Star>(tileIndex);
+
         starIndex = engineService.SpatialStarIndex;
         FillQueue(amountToTake, queue, starRepo);
     }
-
     /// <summary>
     /// The method that stars pulling data from the repo using BoundedInitialization Queue
     /// </summary>
@@ -88,17 +82,17 @@ public class StarQueue
 
                 // create star Object
                 HorizontalStar hstar = new HorizontalStar(equatorialStar);
-                Star newStar = new(hstar,150f);
+                Star newStar = new(hstar, 150f);
                 starIndex.AddStar(newStar);
 
-              /*  int newTileIndex = starIndex.GetTileForStar(newStar).Index;
+                /*  int newTileIndex = starIndex.GetTileForStar(newStar).Index;
 
-                while (starList.Count() <= newTileIndex)
-                {
-                    starList.Add(new List<Star>());
-                }
-                starList[newTileIndex].Add(newStar);
-              */
+                  while (starList.Count() <= newTileIndex)
+                  {
+                      starList.Add(new List<Star>());
+                  }
+                  starList[newTileIndex].Add(newStar);
+                */
             }
 
             return true;
@@ -107,11 +101,6 @@ public class StarQueue
         {
             return false;
         }
-    }
-
-    public IEngineService<Star> GetEngineService()
-    {
-        return engineService;
     }
 
     public bool IsCompleted()

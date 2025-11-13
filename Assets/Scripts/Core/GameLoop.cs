@@ -1,9 +1,11 @@
 using Assets.Scripts.CelestialBodies;
 using Assets.Scripts.UI;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
+using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain;
+using ChargerAstronomyShared.Domain.Index;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -20,12 +22,14 @@ using UnityEngine;
 /// <summary>
 /// Job for updating the Engine Service
 /// </summary>
+/// 
+/*
 struct EngineUpdate : IJob
 {
     public System.Numerics.Vector3 cameraDirection;
     public float horizontalFOV;
 
-    public IEngineService<Star> engineService;
+    public IEngineService<IHorizontal> engineService;
 
     public float deltaTime;
     public void Execute()
@@ -33,7 +37,7 @@ struct EngineUpdate : IJob
         
     }
 }
-
+*/
 
 // Structs
 //===============================================================
@@ -49,6 +53,9 @@ public struct InputData
 
     //FOV of the Camera
     public float fov;
+
+    //
+    public bool messierOn;
 
 
 }
@@ -77,17 +84,25 @@ public class GameLoop : MonoBehaviour
     // job related
     JobHandle engineHandle;
 
+
+    // Subdivision parameter for tile Index
+    private const int SUBDIVISIONS = 3;
+    public int speedMult = 1;
+
+
     IEquatorialCalculator equatorialCalculator;
-    IEngineService<Star> engineService;
+    IEngineService<IHorizontal> engineService;
+
     StarQueue starQueue;
     List<List<Star>> starList;
     List<MessierObject> messierList;
     List<Planet> planetList;
 
+    // queues for updating horizontal objects
+    BlockingCollection<IHorizontal> ActivationQueue;
+    BlockingCollection<IHorizontal> DeactivationQueue;
+    BlockingCollection<IHorizontal> UpdateTransformQueue;
 
-    BlockingCollection<Star> ActivationQueue;
-    BlockingCollection<Star> DeactivationQueue;
-    BlockingCollection<Star> UpdateTransformQueue;
 
 
     Sun sun;
@@ -102,16 +117,25 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
         starList = new();
-        //messierList = MessierRetrieval.GetMessier(); 
-        LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
-        starQueue = new StarQueue(1000 , "AllStars.csv");
 
         // set up engine service
-        engineService = starQueue.GetEngineService();
+       
+        ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
+        engineService = new EngineService<IHorizontal>(tileIndex);
         ActivationQueue = engineService.ActivationQueue;
         DeactivationQueue = engineService.DeactivationQueue;
         UpdateTransformQueue = engineService.UpdateTransformQueue;
         equatorialCalculator = engineService.StartServices();
+
+
+        // get stars
+        starQueue = new StarQueue(engineService,1000, "AllStars.csv");
+
+        // get messiers
+        messierList = MessierRetrieval.GetMessier(engineService);
+
+        // get planets
+        LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
 
         //start pulling items from starQueue
         StartCoroutine(InitalizeSky());
@@ -121,8 +145,7 @@ public class GameLoop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateSimulation(Time.deltaTime);
-        
+        UpdateSimulation(Time.deltaTime*speedMult);
     }
 
     /// <summary>
@@ -131,7 +154,6 @@ public class GameLoop : MonoBehaviour
     /// 
     private void UpdateSimulation(float deltaTime)
     {
-       
 
         // temporary way of accessing the inputs
         SetCameraPosition();
@@ -140,7 +162,7 @@ public class GameLoop : MonoBehaviour
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
 
  
-            Star pulledStar;
+            IHorizontal pulledStar;
             while(ActivationQueue.TryTake(out pulledStar))
             {
                 //Debug.Log("Item From Activation Queue: " + pulledStar.HipparcosId);
@@ -157,16 +179,16 @@ public class GameLoop : MonoBehaviour
             {
                 //Debug.Log("Item From Update Queue" + pulledStar.HipparcosId);
             pulledStar.SetState(true);
-            pulledStar.UpdateStar();
+            pulledStar.UpdatePosition();
             }
 
 
-        moon.UpdateMoon();
-        sun.UpdateSun();
+        moon.UpdatePosition();
+        sun.UpdatePosition();
 
         foreach (Planet planet in planetList)
         {
-            planet.UpdatePlanet();
+            planet.UpdatePosition();
         }
 
 
@@ -175,6 +197,16 @@ public class GameLoop : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// set if the messier Objects are being forced from displaying
+    /// </summary>
+    public void SetMessierVisibility(bool visible)
+    {
+        foreach (MessierObject m in messierList)
+        {
+            m.SetVisible(visible);
+        }
+    }
 
     /// <summary>
     /// Updates the engine's camera position based on the Input Container

@@ -120,7 +120,7 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * (cosAz * cosAlt),
+                -(radius * (cosAz * cosAlt)),
                 radius * sinAlt,
                 radius * (cosAlt * sinAz)
             );
@@ -158,7 +158,7 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Enable or disable the star's GameObject.
         /// </summary>
-        public void UpdateStar()
+        public void UpdatePosition()
         {
 
             UpdateTransformFromHorizontal();

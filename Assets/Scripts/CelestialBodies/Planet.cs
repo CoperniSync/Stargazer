@@ -61,7 +61,7 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Update the planet’s world position based on a new HorizontalPlanet snapshot.
         /// </summary>
-        public void UpdatePlanet()
+        public void UpdatePosition()
         {
 
             UpdateTransformFromHorizontal();
@@ -136,7 +136,7 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * cosAz * cosAlt,
+                -(radius * (cosAz * cosAlt)),
                 radius * sinAlt,
                 radius * cosAlt * sinAz
             );

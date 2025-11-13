@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
+using ChargerAstronomyShared.Contracts.Models;
+using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
 
 namespace Assets.Scripts.CelestialBodies
 {
@@ -10,22 +12,22 @@ namespace Assets.Scripts.CelestialBodies
     /// Author: Tommy Rodriguez
     /// Created: 2025-10-05
     /// </summary>
-    public sealed class MessierObject : CelestialBodyBase
+    public sealed class MessierObject : CelestialBodyBase, IHorizontal
     {
         private HorizontalMessierObject? horizontalMessier;
-        private HorizontalBody? horizontalBody;
+        public HorizontalBody HorizontalBody => horizontalBody;
 
         // ----------------------------
         // Identification
         // ----------------------------
         public string MessierId => horizontalMessier?.MessierId ?? "Unknown M#";
         public string NewGeneralCatalog => horizontalMessier?.NewGeneralCatalog ?? "—";
-        public string Type => horizontalMessier?.Type ??  "Unspecified";
-        public string Constellation => horizontalMessier?.Constellation ??  "Unknown";
-        public string Size => horizontalMessier?.Size ??  "—";
+        public string Type => horizontalMessier?.Type ?? "Unspecified";
+        public string Constellation => horizontalMessier?.Constellation ?? "Unknown";
+        public string Size => horizontalMessier?.Size ?? "—";
         public string ViewingSeason => horizontalMessier?.ViewingSeason ?? "All Year";
-        public string ViewingDifficulty => horizontalMessier?.ViewingDifficulty ??  "Moderate";
-        public string CommonName => horizontalMessier?.CommonName ??  "Unnamed Object";
+        public string ViewingDifficulty => horizontalMessier?.ViewingDifficulty ?? "Moderate";
+        public string CommonName => horizontalMessier?.CommonName ?? "Unnamed Object";
 
         //  Positions for rendering
         public float Magnitude => (float)(horizontalBody?.Magnitude);
@@ -35,11 +37,19 @@ namespace Assets.Scripts.CelestialBodies
 
         private GameObject go;
 
+        private bool enabled;
+        private bool visibilityState; // if the messier object should be rendered
+
         /// <summary>
         /// Prefab-spawning constructor for Messier objects.
         /// </summary>
         public MessierObject(HorizontalMessierObject hMessier, float drawnDistance = 125f, GameObject prefab = null)
         {
+            visibilityState = true;
+            enabled = true;
+
+
+
             horizontalMessier = hMessier;
             horizontalBody = hMessier;
             DrawnDistance = drawnDistance;
@@ -48,7 +58,7 @@ namespace Assets.Scripts.CelestialBodies
 
             GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
 
-            //go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
             go.name = $"Messier_{MessierId}";
         }
 
@@ -137,11 +147,47 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * cosAz * cosAlt,
+                -(radius * (cosAz * cosAlt)),
                 radius * sinAlt,
                 radius * cosAlt * sinAz
             );
         }
 
+        /// <summary>
+        /// Enable or disable the messier Object's GameObject.
+        /// </summary>
+        public void SetState(bool state)
+        {
+            enabled = state;
+            if (go != null)
+            {
+                go.SetActive(enabled && visibilityState);
+            }
+        }
+
+        /// <summary>
+        /// Function used for toggling messier Objects on and off via UI
+        /// </summary>
+        public void SetVisible(bool newVisibility)
+        {
+            visibilityState = newVisibility;
+            SetState(enabled);
+        }
+
+        /// <summary>
+        /// Update the position of the messier Object's Game Object
+        /// </summary>
+        public void UpdatePosition()
+        {
+
+            UpdateTransformFromHorizontal();
+
+            // update GameObject transform
+            if (go != null)
+            {
+                go.transform.position = Position3D;
+            }
+
+        }
     }
 }

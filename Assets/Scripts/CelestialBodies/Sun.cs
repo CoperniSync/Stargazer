@@ -49,7 +49,7 @@ namespace Assets.Scripts.CelestialBodies
         /// <summary>
         /// Backend push: apply a fresh HorizontalSun.
         /// </summary>
-        public void UpdateSun()
+        public void UpdatePosition()
         {
 
             UpdateTransformFromHorizontal();
@@ -130,7 +130,7 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * cosAz * cosAlt,
+                -(radius * (cosAz * cosAlt)),
                 radius * sinAlt,
                 radius * cosAlt * sinAz
             );

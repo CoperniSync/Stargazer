@@ -4384,6 +4384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19319bc1349563c4b8299ab4ed19206d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityInterface
+  speedMult: 1
 --- !u!1 &351954692
 GameObject:
   m_ObjectHideFlags: 0
@@ -7157,7 +7158,7 @@ GameObject:
   - component: {fileID: 720515840}
   - component: {fileID: 720515843}
   m_Layer: 5
-  m_Name: Sun5
+  m_Name: Sun6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7450,8 +7451,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 799638377}
   m_HandleRect: {fileID: 799638376}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 0.99999934
+  m_Size: 0.614
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8225,8 +8226,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1253453323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.38599974}
+  m_AnchorMax: {x: 1, y: 0.99999976}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13492,7 +13493,7 @@ GameObject:
   - component: {fileID: 1284712234}
   - component: {fileID: 1284712237}
   m_Layer: 5
-  m_Name: Sun6
+  m_Name: Sun5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21497,8 +21498,8 @@ RectTransform:
   - {fileID: 1131108369}
   - {fileID: 2014065811}
   - {fileID: 139464935}
-  - {fileID: 720515839}
   - {fileID: 1284712233}
+  - {fileID: 720515839}
   m_Father: {fileID: 657845244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

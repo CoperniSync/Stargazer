@@ -87,7 +87,9 @@ public class GameLoop : MonoBehaviour
 
     // Subdivision parameter for tile Index
     private const int SUBDIVISIONS = 3;
-    public int speedMult = 1;
+
+    // how many seconds pass in the engine per second
+    public float speedMult = 1;
 
 
     IEquatorialCalculator equatorialCalculator;
@@ -162,24 +164,35 @@ public class GameLoop : MonoBehaviour
         var task = Task.Run(() => engineService.Step(deltaTime, inputData.camDir, inputData.fov));
 
  
-            IHorizontal pulledStar;
-            while(ActivationQueue.TryTake(out pulledStar))
+            IHorizontal pulledObject;
+            while(ActivationQueue.TryTake(out pulledObject) && !ActivationQueue.IsCompleted)
             {
+                //Debug.Log("AQ");
                 //Debug.Log("Item From Activation Queue: " + pulledStar.HipparcosId);
-                pulledStar.SetState(true);     // activate TODO: need new method
+                pulledObject.SetState(true);     // activate TODO: need new method
             }
     
-            while(DeactivationQueue.TryTake(out pulledStar))
+            while(DeactivationQueue.TryTake(out pulledObject) && !DeactivationQueue.IsCompleted)
             {
+                //Debug.Log("DQ");
                 //Debug.Log("Item From Deactivation Queue: " +pulledStar.HipparcosId);
-                pulledStar.SetState(false);   // deactivate TODO: need new method
+                pulledObject.SetState(false);   // deactivate TODO: need new method
             }
 
-            while(UpdateTransformQueue.TryTake(out pulledStar))
+            while(UpdateTransformQueue.TryTake(out pulledObject) && !UpdateTransformQueue.IsCompleted)
             {
+                //Debug.Log("TQ");
                 //Debug.Log("Item From Update Queue" + pulledStar.HipparcosId);
-            pulledStar.SetState(true);
-            pulledStar.UpdatePosition();
+                pulledObject.SetState(true);
+                pulledObject.UpdatePosition();
+                if (pulledObject.GetType() == typeof(Star))
+                {
+                    Star star = (Star)pulledObject;
+                    if(star.Go.name == "A")
+                    {
+                        Debug.Log("A in Queue" + DateTime.Now);
+                    }
+                }
             }
 
 
@@ -191,6 +204,7 @@ public class GameLoop : MonoBehaviour
             planet.UpdatePosition();
         }
 
+        Debug.Log("Step" + DateTime.Now);
 
 
         task.Wait();

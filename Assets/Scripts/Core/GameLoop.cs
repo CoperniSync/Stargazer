@@ -1,10 +1,12 @@
 using Assets.Scripts.CelestialBodies;
+using Assets.Scripts.Core;
 using Assets.Scripts.UI;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
 using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain;
+using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Index;
 using System;
 using System.Collections;
@@ -96,9 +98,10 @@ public class GameLoop : MonoBehaviour
     IEngineService<IHorizontal> engineService;
 
     StarQueue starQueue;
-    List<List<Star>> starList;
-    List<MessierObject> messierList;
-    List<Planet> planetList;
+    List<Star> starList;    // List for holding references to all of the objects of type Star
+    List<MessierObject> messierList;    // List for holding references to all of the objects of type MessierObject
+    List<Planet> planetList;    // List for holding references to all of the objects of type Planet
+    List<UnityConstellation> constellationList;
 
     // queues for updating horizontal objects
     BlockingCollection<IHorizontal> ActivationQueue;
@@ -119,9 +122,10 @@ public class GameLoop : MonoBehaviour
     void Start()
     {
         starList = new();
+        constellationList = new();
 
         // set up engine service
-       
+
         ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
         engineService = new EngineService<IHorizontal>(tileIndex);
         ActivationQueue = engineService.ActivationQueue;
@@ -131,7 +135,7 @@ public class GameLoop : MonoBehaviour
 
 
         // get stars
-        starQueue = new StarQueue(engineService,1000, "AllStars.csv");
+        starQueue = new StarQueue(engineService,500, "AllStars.csv");
 
         // get messiers
         messierList = MessierRetrieval.GetMessier(engineService);
@@ -165,34 +169,26 @@ public class GameLoop : MonoBehaviour
 
  
             IHorizontal pulledObject;
-            while(ActivationQueue.TryTake(out pulledObject) && !ActivationQueue.IsCompleted)
+            while(ActivationQueue.TryTake(out pulledObject))
             {
                 //Debug.Log("AQ");
                 //Debug.Log("Item From Activation Queue: " + pulledStar.HipparcosId);
                 pulledObject.SetState(true);     // activate TODO: need new method
             }
     
-            while(DeactivationQueue.TryTake(out pulledObject) && !DeactivationQueue.IsCompleted)
+            while(DeactivationQueue.TryTake(out pulledObject))
             {
                 //Debug.Log("DQ");
                 //Debug.Log("Item From Deactivation Queue: " +pulledStar.HipparcosId);
                 pulledObject.SetState(false);   // deactivate TODO: need new method
             }
 
-            while(UpdateTransformQueue.TryTake(out pulledObject) && !UpdateTransformQueue.IsCompleted)
+            while(UpdateTransformQueue.TryTake(out pulledObject))
             {
                 //Debug.Log("TQ");
                 //Debug.Log("Item From Update Queue" + pulledStar.HipparcosId);
                 pulledObject.SetState(true);
                 pulledObject.UpdatePosition();
-                if (pulledObject.GetType() == typeof(Star))
-                {
-                    Star star = (Star)pulledObject;
-                    if(star.Go.name == "A")
-                    {
-                        Debug.Log("A in Queue" + DateTime.Now);
-                    }
-                }
             }
 
 
@@ -204,7 +200,10 @@ public class GameLoop : MonoBehaviour
             planet.UpdatePosition();
         }
 
-        Debug.Log("Step" + DateTime.Now);
+        foreach (var constellation in constellationList)
+        {
+            constellation.UpdatePosition();
+        }
 
 
         task.Wait();
@@ -273,6 +272,9 @@ public class GameLoop : MonoBehaviour
             }
             yield return null;
         }
+
+        // get constellation
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList);
         
         
 

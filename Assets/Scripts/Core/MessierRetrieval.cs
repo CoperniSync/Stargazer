@@ -38,7 +38,7 @@ public class MessierRetrieval
         return messierList;
     }
 
-    private static string FindCsvPath(string fileName = "AllStars" + ".csv")
+    private static string FindCsvPath(string fileName = "messier-catalog" + ".csv")
     {
 
         var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(), "ChargerAstronomyEngine", "ChargerAstronomyEngine", "Data"), "Star", fileName);

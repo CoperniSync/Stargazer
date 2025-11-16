@@ -20,6 +20,8 @@ namespace Assets.Scripts.CelestialBodies
 
         public HorizontalBody HorizontalBody => horizontalBody;
 
+        public GameObject Go => go;
+
         private GameObject go;
         public Star(HorizontalStar hstar, float drawnDistance = 74f)
         {

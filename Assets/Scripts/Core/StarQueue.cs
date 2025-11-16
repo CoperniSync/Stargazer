@@ -5,7 +5,6 @@ using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
-using ChargerAstronomyShared.Domain.Index;
 using ChargerAstronomyShared.Domain.SpatialIndex;
 using System.Collections.Generic;
 using System.IO;
@@ -71,28 +70,24 @@ public class StarQueue
     /// <summary>
     /// A star located by the Horizontal Coordinate method
     /// </summary>
-    public bool TryDequeue(ref List<List<Star>> starList)
+    public bool TryDequeue(ref List<Star> starList)
     {
         if (queue != null && queue.TryDequeue(out var pr))
         {
-
             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
             foreach (EquatorialStar equatorialStar in equatorialList)
             {
 
                 // create star Object
-                HorizontalStar hstar = new HorizontalStar(equatorialStar);
-                Star newStar = new(hstar, 150f);
-                starIndex.AddStar(newStar);
+                
+                
 
-                /*  int newTileIndex = starIndex.GetTileForStar(newStar).Index;
-
-                  while (starList.Count() <= newTileIndex)
-                  {
-                      starList.Add(new List<Star>());
-                  }
-                  starList[newTileIndex].Add(newStar);
-                */
+                    HorizontalStar hstar = new HorizontalStar(equatorialStar);
+                    Star newStar = new(hstar, 150f);
+                    starIndex.AddStar(newStar);
+                    starList.Add(newStar);
+                    newStar.UpdatePosition();
+                   
             }
 
             return true;

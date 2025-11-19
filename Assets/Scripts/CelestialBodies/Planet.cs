@@ -13,6 +13,7 @@ namespace Assets.Scripts.CelestialBodies
     {
         private GameObject go;
 
+        public HorizontalPlanet HorizontalPlanet => horizontalPlanet;
         private HorizontalPlanet? horizontalPlanet;
         private HorizontalBody? horizontalBody;
 

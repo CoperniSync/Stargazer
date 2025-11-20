@@ -31,15 +31,14 @@ namespace Assets.Scripts.CelestialBodies
                 ? (string.IsNullOrWhiteSpace(equatorialStar?.ProperName) ? "Unnamed Star" : equatorialStar!.ProperName!)
                 : horizontalStar!.StarName!;
 
-        // Photometric
         public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialStar?.Magnitude ?? 0.0);
 
-        // Cached positions
+        // cached positions
         public Vector3 Position3D { get; private set; }
         public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
-        // Used by renderer
+        // used by renderer
         public bool IsVisible { get; private set; } = false;
 
         /// <summary>
@@ -120,8 +119,6 @@ namespace Assets.Scripts.CelestialBodies
             return new Vector3(size, size, size);
         }
 
-        // IHorizontal “render control” hooks – now just flip a bool
-
         public void ToggleState()
         {
             SetState(!IsVisible);
@@ -135,7 +132,6 @@ namespace Assets.Scripts.CelestialBodies
         public void UpdatePosition()
         {
             UpdateTransformFromHorizontal();
-            // Renderer will read Position3D next frame; nothing else to do.
         }
     }
 }

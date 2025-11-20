@@ -12,6 +12,8 @@ namespace Assets.Scripts.CelestialBodies
     public sealed class Sun : CelestialBodyBase
     {
         // spawned instance
+
+        public HorizontalSun HorizontalSun => horizontalSun;
         private GameObject go;
 
         private HorizontalSun? horizontalSun;

@@ -7,6 +7,7 @@ using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain;
 using ChargerAstronomyShared.Domain.Equatorial;
+using ChargerAstronomyShared.Domain.Horizontal;
 using ChargerAstronomyShared.Domain.Index;
 using System;
 using System.Collections;
@@ -16,33 +17,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
-
-
-//Jobs
-//==============================================================
-
-/// <summary>
-/// Job for updating the Engine Service
-/// </summary>
-/// 
-/*
-struct EngineUpdate : IJob
-{
-    public System.Numerics.Vector3 cameraDirection;
-    public float horizontalFOV;
-
-    public IEngineService<IHorizontal> engineService;
-
-    public float deltaTime;
-    public void Execute()
-    {
-        
-    }
-}
-*/
-
-// Structs
-//===============================================================
 
 //struct for storing the input data in the form the engine needs it
 public struct InputData
@@ -61,15 +35,6 @@ public struct InputData
 
 
 }
-
-
-
-
-
-
-
-
-
 
 // Game Loop Class
 //===============================================================
@@ -190,13 +155,15 @@ public class GameLoop : MonoBehaviour
                 pulledObject.SetState(true);
                 pulledObject.UpdatePosition();
             }
-
-
+     
+        equatorialCalculator.UpdatePositionOf(moon.HorizontalMoon);
         moon.UpdatePosition();
+        equatorialCalculator.UpdatePositionOf(sun.HorizontalSun);
         sun.UpdatePosition();
 
         foreach (Planet planet in planetList)
         {
+            equatorialCalculator.UpdatePositionOf(planet.HorizontalPlanet);
             planet.UpdatePosition();
         }
 

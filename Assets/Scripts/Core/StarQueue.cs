@@ -82,7 +82,7 @@ public class StarQueue
 
                 // create star Object
                 HorizontalStar hstar = new HorizontalStar(equatorialStar);
-                Star newStar = new(hstar, 150f);
+                Star newStar = new(hstar, 100f);
                 starIndex.AddStar(newStar);
 
                 /*  int newTileIndex = starIndex.GetTileForStar(newStar).Index;

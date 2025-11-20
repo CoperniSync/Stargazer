@@ -188,10 +188,6 @@ public class GameLoop : MonoBehaviour
                 if (pulledObject.GetType() == typeof(Star))
                 {
                     Star star = (Star)pulledObject;
-                    if(star.Go.name == "A")
-                    {
-                        Debug.Log("A in Queue" + DateTime.Now);
-                    }
                 }
             }
 
@@ -204,7 +200,7 @@ public class GameLoop : MonoBehaviour
             planet.UpdatePosition();
         }
 
-        Debug.Log("Step" + DateTime.Now);
+        //Debug.Log("Step" + DateTime.Now);
 
 
         task.Wait();

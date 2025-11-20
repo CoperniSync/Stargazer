@@ -10,7 +10,7 @@ class WrapperBuildProcessor : IPostprocessBuildWithReport
 
     public void OnPostprocessBuild(BuildReport report)
     {
-        Debug.Log("[WrapperBuildProcessor] Reverting to remote package refsÖ");
+        Debug.Log("[WrapperBuildProcessor] Reverting to remote package refsÅE");
 
         var manifestPath = "Packages/manifest.json";
         var manifestText = File.ReadAllText(manifestPath);

@@ -1,52 +1,27 @@
 ﻿using UnityEngine;
 using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
-using NUnit.Framework;
-using System.Collections.Generic;
 using ChargerAstronomyShared.Contracts.Models;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.CelestialBodies
 {
     /// <summary>
     /// A star that converts its celestial coordinates to a Unity position.
-    /// Author: Tommy Rodriguez
-    /// Created: 2025-09-25
+    /// Rendered by StarGpuRenderer (no per-star GameObject).
     /// </summary>
     public sealed class Star : CelestialBodyBase, IHorizontal
     {
-        // <summary
-        // Constructor for queue initialization of star
-        //</summary>
+        // Static registry so renderer can see all stars
+        private static readonly List<Star> allStars = new List<Star>();
+        public static IReadOnlyList<Star> AllStars => allStars;
 
-        public HorizontalBody HorizontalBody => horizontalBody;
-
-        public GameObject Go => go;
-
-        private GameObject go;
-        public Star(HorizontalStar hstar, float drawnDistance = 74f)
-        {
-            horizontalStar = hstar;
-            horizontalBody = hstar;
-            DrawnDistance = drawnDistance;
-            GameObject starPrefab = Resources.Load<GameObject>("Prefabs/Star");
-
-            UpdateTransformFromHorizontal(); // sets Position3D
-
-            // spawn prefab
-            go = Object.Instantiate(starPrefab, Position3D, Quaternion.identity);
-            SetState(false);
-        }
-
-        // registry of spawned stars
-        private static readonly List<Star> activeStars = new List<Star>();
-        public static IReadOnlyList<Star> ActiveStars => activeStars;
-
-        // Strongly typed identity from the catalog
-        private EquatorialStar? equatorialStar;
         // Shared horizontal wrapper (provides Altitude, Azimuth, Magnitude, Distance)
         private HorizontalStar? horizontalStar;
-        // Keep a local typed reference for star-specific fields.
         private HorizontalBody? horizontalBody;
+        private EquatorialStar? equatorialStar;   // kept for id/name
+
+        public HorizontalBody HorizontalBody => horizontalBody!;
 
         // Identity / display
         public int HipparcosId => horizontalStar?.HipparcosId ?? equatorialStar?.HipparcosId ?? 0;
@@ -56,18 +31,31 @@ namespace Assets.Scripts.CelestialBodies
                 ? (string.IsNullOrWhiteSpace(equatorialStar?.ProperName) ? "Unnamed Star" : equatorialStar!.ProperName!)
                 : horizontalStar!.StarName!;
 
-        // Photometric
         public float Magnitude => (float)(horizontalBody?.Magnitude ?? equatorialStar?.Magnitude ?? 0.0);
 
-        // Cached positions
+        // cached positions
         public Vector3 Position3D { get; private set; }
         public Vector3 LocalScale { get; private set; }
         public Vector2 Position2D { get; private set; }
 
-        /// <summary>);
-        /// One-time initializer from a HorizontalStar snapshot.
-        /// Call this when you first create the GameObject/component.
-        /// </summary
+        // used by renderer
+        public bool IsVisible { get; private set; } = false;
+
+        /// <summary>
+        /// Distance of the star sphere from origin.
+        /// </summary>
+        public float DrawnDistance { get; }
+
+        public Star(HorizontalStar hstar, float drawnDistance = 24f)
+        {
+            horizontalStar = hstar;
+            horizontalBody = hstar;
+            DrawnDistance = drawnDistance;
+
+            UpdateTransformFromHorizontal(); // sets Position3D, LocalScale, Position2D
+
+            allStars.Add(this);
+        }
 
         /// <summary>
         /// Backend push: apply a fresh HorizontalStar.
@@ -76,18 +64,16 @@ namespace Assets.Scripts.CelestialBodies
         {
             horizontalStar = hstar;
             horizontalBody = hstar;
-
             UpdateTransformFromHorizontal();
         }
 
         /// <summary>
-        /// Computes world position and updates transform + screen-space cache.
+        /// Computes world position and updates screen-space cache.
         /// </summary>
         private void UpdateTransformFromHorizontal()
         {
             if (horizontalBody == null) return;
 
-            // Convert Alt/Az (deg) -> world position on a sphere of radius DrawnDistance
             Position3D = ComputeWorldPosition(
                 (float)horizontalBody.Altitude,
                 (float)horizontalBody.Azimuth,
@@ -96,7 +82,6 @@ namespace Assets.Scripts.CelestialBodies
 
             LocalScale = ComputeStarScale(Magnitude);
 
-            // Cache screen-space for UI
             var cam = Camera.main;
             if (cam != null)
             {
@@ -106,8 +91,8 @@ namespace Assets.Scripts.CelestialBodies
         }
 
         /// <summary>
-        /// Maps Altitude (deg), Azimuth (deg), and radius to a Unity world position.
         /// X = r * cos(az) * cos(alt); Y = r * sin(alt); Z = r * cos(alt) * sin(az)
+        /// (your original formula, kept as-is)
         /// </summary>
         private static Vector3 ComputeWorldPosition(float altitudeDeg, float azimuthDeg, float radius)
         {
@@ -128,55 +113,25 @@ namespace Assets.Scripts.CelestialBodies
             );
         }
 
-
-        /// <summary>
-        /// Magnitude-to-scale mapping.
-        /// </summary>
         private static Vector3 ComputeStarScale(float magnitude)
         {
             float size = Mathf.Clamp(1.2f - 0.1f * (magnitude + 1.5f), 0.35f, 1.2f);
             return new Vector3(size, size, size);
         }
 
-        /// <summary>
-        /// Enable or disable the star's GameObject.
-        /// </summary>
         public void ToggleState()
         {
-            if (go != null)
-            {
-                go.SetActive(!go.activeSelf);
-            }
+            SetState(!IsVisible);
         }
 
         public void SetState(bool state)
         {
-            if (go != null)
-            {
-                go.SetActive(state);
-            }
+            IsVisible = state;
         }
 
-        /// <summary>
-        /// Enable or disable the star's GameObject.
-        /// </summary>
         public void UpdatePosition()
         {
-
             UpdateTransformFromHorizontal();
-
-            // update GameObject transform
-            if (go != null)
-            {
-                go.transform.position = Position3D;
-            }
         }
-
-        /*internal void UpdateStar()
-        {
-        }
-        */
-
-        
     }
 }

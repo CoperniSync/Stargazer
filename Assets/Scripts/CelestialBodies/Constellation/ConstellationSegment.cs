@@ -67,30 +67,16 @@ public class ConstellationSegment
     /// </summary>
     public void UpdatePosition()
     {
-        if (!(endpoint1.Go.activeSelf) && !(endpoint2.Go.activeSelf))
-        {
-            SetState(false);
-            lineRenderer.SetPosition(0, endpoint1.Position3D);
-            lineRenderer.SetPosition(1, endpoint2.Position3D);
-        }
-        else if ((endpoint1.Go.activeSelf) && (endpoint2.Go.activeSelf))
-        {
-            SetState(true);
-            lineRenderer.SetPosition(0, endpoint1.Position3D);
-            lineRenderer.SetPosition(1, endpoint2.Position3D);
-        }
-        else if (!endpoint1.Go.activeSelf)
-        {
-            SetState(false);
-            lineRenderer.SetPosition(0, endpoint1.Position3D);
-            lineRenderer.SetPosition(1, endpoint2.Position3D);
-        }
-        else if (!endpoint2.Go.activeSelf)
-        {
-            SetState(false);
-            lineRenderer.SetPosition(0, endpoint1.Position3D);
-            lineRenderer.SetPosition(1, endpoint2.Position3D);
-        }
+        bool e1Visible = endpoint1.IsVisible;
+        bool e2Visible = endpoint2.IsVisible;
+
+        bool lineActive = e1Visible && e2Visible;
+
+        SetState(lineActive);
+
+        lineRenderer.SetPosition(0, endpoint1.Position3D);
+        lineRenderer.SetPosition(1, endpoint2.Position3D);
+
     }
     public void SetState(bool state)
     {

@@ -230,6 +230,7 @@ public class GameLoop : MonoBehaviour
         var inputs = InputContainer.Container;
         inputData.fov = inputs.HorizontalFOV;
 
+
         inputData.camDirHorizontal = new System.Numerics.Vector3(
             inputs.RotationVector.x,
             inputs.RotationVector.y,
@@ -260,17 +261,6 @@ public class GameLoop : MonoBehaviour
         equatorialCalculator.UpdateTimeAndLocation(newTime, newObserver);
     }
 
-    public void SetMessierVisibility(bool visible)
-    {
-        if (messierList != null)
-        {
-            foreach (MessierObject m in messierList)
-            {
-                m.SetVisible(visible);
-            }
-        }
-    }
-
     public static string GetProjectPath()
     {
         return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
@@ -281,10 +271,7 @@ public class GameLoop : MonoBehaviour
         // Load all stars
         while (!starQueue.IsCompleted())
         {
-            if (starQueue.TryDequeue(ref starList))
-            {
-                // Stars are being added to the spatial index automatically
-            }
+            starQueue.TryDequeue(ref starList);
             yield return null;
         }
 

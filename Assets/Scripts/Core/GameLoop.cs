@@ -22,7 +22,14 @@ public struct InputData
     // Camera direction in HORIZONTAL space (Alt/Az relative to observer)
     public System.Numerics.Vector3 camDirHorizontal;
     public float fov;
+
+    // state of messier Objects
     public bool messierOn;
+
+    // state of constellations
+    public bool constellationOn;
+
+
 }
 
 /// <summary>
@@ -62,6 +69,9 @@ public class GameLoop : MonoBehaviour
         starList = new List<Star>();
         constellationList = new List<UnityConstellation>();
         planetList = new List<Planet>();
+        inputData.messierOn = true;
+        inputData.constellationOn = true;
+        // set up engine service
 
         // Set up engine service with proper tile index
         ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
@@ -187,10 +197,39 @@ public class GameLoop : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// set if the messier Objects are being forced from displaying
+    /// </summary>
+    public void SetMessierVisibility(bool visible)
+    {
+        inputData.messierOn = visible;
+        foreach (MessierObject m in messierList)
+        {
+            m.SetVisible(visible);
+        }
+    }
+
+
+    /// <summary>
+    /// sets the visibilty of constelations
+    /// </summary>
+    public void SetConstellationVisibility(bool visible)
+    {
+        inputData.constellationOn = visible;
+        foreach (UnityConstellation c in constellationList)
+        {
+            c.SetVisible(visible);
+        }
+    }
+
+    /// <summary>
+    /// Updates the engine's camera position based on the Input Container
+    /// </summary>
     public void SetCameraPosition()
     {
         var inputs = InputContainer.Container;
         inputData.fov = inputs.HorizontalFOV;
+
 
         inputData.camDirHorizontal = new System.Numerics.Vector3(
             inputs.RotationVector.x,
@@ -222,17 +261,6 @@ public class GameLoop : MonoBehaviour
         equatorialCalculator.UpdateTimeAndLocation(newTime, newObserver);
     }
 
-    public void SetMessierVisibility(bool visible)
-    {
-        if (messierList != null)
-        {
-            foreach (MessierObject m in messierList)
-            {
-                m.SetVisible(visible);
-            }
-        }
-    }
-
     public static string GetProjectPath()
     {
         return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
@@ -243,13 +271,14 @@ public class GameLoop : MonoBehaviour
         // Load all stars
         while (!starQueue.IsCompleted())
         {
-            if (starQueue.TryDequeue(ref starList))
-            {
-                // Stars are being added to the spatial index automatically
-            }
+            starQueue.TryDequeue(ref starList);
             yield return null;
         }
 
+        // get constellation
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList, inputData.constellationOn);
+        
+        
         engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn
 
         engineService.PlaceStars();

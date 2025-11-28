@@ -17,14 +17,16 @@ public class UnityConstellation
     /// </summary>
     /// <param name="starList">The list of stars that the star data will be pulled from</param>
     /// <param name="constellation">Information that the constellation will be created from</param>
+    /// <param name="initalState"> Whether the constellation should start visible</param>
     /// <remarks>
     /// Ensure starList has been populated prior to calling this constructor.
     /// </remarks>
-    public UnityConstellation(Constellation constellation, List<Star> starList)
+    public UnityConstellation(Constellation constellation, List<Star> starList, bool initalState = true)
     {
         // way of finding stars should be optimized at some point
         go = new GameObject(constellation.ConstellationName);
-        foreach(Tuple<int, int> endpoints in constellation.ConstellationLines)
+        SetVisible(initalState);
+        foreach (Tuple<int, int> endpoints in constellation.ConstellationLines)
         {
             Star endpoint1 = null, endpoint2 = null;
             foreach(Star star in starList)
@@ -49,7 +51,11 @@ public class UnityConstellation
             }//end inner foreach
             if (endpoint1 != null && endpoint2 != null)
             {
-                segments.Add(new ConstellationSegment(endpoint1, endpoint2, constellation.ConstellationName));
+                var newSegment = new ConstellationSegment(endpoint1, endpoint2, constellation.ConstellationName);
+                newSegment.addParent(go);
+                segments.Add(newSegment);
+
+                
             }
         }//end outer foreach
     }
@@ -59,7 +65,7 @@ public class UnityConstellation
     /// Toggles the visibility of the Constellation
     /// </summary>
     /// <param name="state"></param>
-    public void SetState(bool state)
+    public void SetVisible(bool state)
     {
         enabled = state;
         if (go != null)

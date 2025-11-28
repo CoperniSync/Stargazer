@@ -30,12 +30,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _Brightness: 1
-    - _BrightnessMultiplier: 0.63
+    - _BrightnessMultiplier: 1.5
     - _CoreSharpness: 0.63
     - _CoreSize: 0.43
     - _GlowSize: 1.61
     - _GlowStrength: 0.9
     - _SpikeStrength: 0.289
+    - _ZoomFactor: 0.6
     m_Colors:
     - _BaseColor: {r: 0.8678355, g: 0.9245283, b: 0.9245283, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

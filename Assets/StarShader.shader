@@ -1,12 +1,13 @@
-Shader "Custom/StarShader"
+﻿Shader "Custom/StarShader"
 {
     Properties
     {
         _BaseColor ("Base Star Color", Color) = (1,1,1,1)
         _BrightnessMultiplier ("Brightness Multiplier", Range(0.5, 5)) = 3.0
         _GlowStrength ("Glow Strength", Range(0, 2)) = 0.4
-        _CoreSize ("Core Size", Range(0.05, 0.5)) = 0.3
+        _CoreSize ("Core Size", Range(0.05, 0.5)) = 0.4
         _SpikeStrength ("Spike Strength", Range(0, 1)) = 0.1
+        _ZoomFactor("Zoom Factor", Float) = 1.0
     }
     
     SubShader
@@ -53,6 +54,7 @@ Shader "Custom/StarShader"
             float _GlowStrength;
             float _CoreSize;
             float _SpikeStrength;
+            float _ZoomFactor;
 
             v2f vert (appdata v)
             {
@@ -93,19 +95,25 @@ Shader "Custom/StarShader"
                 float2 centered = i.uv * 2.0 - 1.0;
                 float dist = length(centered);
                 
-                float core = 1.0 - smoothstep(0.0, _CoreSize * 0.7, dist);
-                core = pow(core, 0.3); 
+              // Tighter, brighter core when zoomed
+                float coreSize = _CoreSize / (1.0 + (_ZoomFactor - 1.0) * 0.3);
+                float core = 1.0 - smoothstep(0.0, coreSize, dist);
+                core = pow(core, 0.3);; 
                 
                 float disk = smoothstep(_CoreSize * 0.8, _CoreSize * 0.5, dist);
                 
-                float glow = exp(-dist * 5.0) * _GlowStrength;
-                
+                float glowBoost = 1.0 + (_ZoomFactor - 1.0) * 0.3;
+                float glow = exp(-dist * 5.0) * _GlowStrength * glowBoost;
+
                 // spikes are taken from a shadertoy example. 
                 float angle = atan2(centered.y, centered.x);
                 float spikes = pow(abs(cos(angle * 2.0)), 25.0);
                 spikes *= smoothstep(0.5, 0.25, dist) * smoothstep(0.0, 0.1, dist);
                 spikes *= _SpikeStrength;
                 
+                float spikeBoost = 1.0 + (_ZoomFactor - 1.0) * 0.5;
+                spikes *= _SpikeStrength * spikeBoost;
+
                 float brightness = disk * 3.0 + core * 2.0 + glow + spikes * 0.3;
                 brightness *= i.color.a; 
                 brightness *= _BrightnessMultiplier;
@@ -118,6 +126,8 @@ Shader "Custom/StarShader"
                 
                 col.a = saturate(brightness);
                 
+                if (brightness < 0.005) discard;
+
                 return col;
             }
             ENDCG

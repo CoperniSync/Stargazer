@@ -17,13 +17,13 @@ public class HorizonFader : MonoBehaviour
         if(enabled)
         {
             Color color = GetComponent<Renderer>().material.color;
-            color.a = Math.Clamp((Vector3.Angle(Vector3.down, InputContainer.Container.RotationVector) - 60f) / 720f, 0f, 0.3f);
+            color.a = Math.Clamp((Vector3.Angle(Vector3.right, InputContainer.Container.RotationVector) - 60f) / 720f, 0f, 0.3f);
             GetComponent<Renderer>().material.SetColor("_Color", color);
         }
         else
         {
             Color color = GetComponent<Renderer>().material.color;
-            color.a = Math.Clamp((Vector3.Angle(Vector3.down, InputContainer.Container.RotationVector) - 60f) / 720f, 0f, 0.3f);
+            color.a = Math.Clamp((Vector3.Angle(Vector3.right, InputContainer.Container.RotationVector) - 60f) / 720f, 0f, 0.3f);
             GetComponent<Renderer>().material.SetColor("_Color", color);
         }
     }

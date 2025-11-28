@@ -36,6 +36,7 @@ Material:
     - _GlowSize: 1.61
     - _GlowStrength: 0.9
     - _SpikeStrength: 0.289
+    - _ZoomFactor: 0.6
     m_Colors:
     - _BaseColor: {r: 0.8678355, g: 0.9245283, b: 0.9245283, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

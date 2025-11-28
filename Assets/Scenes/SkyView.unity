@@ -5790,6 +5790,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e072daaf73ac2249804f11d23cc1ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CalendarButton
+--- !u!1 &542874734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 542874736}
+  - component: {fileID: 542874735}
+  m_Layer: 0
+  m_Name: TileInspector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &542874735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542874734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb7a25babecfa934bb8d8dd630c1ce49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileInspector
+  gameLoop: {fileID: 330585549}
+  autoSelectFromCamera: 1
+  manualTileIndex: 0
+  showTileBounds: 1
+  showTileStars: 1
+  showTileCenter: 1
+  showTileNormal: 1
+  normalLength: 2
+  tileScale: 1
+  selectedTileColor: {r: 0, g: 1, b: 0, a: 1}
+  starColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  normalColor: {r: 0, g: 1, b: 1, a: 1}
+  centerColor: {r: 1, g: 0, b: 1, a: 1}
+--- !u!4 &542874736
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542874734}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &573571924
 GameObject:
   m_ObjectHideFlags: 0
@@ -5869,6 +5926,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 573571924}
   m_CullTransparentMesh: 1
+--- !u!1 &576236568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576236570}
+  - component: {fileID: 576236569}
+  m_Layer: 0
+  m_Name: HeatmapDebug
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &576236569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576236568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4378d139a7e86124888e2c61460d55a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeatMapVisualizer
+  gameLoop: {fileID: 330585549}
+  showTiles: 1
+  showLabels: 1
+  tileScale: 1
+  coldColor: {r: 0, g: 0, b: 1, a: 0.3}
+  hotColor: {r: 1, g: 0, b: 0, a: 0.8}
+  activeTileColor: {r: 0, g: 1, b: 0, a: 0.5}
+  showCameraDirection: 1
+  cameraRayLength: 5
+  cameraRayColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  showStats: 1
+--- !u!4 &576236570
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576236568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &576343377
 GameObject:
   m_ObjectHideFlags: 0
@@ -21432,3 +21544,5 @@ SceneRoots:
   - {fileID: 1318875665}
   - {fileID: 1312187030}
   - {fileID: 403726028}
+  - {fileID: 576236570}
+  - {fileID: 542874736}

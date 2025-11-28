@@ -117,11 +117,25 @@ public class CameraControls : MonoBehaviour
         inputs.MaxDeclination = degDec + fieldOfView / 2f;
         */
 
-        inputs.RotationVector = transform.forward;
-      
+        var unityForward = transform.forward;
+
+       // Debug.Log($"Unity forward: ({unitysForward.x:F3}, {unityForward.y:F3}, {unityForward.z:F3})");
+
+        // Unity (X=East, Y=Zenith, Z=North) -> Astronomy HOR (X=North, Y=West, Z=Zenith)
+        inputs.RotationVector = new Vector3(
+            unityForward.z,     // North
+            -unityForward.x,    // West (negative East)
+            unityForward.y      // Zenith
+        );
+
+        var rot = inputs.RotationVector;
+
+        // Debug.Log($"HOR direction: ({rot.x:F3}, {rot.y:F3}, {rot.z:F3})");
+
         //inputs.DiagonalFOV = Mathf.Rad2Deg * 2f * Mathf.Atan( Mathf.Sqrt(Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) + (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f/9f) * (Mathf.Tan(fieldOfView * Mathf.Deg2Rad / 2f) * 16f / 9f) ) );
 
-        inputs.HorizontalFOV = (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f));
+        float aspectRatio = (float)Screen.width / Screen.height;
+        inputs.HorizontalFOV = Camera.VerticalToHorizontalFieldOfView(fieldOfView, aspectRatio) * Mathf.Deg2Rad;
     }
     
 }

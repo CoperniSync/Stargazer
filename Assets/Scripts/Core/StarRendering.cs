@@ -13,13 +13,13 @@ namespace Assets.Scripts.Rendering
         [Header("Settings")]
         public bool billboardToCamera = true;
         [Range(0.5f, 5.0f)]
-        public float brightnessMultiplier = 1.5f;
+        public float brightnessMultiplier = 0.87f;
         [Range(0.5f, 10.0f)]
-        public float sizeMultiplier = 2.0f;  
+        public float sizeMultiplier = 1.29f;
         [Range(0.0f, 1.0f)]
-        public float sizeVariation = 0.7f; 
+        public float sizeVariation = 0.7f;
         [Range(1.0f, 100.0f)]
-        public float minDistanceClamp = 10.0f;  
+        public float minDistanceClamp = 10.0f;
 
         private ComputeBuffer positionBuffer;
         private ComputeBuffer scaleBuffer;
@@ -64,9 +64,13 @@ namespace Assets.Scripts.Rendering
             args[1] = (uint)currentStarCount;
             argsBuffer.SetData(args);
 
+            float currentFOV = Camera.main != null ? Camera.main.fieldOfView : 60f;
+            float zoomFactor = 60f / Mathf.Max(currentFOV, 1f); 
+
             if (starMaterial != null)
             {
                 starMaterial.SetFloat("_BrightnessMultiplier", brightnessMultiplier);
+                starMaterial.SetFloat("_ZoomFactor", zoomFactor);
             }
 
             // render all the stars in one go
@@ -127,6 +131,10 @@ namespace Assets.Scripts.Rendering
 
             Vector3 camPos = Camera.main != null ? Camera.main.transform.position : Vector3.zero;
 
+            float currentFOV = Camera.main != null ? Camera.main.fieldOfView : 60f;
+            float zoomFactor = 60f / Mathf.Max(currentFOV, 5f); // 
+            float sizeScale = 1.5f / zoomFactor; // Shrink when zoomed in ( this doesnt work very well ) 
+
             for (int i = 0; i < currentStarCount; i++)
             {
                 var star = stars[i];
@@ -135,14 +143,14 @@ namespace Assets.Scripts.Rendering
                 Vector3 baseScale = star.LocalScale;
                 float avgScale = (baseScale.x + baseScale.y + baseScale.z) / 3f;
 
-                // blending is done here for sizevariation
-               float uniformSize = 1.0f;
+                float uniformSize = 1.0f;
                 float finalSize = Mathf.Lerp(uniformSize, avgScale, sizeVariation);
 
-                scales[i] = new Vector3(finalSize, finalSize, finalSize) * sizeMultiplier;
+                //                finalSize *= sizeAdjust;
+
+                scales[i] = new Vector3(finalSize, finalSize, finalSize) * sizeMultiplier * sizeScale;
                 colors[i] = GetStarColor(star);
 
-               
                 float distToCam = Vector3.Distance(star.Position3D, camPos);
                 bool tooClose = distToCam < minDistanceClamp;
 
@@ -160,10 +168,10 @@ namespace Assets.Scripts.Rendering
         {
             float magnitude = star.Magnitude;
 
-            float normalizedMag = Mathf.Clamp01((6.0f - magnitude) / 7.5f);
-            float brightness = Mathf.Pow(normalizedMag, 0.5f);
 
-            // Get color from spectrum/temperature
+            float brightness = Mathf.Pow(2.512f, -magnitude + 1f);
+            brightness = Mathf.Clamp(brightness, 0.02f, 5.0f);  
+
             Color starColor = GetStarColorFromSpectrum(star);
 
             return new Vector4(starColor.r, starColor.g, starColor.b, brightness);
@@ -178,7 +186,7 @@ namespace Assets.Scripts.Rendering
             if (magnitude < 1.0f)
             {
                 // blue-white
-                return new Color(0.7f, 0.85f, 1.0f); 
+                return new Color(0.7f, 0.85f, 1.0f);
             }
             else if (magnitude < 2.5f)
             {

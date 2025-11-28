@@ -29,6 +29,8 @@ public struct InputData
     // state of constellations
     public bool constellationOn;
 
+    public bool labelsOn;
+
 
 }
 
@@ -91,6 +93,8 @@ public class GameLoop : MonoBehaviour
         // Get local objects (planets, sun, moon)
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
 
+        messierList = MessierRetrieval.GetMessier(engineService);
+
         // Start initialization coroutine
         StartCoroutine(InitializeSky());
     }
@@ -141,7 +145,7 @@ public class GameLoop : MonoBehaviour
         );
 
    
-        // important to this part first otherwise there is a verry weird visual bug for some reason
+        // important to do this part first otherwise there is a very weird visual bug for some reason
         
         IHorizontal pulledObject;
 
@@ -220,6 +224,23 @@ public class GameLoop : MonoBehaviour
         {
             c.SetVisible(visible);
         }
+    }
+
+    /// <summary>
+    /// sets the visibilty of conste;lations labels
+    /// </summary>
+    public void SetLabelVisibility(bool visible)
+    {
+        inputData.constellationOn = visible;
+        foreach (UnityConstellation c in constellationList)
+        {
+            c.SetLabelVisible(visible);
+        }
+    }
+
+    public void SetSpeedMultiplier(float speed)
+    {
+        speedMult = speed;
     }
 
     /// <summary>

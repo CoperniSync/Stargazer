@@ -4203,7 +4203,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 55
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -4295,8 +4295,8 @@ MonoBehaviour:
   verticalRotationSpeed: 1
   horizontalRotationSpeed: 1
   zoomSpeed: 4
-  zoomMax: 100
-  zoomMin: 1
+  zoomMax: 55
+  zoomMin: 3
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5819,19 +5819,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7a25babecfa934bb8d8dd630c1ce49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileInspector
-  gameLoop: {fileID: 330585549}
-  autoSelectFromCamera: 1
-  manualTileIndex: 0
-  showTileBounds: 1
-  showTileStars: 1
-  showTileCenter: 1
-  showTileNormal: 1
-  normalLength: 2
-  tileScale: 1
-  selectedTileColor: {r: 0, g: 1, b: 0, a: 1}
-  starColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  normalColor: {r: 0, g: 1, b: 1, a: 1}
-  centerColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!4 &542874736
 Transform:
   m_ObjectHideFlags: 0

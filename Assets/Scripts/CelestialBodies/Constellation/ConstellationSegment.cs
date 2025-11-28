@@ -1,6 +1,7 @@
 using Assets.Scripts.CelestialBodies;
-using UnityEngine;
 using System.Collections.Generic;
+using System.Net;
+using UnityEngine;
 
 // Author: Morgan Hendon
 // Created On: 11/15/2025
@@ -77,6 +78,8 @@ public class ConstellationSegment
 
         bool lineActive = e1Visible && e2Visible;
 
+        go.transform.position = GetMidpoint();
+        
         SetState(lineActive);
 
         lineRenderer.SetPosition(0, endpoint1.Position3D * 1.2f);
@@ -91,4 +94,14 @@ public class ConstellationSegment
         }
     }
 
+    public Vector3 GetMidpoint()
+    {
+       return (endpoint1.Position3D + endpoint2.Position3D) / 2f;
+    }
+
+
+    public bool IsOnScreen()
+    {
+       return endpoint1.IsVisible && endpoint2.IsVisible;
+    }
 }

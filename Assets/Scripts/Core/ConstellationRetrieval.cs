@@ -18,12 +18,12 @@ namespace Assets.Scripts.Core
 {
     public class ConstellationRetrieval
     {
-        public static void GetConstellations(ref List<UnityConstellation> constellationList, List<Star> starList, string path = "constellations" + ".json")
+        public static void GetConstellations(ref List<UnityConstellation> constellationList, List<Star> starList, bool initalState = true, string path = "constellations" + ".json")
         {
             IConstellationRepository constRepo = new CsvConstellationRepository(FindCsvPath(path));
             foreach (Constellation constellation in constRepo.GetConstellations())
             {
-                UnityConstellation uConst = new(constellation, starList );
+                UnityConstellation uConst = new(constellation, starList, initalState);
                 constellationList.Add(uConst);
             }
         }

@@ -51,13 +51,18 @@ public class ConstellationSegment
         go = new(name);
         lineRenderer = go.AddComponent<LineRenderer>();
         
-        lineRenderer.SetPosition(0, endpoint1.Position3D);
-        lineRenderer.SetPosition(1, endpoint2.Position3D);
+        lineRenderer.SetPosition(0, endpoint1.Position3D*1.2f);
+        lineRenderer.SetPosition(1, endpoint2.Position3D * 1.2f);
         lineRenderer.widthMultiplier = 0.2f;
         List<Material> matList = new List<Material>();
         matList.Add(Resources.Load<Material>("Materials/Constellation"));
         lineRenderer.SetMaterials(matList);
 
+    }
+
+    public void addParent(GameObject parent)
+    {
+        go.transform.parent = parent.transform;
     }
 
 
@@ -74,8 +79,8 @@ public class ConstellationSegment
 
         SetState(lineActive);
 
-        lineRenderer.SetPosition(0, endpoint1.Position3D);
-        lineRenderer.SetPosition(1, endpoint2.Position3D);
+        lineRenderer.SetPosition(0, endpoint1.Position3D * 1.2f);
+        lineRenderer.SetPosition(1, endpoint2.Position3D * 1.2f);
 
     }
     public void SetState(bool state)

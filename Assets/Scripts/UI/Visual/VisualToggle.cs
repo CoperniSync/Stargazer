@@ -14,19 +14,25 @@ namespace Assets.Scripts.UI.Visual
 {
     internal class VisualToggle : MonoBehaviour
     {
+
+        public GameObject gameLoopObject;
+        private GameLoop gameLoop;
         InputContainer inputs;
         void Start()
         {
             inputs = InputContainer.Container; //get the input container instance
+            gameLoop = gameLoopObject.GetComponent<GameLoop>();
 
         }
         public void ToggleConstellations(Toggle toggle)
         {
             inputs.ConstellationsToggle = toggle.isOn;
+            gameLoop.SetConstellationVisibility(toggle.isOn);
         }
         public void ToggleMessierObjects(Toggle toggle)
         {
             inputs.MessierToggle = toggle.isOn;
+            gameLoop.SetMessierVisibility(toggle.isOn);
         }
         public void ToggleAzimuthGridlines(Toggle toggle)
         {

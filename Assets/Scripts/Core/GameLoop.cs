@@ -30,8 +30,11 @@ public struct InputData
     //FOV of the Camera
     public float fov;
 
-    //
+    // state of messier Objects
     public bool messierOn;
+
+    // state of constellations
+    public bool constellationOn;
 
 
 }
@@ -88,7 +91,8 @@ public class GameLoop : MonoBehaviour
     {
         starList = new();
         constellationList = new();
-
+        inputData.messierOn = true;
+        inputData.constellationOn = true;
         // set up engine service
 
         ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
@@ -182,9 +186,23 @@ public class GameLoop : MonoBehaviour
     /// </summary>
     public void SetMessierVisibility(bool visible)
     {
+        inputData.messierOn = visible;
         foreach (MessierObject m in messierList)
         {
             m.SetVisible(visible);
+        }
+    }
+
+
+    /// <summary>
+    /// sets the visibilty of constelations
+    /// </summary>
+    public void SetConstellationVisibility(bool visible)
+    {
+        inputData.constellationOn = visible;
+        foreach (UnityConstellation c in constellationList)
+        {
+            c.SetVisible(visible);
         }
     }
 
@@ -241,7 +259,7 @@ public class GameLoop : MonoBehaviour
         }
 
         // get constellation
-        ConstellationRetrieval.GetConstellations(ref constellationList, starList);
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList, inputData.constellationOn);
         
         
 

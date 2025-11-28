@@ -19,14 +19,12 @@ public class HorizonFader : MonoBehaviour
             Color color = GetComponent<Renderer>().material.color;
             color.a = Math.Clamp((InputContainer.Container.RotationVector.z + 0.5f)/2, 0f, 0.3f);
             GetComponent<Renderer>().material.SetColor("_Color", color);
-            Debug.Log(InputContainer.Container.RotationVector);
         }
         else
         {
             Color color = GetComponent<Renderer>().material.color;
             color.a = 0f;
             GetComponent<Renderer>().material.SetColor("_Color", color);
-            Debug.Log(InputContainer.Container.RotationVector);
         }
     }
 

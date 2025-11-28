@@ -77,12 +77,7 @@ public class StarQueue
             IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
             foreach (EquatorialStar equatorialStar in equatorialList)
             {
-
-                // create star Object
-                
-                
-
-                    HorizontalStar hstar = new HorizontalStar(equatorialStar);
+                HorizontalStar hstar = new HorizontalStar(equatorialStar);
                     Star newStar = new(hstar, 150f);
                     starIndex.AddStar(newStar);
                     starList.Add(newStar);

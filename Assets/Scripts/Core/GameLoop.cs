@@ -297,7 +297,7 @@ public class GameLoop : MonoBehaviour
         }
 
         // get constellation
-        ConstellationRetrieval.GetConstellations(ref constellationList, starList, inputData.constellationOn);
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
         
         
         engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn

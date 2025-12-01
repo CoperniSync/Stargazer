@@ -1,5 +1,8 @@
 using Assets.Scripts.CelestialBodies;
 using Assets.Scripts.UI;
+using ChargerAstronomyEngine.Streaming;
+using ChargerAstronomyShared.Contracts.Models;
+using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain.Equatorial;
 using System;
 using System.Collections.Generic;
@@ -16,8 +19,7 @@ public class UnityConstellation
     private GameObject go = null;
     private GameObject label = null;
     private List<ConstellationSegment> segments = new List<ConstellationSegment>();
-
-
+    private IEngineService<IHorizontal> engine;
     /// <summary>
     /// Creates a constellation in the sky between already defined stars.
     /// </summary>
@@ -27,12 +29,12 @@ public class UnityConstellation
     /// <remarks>SetState(lineActive);
     /// Ensure starList has been populated prior to calling this constructor.
     /// </remarks>
-    public UnityConstellation(Constellation constellation, List<Star> starList, bool initalState = true)
+    public UnityConstellation(Constellation constellation, List<Star> starList, IEngineService<IHorizontal> engineService, bool initalState = true)
     {
         // way of finding stars should be optimized at some point
         go = new GameObject(constellation.ConstellationName);
         SetVisible(initalState);
-        
+        engine = engineService;
       
 
         foreach (Tuple<int, int> endpoints in constellation.ConstellationLines)
@@ -60,7 +62,7 @@ public class UnityConstellation
             }//end inner foreach
             if (endpoint1 != null && endpoint2 != null)
             {
-                var newSegment = new ConstellationSegment(endpoint1, endpoint2, constellation.ConstellationName);
+                var newSegment = new ConstellationSegment(endpoint1, endpoint2, engine, constellation.ConstellationName);
                 newSegment.addParent(go);
                 segments.Add(newSegment);
 
@@ -107,6 +109,7 @@ public class UnityConstellation
             if(enabled)
             {
                 go.SetActive(true);
+
             }
         }
         else

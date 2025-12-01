@@ -32,6 +32,8 @@ public struct InputData
     public bool labelsOn;
 
 
+
+
 }
 
 /// <summary>
@@ -86,6 +88,7 @@ public class GameLoop : MonoBehaviour
 
         // Get the calculator
         equatorialCalculator = engineService.StartServices();
+        SetLocationAndTime();
 
         // Initialize star loading
         starQueue = new StarQueue(engineService, 500, "AllStars.csv");
@@ -297,7 +300,7 @@ public class GameLoop : MonoBehaviour
         }
 
         // get constellation
-        ConstellationRetrieval.GetConstellations(ref constellationList, starList, inputData.constellationOn);
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
         
         
         engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn

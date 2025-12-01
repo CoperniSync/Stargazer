@@ -134,7 +134,7 @@ public class HeatMapVisualizer : MonoBehaviour
 
         if (engineService == null)
         {
-            GUI.Label(new Rect(20, 35, 280, 20), "Engine Service: NOT FOUND");
+            //GUI.Label(new Rect(20, 35, 280, 20), "Engine Service: NOTFOUND");
             return;
         }
 

@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public struct InputData
 {
@@ -30,6 +31,12 @@ public struct InputData
     public bool constellationOn;
 
     public bool labelsOn;
+
+    public Observer observer;
+
+    public DateTime time;
+
+    public int year;
 
 
 }
@@ -73,6 +80,10 @@ public class GameLoop : MonoBehaviour
         planetList = new List<Planet>();
         inputData.messierOn = true;
         inputData.constellationOn = true;
+        inputData.observer = new Observer(0.0,0.0,0.0);
+        var inputs = InputContainer.Container;
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
         // set up engine service
 
         // Set up engine service with proper tile index
@@ -86,6 +97,7 @@ public class GameLoop : MonoBehaviour
 
         // Get the calculator
         equatorialCalculator = engineService.StartServices();
+        SetLocationAndTime();
 
         // Initialize star loading
         starQueue = new StarQueue(engineService, 500, "AllStars.csv");
@@ -128,8 +140,16 @@ public class GameLoop : MonoBehaviour
 
     private void UpdateSimulation(float deltaTime)
     {
+
         if (!starsLoaded) return;
 
+        
+        inputData.time = inputData.time.AddSeconds(deltaTime);
+        if (inputData.time.Year != 2000)
+        {
+            inputData.year = inputData.year + (inputData.time.Year - 2000);
+            inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+        }
         SetCameraPosition();
 
         float magnitudeCutoff = CalculateMagnitudeCutoff(Camera.main.fieldOfView);
@@ -264,7 +284,9 @@ public class GameLoop : MonoBehaviour
     public void SetLocationAndTime()
     {
         var inputs = InputContainer.Container;
-        var newTime = new CalendarDateTime(
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
+        var time = new CalendarDateTime(
             inputs.Year,
             inputs.Time.Month,
             inputs.Time.Day,
@@ -273,18 +295,27 @@ public class GameLoop : MonoBehaviour
             inputs.Time.Second
         );
 
-        var newObserver = new Observer(
+        inputData.observer = new Observer(
             Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin) / 60.0),
             Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
             0.0
         );
-
-        equatorialCalculator.UpdateTimeAndLocation(newTime, newObserver);
+        Debug.Log(inputs.Time.ToString());
+        Debug.Log(time.ToString());
+        equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
     }
 
     public static string GetProjectPath()
     {
         return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
+    }
+
+    public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)
+    {
+        camDirection = InputContainer.Container.RotationVector;
+        engineYear = inputData.year;
+        engineTime = inputData.time;
+        engineObserver = inputData.observer;
     }
 
     IEnumerator InitializeSky()

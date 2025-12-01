@@ -1,4 +1,5 @@
 using Assets.Scripts.CelestialBodies;
+using Assets.Scripts.UI;
 using ChargerAstronomyShared.Domain.Equatorial;
 using System;
 using System.Collections.Generic;
@@ -119,13 +120,25 @@ public class UnityConstellation
             segment.UpdatePosition();
         }
 
+   
+        // update the position and orientation of the label
+        //
+        var inputs = InputContainer.Container;
+        var cameraDirection = new Vector3(-inputs.RotationVector.y, 0f, inputs.RotationVector.x);
 
+        // position
         label.transform.localPosition = Vector3.zero;
-        label.transform.LookAt(new Vector3(0f, 0f,0f));
+
+        //rotation
+        label.transform.LookAt(new Vector3(0f, 0.0f, 00f) - 64 * cameraDirection);
+
+        
+
         label.transform.forward = -label.transform.forward;
 
-
-       
+        //scale
+        float scaleRatio = (inputs.HorizontalFOV * Mathf.Rad2Deg) / 60f;
+        label.transform.localScale = new(scaleRatio,scaleRatio,scaleRatio);
     }
 
 

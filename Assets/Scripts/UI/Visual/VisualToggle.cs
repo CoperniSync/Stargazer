@@ -14,7 +14,7 @@ namespace Assets.Scripts.UI.Visual
 {
     internal class VisualToggle : MonoBehaviour
     {
-
+        public GameObject horizonLine;
         public GameObject gameLoopObject;
         private GameLoop gameLoop;
         InputContainer inputs;
@@ -46,6 +46,12 @@ namespace Assets.Scripts.UI.Visual
         {
             inputs.ConstellationLabel = toggle.isOn;
             gameLoop.SetLabelVisibility(toggle.isOn);
+
+        }
+
+        public void ToggleHorizon(Toggle toggle)
+        {
+            horizonLine.SetActive(toggle.isOn);
 
         }
     }

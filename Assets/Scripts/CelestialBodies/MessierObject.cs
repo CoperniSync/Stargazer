@@ -56,10 +56,29 @@ namespace Assets.Scripts.CelestialBodies
 
             UpdateTransformFromHorizontal();
 
-            GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
+            GameObject messierObjectPrefab = prefab;
+            if (messierObjectPrefab == null)
+            {
+                string messierId = MessierId?.Trim() ?? "MDefault";
 
-            go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
-            go.name = $"Messier_{MessierId}";
+                // Resource path: Assets/Resources/Prefabs/MessierObjects/M--
+                string specificPath = $"Prefabs/MessierObjects/{messierId}";
+
+                messierObjectPrefab = Resources.Load<GameObject>(specificPath);
+
+                if (messierObjectPrefab == null)
+                {
+                    Debug.LogWarning(
+                        $"[MessierObject] Prefab not found at '{specificPath}'. " +
+                        "Falling back to 'Prefabs/MessierObjects/DefaultMessier'."
+                    );
+
+                    messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObjects/DefaultMessier");
+                }
+
+                go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+                go.name = $"Messier_{MessierId}";
+            }
         }
 
         /// <summary>

@@ -46,7 +46,6 @@ namespace Assets.Scripts.UI.Visual
         {
             inputs.ConstellationLabel = toggle.isOn;
             gameLoop.SetLabelVisibility(toggle.isOn);
-
         }
     }
 }

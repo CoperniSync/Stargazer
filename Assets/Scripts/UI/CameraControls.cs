@@ -94,8 +94,7 @@ public class CameraControls : MonoBehaviour
 
     private void UpdateInputContaner()
     {
-        // calculate fov bounds and pass them to the input container in terms of RA and Declination
-
+        // commented code calculates fov bounds and pass them to the input container in terms of RA and Declination
         // calculate the bounds of field of view as far as right ascention
         /*
         float minChangeA = (360f-((yAxisDegrees + (Camera.VerticalToHorizontalFieldOfView(fieldOfView, 16f / 9f)/2f))%360f)) % 360f;

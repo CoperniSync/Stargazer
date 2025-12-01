@@ -1,29 +1,22 @@
 ﻿using Assets.Scripts.CelestialBodies;
-using ChargerAstronomyEngine.Data.Messier;
-using ChargerAstronomyEngine.Streaming;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain.Equatorial;
-using ChargerAstronomyShared.Domain.Horizontal;
-using ChargerAstronomyShared.Domain.SpatialIndex;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChargerAstronomyEngine.Data.Constellations;
 
 namespace Assets.Scripts.Core
 {
     public class ConstellationRetrieval
     {
-        public static void GetConstellations(ref List<UnityConstellation> constellationList, List<Star> starList, bool initalState = true, string path = "constellations" + ".json")
+        public static void GetConstellations(ref List<UnityConstellation> constellationList, List<Star> starList, IEngineService<IHorizontal> engineIn, bool initalState = true, string path = "constellations" + ".json")
         {
             IConstellationRepository constRepo = new CsvConstellationRepository(FindCsvPath(path));
             foreach (Constellation constellation in constRepo.GetConstellations())
             {
-                UnityConstellation uConst = new(constellation, starList, initalState);
+                UnityConstellation uConst = new(constellation, starList, engineIn, initalState);
                 constellationList.Add(uConst);
             }
         }

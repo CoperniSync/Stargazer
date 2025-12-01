@@ -1,4 +1,8 @@
 using Assets.Scripts.CelestialBodies;
+using Assets.Scripts.UI;
+using ChargerAstronomyEngine.Streaming;
+using ChargerAstronomyShared.Contracts.Models;
+using ChargerAstronomyShared.Contracts.Repositories;
 using ChargerAstronomyShared.Domain.Equatorial;
 using System;
 using System.Collections.Generic;
@@ -15,8 +19,7 @@ public class UnityConstellation
     private GameObject go = null;
     private GameObject label = null;
     private List<ConstellationSegment> segments = new List<ConstellationSegment>();
-
-
+    private IEngineService<IHorizontal> engine;
     /// <summary>
     /// Creates a constellation in the sky between already defined stars.
     /// </summary>
@@ -26,12 +29,12 @@ public class UnityConstellation
     /// <remarks>SetState(lineActive);
     /// Ensure starList has been populated prior to calling this constructor.
     /// </remarks>
-    public UnityConstellation(Constellation constellation, List<Star> starList, bool initalState = true)
+    public UnityConstellation(Constellation constellation, List<Star> starList, IEngineService<IHorizontal> engineService, bool initalState = true)
     {
         // way of finding stars should be optimized at some point
         go = new GameObject(constellation.ConstellationName);
         SetVisible(initalState);
-        
+        engine = engineService;
       
 
         foreach (Tuple<int, int> endpoints in constellation.ConstellationLines)
@@ -59,7 +62,7 @@ public class UnityConstellation
             }//end inner foreach
             if (endpoint1 != null && endpoint2 != null)
             {
-                var newSegment = new ConstellationSegment(endpoint1, endpoint2, constellation.ConstellationName);
+                var newSegment = new ConstellationSegment(endpoint1, endpoint2, engine, constellation.ConstellationName);
                 newSegment.addParent(go);
                 segments.Add(newSegment);
 
@@ -106,6 +109,7 @@ public class UnityConstellation
             if(enabled)
             {
                 go.SetActive(true);
+
             }
         }
         else
@@ -119,13 +123,25 @@ public class UnityConstellation
             segment.UpdatePosition();
         }
 
+   
+        // update the position and orientation of the label
+        //
+        var inputs = InputContainer.Container;
+        var cameraDirection = new Vector3(-inputs.RotationVector.y, 0f, inputs.RotationVector.x);
 
+        // position
         label.transform.localPosition = Vector3.zero;
-        label.transform.LookAt(new Vector3(0f, 0f,0f));
+
+        //rotation
+        label.transform.LookAt(new Vector3(0f, 0.0f, 00f) - 64 * cameraDirection);
+
+        
+
         label.transform.forward = -label.transform.forward;
 
-
-       
+        //scale
+        float scaleRatio = (inputs.HorizontalFOV * Mathf.Rad2Deg) / 60f;
+        label.transform.localScale = new(scaleRatio,scaleRatio,scaleRatio);
     }
 
 

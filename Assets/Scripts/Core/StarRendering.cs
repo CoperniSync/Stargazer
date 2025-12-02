@@ -168,9 +168,8 @@ namespace Assets.Scripts.Rendering
         {
             float magnitude = star.Magnitude;
 
-
             float brightness = Mathf.Pow(2.512f, -magnitude + 1f);
-            brightness = Mathf.Clamp(brightness, 0.02f, 5.0f);  
+            brightness = Mathf.Clamp(brightness, 0.02f, 2.0f); 
 
             Color starColor = GetStarColorFromSpectrum(star);
 

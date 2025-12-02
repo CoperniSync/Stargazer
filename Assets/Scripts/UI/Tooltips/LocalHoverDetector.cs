@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI.Tooltips
                         "The Sun\n" +
                         "Altitude: " + sun.HorizontalSun.Altitude.ToString("F") + "\n" +
                         "Azimuth: " + sun.HorizontalSun.Azimuth.ToString("F") + "\n" +
-                        "Distance: " + sun.HorizontalSun.Distance.ToString("F") + " AU";
+                        "Distance: " + sun.HorizontalSun.Distance.ToString("F") + " LY";
                     StarTooltipText.Instance.ShowAtMouse();
                     return;
                 }

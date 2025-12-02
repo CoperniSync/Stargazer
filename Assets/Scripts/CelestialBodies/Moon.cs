@@ -15,6 +15,8 @@ namespace Assets.Scripts.CelestialBodies
 
         private GameObject go;
 
+        public GameObject Go { get => go; } 
+
         public HorizontalMoon HorizontalMoon => horizontalMoon;
         private HorizontalMoon? horizontalMoon;
         private HorizontalBody? horizontalBody;

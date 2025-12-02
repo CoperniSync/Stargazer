@@ -36,7 +36,7 @@ public class StarTooltipText : MonoBehaviour
     public void UpdateData(string name, int id, float altitude, float azimuth, float distance)
     {
         if (textObject == null) return;
-
+        
         textObject.text =
             name + "\n" +
             "HIP: " + id + "\n" +
@@ -63,6 +63,13 @@ public class StarTooltipText : MonoBehaviour
 
         UpdateData(name, hipId, altitude, azimuth, distance);
 
+        panel.gameObject.SetActive(true);
+        panel.position = Input.mousePosition;
+    }
+
+    public void ShowAtMouse()
+    {
+        if (panel == null) return;
         panel.gameObject.SetActive(true);
         panel.position = Input.mousePosition;
     }

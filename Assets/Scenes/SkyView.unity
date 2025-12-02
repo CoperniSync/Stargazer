@@ -3157,8 +3157,8 @@ GameObject:
   - component: {fileID: 256881981}
   - component: {fileID: 256881980}
   m_Layer: 5
-  m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_Name: Text Tooltip
+  m_TagString: TextTooltip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

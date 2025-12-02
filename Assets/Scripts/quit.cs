@@ -13,6 +13,7 @@ public class quit : MonoBehaviour
     {
         if (Input.GetAxis("Exit") != 0)
         {
+            Debug.Log("aaa");
             Application.Quit();
         }
     }

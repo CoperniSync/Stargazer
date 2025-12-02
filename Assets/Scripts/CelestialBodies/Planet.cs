@@ -12,7 +12,7 @@ namespace Assets.Scripts.CelestialBodies
     public sealed class Planet : CelestialBodyBase
     {
         private GameObject go;
-
+        public GameObject Go { get => go; }
         public HorizontalPlanet HorizontalPlanet => horizontalPlanet;
         private HorizontalPlanet? horizontalPlanet;
         private HorizontalBody? horizontalBody;

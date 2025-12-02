@@ -23,8 +23,7 @@ namespace Assets.Scripts.Core
 
         private static string FindCsvPath(string fileName = "constellations" + ".json")
         {
-
-            var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(), "ChargerAstronomyEngine", "ChargerAstronomyEngine", "Data"), "Star", fileName);
+            var direct = Path.Combine(GameLoop.GetProjectPath(), fileName);
             if (File.Exists(direct)) return direct;
 
             var dir = new DirectoryInfo(GameLoop.GetProjectPath());

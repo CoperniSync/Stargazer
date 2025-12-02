@@ -284,7 +284,7 @@ public class GameLoop : MonoBehaviour
 
     public static string GetProjectPath()
     {
-        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
+        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
     }
 
     IEnumerator InitializeSky()

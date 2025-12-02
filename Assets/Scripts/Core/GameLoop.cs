@@ -297,9 +297,8 @@ public class GameLoop : MonoBehaviour
             Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
             0.0
         );
-        Debug.Log(inputs.Time.ToString());
-        Debug.Log(inputs.Year.ToString());
         Debug.Log(time.ToString());
+        Debug.Log(inputData.observer.ToString());
         equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
     }
 

@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public struct InputData
 {
@@ -31,7 +32,11 @@ public struct InputData
 
     public bool labelsOn;
 
+    public Observer observer;
 
+    public DateTime time;
+
+    public int year;
 
 
 }
@@ -75,6 +80,10 @@ public class GameLoop : MonoBehaviour
         planetList = new List<Planet>();
         inputData.messierOn = true;
         inputData.constellationOn = true;
+        inputData.observer = new Observer(0.0, 0.0, 0.0);
+        var inputs = InputContainer.Container;
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
         // set up engine service
 
         // Set up engine service with proper tile index
@@ -131,8 +140,16 @@ public class GameLoop : MonoBehaviour
 
     private void UpdateSimulation(float deltaTime)
     {
+
         if (!starsLoaded) return;
 
+        inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+        inputData.time = inputData.time.AddSeconds(deltaTime);
+        if (inputData.time.Year != 2000)
+        {
+            inputData.year = inputData.year + (inputData.time.Year - 2000);
+            inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+        }
         SetCameraPosition();
 
         float magnitudeCutoff = CalculateMagnitudeCutoff(Camera.main.fieldOfView);
@@ -147,9 +164,9 @@ public class GameLoop : MonoBehaviour
             speedMult
         );
 
-   
+
         // important to do this part first otherwise there is a very weird visual bug for some reason
-        
+
         IHorizontal pulledObject;
 
         int updateCount = 0;
@@ -264,7 +281,9 @@ public class GameLoop : MonoBehaviour
     public void SetLocationAndTime()
     {
         var inputs = InputContainer.Container;
-        var newTime = new CalendarDateTime(
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
+        var time = new CalendarDateTime(
             inputs.Year,
             inputs.Time.Month,
             inputs.Time.Day,
@@ -273,18 +292,28 @@ public class GameLoop : MonoBehaviour
             inputs.Time.Second
         );
 
-        var newObserver = new Observer(
+        inputData.observer = new Observer(
             Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin) / 60.0),
             Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
             0.0
         );
-
-        equatorialCalculator.UpdateTimeAndLocation(newTime, newObserver);
+        Debug.Log(inputs.Time.ToString());
+        Debug.Log(inputs.Year.ToString());
+        Debug.Log(time.ToString());
+        equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
     }
 
     public static string GetProjectPath()
     {
-        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
+        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
+    }
+
+    public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)
+    {
+        camDirection = InputContainer.Container.RotationVector;
+        engineYear = inputData.year;
+        engineTime = inputData.time;
+        engineObserver = inputData.observer;
     }
 
     IEnumerator InitializeSky()
@@ -298,8 +327,8 @@ public class GameLoop : MonoBehaviour
 
         // get constellation
         ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
-        
-        
+
+
         engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn
 
         engineService.PlaceStars();

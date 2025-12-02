@@ -17,7 +17,6 @@ public class EngineStateUI : MonoBehaviour
     private Text textComp;
     void Start()
     {
-
         gameLoop = gameLoopObject.GetComponent<GameLoop>();
         textComp = this.gameObject.transform.GetComponent<Text>();
 

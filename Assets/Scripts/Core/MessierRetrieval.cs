@@ -33,7 +33,7 @@ public class MessierRetrieval
             MessierObject messier = new(hMessier);
             messier.ApplyHorizontal(hMessier);
             messierList.Add(messier);
-            starIndex.AddStar(messier);
+            //starIndex.AddStar(messier);
         }
         return messierList;
     }

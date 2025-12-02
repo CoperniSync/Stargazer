@@ -176,16 +176,12 @@ public class GameLoop : MonoBehaviour
             updateCount++;
         }
 
-        // process activation queue
+        // Process activation queue
         int activationCount = 0;
         while (ActivationQueue.TryTake(out pulledObject, 0))
         {
             pulledObject.SetState(true);
             activationCount++;
-        }
-        if (activationCount > 0)
-        {
-            //Debug.Log(${activationCount} stars");
         }
 
         // Process deactivation queue
@@ -195,11 +191,12 @@ public class GameLoop : MonoBehaviour
             pulledObject.SetState(false);
             deactivationCount++;
         }
-        if (deactivationCount > 0)
-        {
-            //Debug.Log($"{deactivationCount} stars");
-        }
 
+        foreach (MessierObject messier in messierList)
+        {
+            engineService.ForceStarUpdate(messier);
+            messier.UpdatePosition();
+        }
 
         // Update the sun moon and planets 
         equatorialCalculator.UpdatePositionOf(moon.HorizontalMoon);

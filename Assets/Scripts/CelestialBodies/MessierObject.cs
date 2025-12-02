@@ -3,6 +3,7 @@ using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts.CelestialBodies
 {
@@ -81,6 +82,7 @@ namespace Assets.Scripts.CelestialBodies
             }
 
             go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            UpdateVisibility();
             go.name = $"Messier_{MessierId}";
         }
         
@@ -176,16 +178,20 @@ namespace Assets.Scripts.CelestialBodies
             );
         }
 
+        private void UpdateVisibility()
+        {
+            if (go != null)
+            {
+                go.SetActive(enabled);
+            }
+        }
+
         /// <summary>
         /// Enable or disable the messier Object's GameObject.
         /// </summary>
         public void SetState(bool state)
         {
-            enabled = state;
-            if (go != null)
-            {
-                go.SetActive(enabled && visibilityState);
-            }
+            // Not used anymore - Messier objects aren't part of the culling system
         }
 
         /// <summary>
@@ -194,7 +200,10 @@ namespace Assets.Scripts.CelestialBodies
         public void SetVisible(bool newVisibility)
         {
             visibilityState = newVisibility;
-            SetState(enabled);
+            if (go != null)
+            {
+                go.SetActive(visibilityState);
+            }
         }
 
         /// <summary>
@@ -202,15 +211,13 @@ namespace Assets.Scripts.CelestialBodies
         /// </summary>
         public void UpdatePosition()
         {
-
             UpdateTransformFromHorizontal();
 
-            // update GameObject transform
             if (go != null)
             {
                 go.transform.position = Position3D;
+                // Visibility is controlled solely by visibilityState now
             }
-
         }
         private static string GetPrefabNameForType(string type)
         {

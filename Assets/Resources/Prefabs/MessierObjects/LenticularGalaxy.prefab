@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7520624919189267366}
   - component: {fileID: 9022575113924392345}
   - component: {fileID: 3312935781459482752}
+  - component: {fileID: 605643779146533713}
   m_Layer: 0
   m_Name: LenticularGalaxy
   m_TagString: Untagged
@@ -103,3 +104,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b50baa128d0ee41b98164a88dcc0d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BillboardToCamera
+--- !u!114 &605643779146533713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2884851046758766515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c4a67878a1c8a46a1e572f476cc421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Tooltips.MessierHoverDetector
+  gameLoop: {fileID: 0}

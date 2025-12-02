@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4967039413464263867}
   - component: {fileID: 2127644439538369104}
   - component: {fileID: 7213753368237890939}
+  - component: {fileID: 6597880362876884305}
   m_Layer: 0
   m_Name: EllipticalGalaxy
   m_TagString: Untagged
@@ -103,3 +104,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b50baa128d0ee41b98164a88dcc0d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BillboardToCamera
+--- !u!114 &6597880362876884305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5439457888263327133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c4a67878a1c8a46a1e572f476cc421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Tooltips.MessierHoverDetector
+  gameLoop: {fileID: 0}

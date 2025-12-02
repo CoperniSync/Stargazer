@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8951010780362732019}
   - component: {fileID: 2211900336732417525}
   - component: {fileID: 2774491478726192518}
+  - component: {fileID: 18101967196472139}
   m_Layer: 0
   m_Name: IrregularGalaxy
   m_TagString: Untagged
@@ -103,3 +104,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b50baa128d0ee41b98164a88dcc0d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BillboardToCamera
+--- !u!114 &18101967196472139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2791123262121477156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c4a67878a1c8a46a1e572f476cc421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Tooltips.MessierHoverDetector
+  gameLoop: {fileID: 0}

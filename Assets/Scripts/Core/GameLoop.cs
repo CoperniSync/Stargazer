@@ -307,7 +307,7 @@ public class GameLoop : MonoBehaviour
 
     public static string GetProjectPath()
     {
-        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
+        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
     }
 
     public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)

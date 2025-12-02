@@ -41,7 +41,7 @@ public class MessierRetrieval
     private static string FindCsvPath(string fileName = "messier-catalog" + ".csv")
     {
 
-        var direct = Path.Combine(GameLoop.GetProjectPath(), fileName);
+        var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(), "ChargerAstronomyEngine", "ChargerAstronomyEngine", "Data"), "Star", fileName);
         if (File.Exists(direct)) return direct;
 
         var dir = new DirectoryInfo(GameLoop.GetProjectPath());

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EngineStateUI : MonoBehaviour
+public class quit : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -11,6 +11,10 @@ public class EngineStateUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetAxis("Exit") != 0)
+        {
+            Debug.Log("aaa");
+            Application.Quit();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace Assets.Scripts.CelestialBodies
     public sealed class Planet : CelestialBodyBase
     {
         private GameObject go;
-
+        public GameObject Go { get => go; }
         public HorizontalPlanet HorizontalPlanet => horizontalPlanet;
         private HorizontalPlanet? horizontalPlanet;
         private HorizontalBody? horizontalBody;
@@ -163,9 +163,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                -(radius * (cosAz * cosAlt)),
-                radius * sinAlt,
-                radius * cosAlt * sinAz
+                radius * cosAlt * sinAz,    // X = East component
+                radius * sinAlt,             // Y = Up (altitude)
+                radius * cosAlt * cosAz      // Z = North component
             );
         }
 

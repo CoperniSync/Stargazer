@@ -40,7 +40,7 @@ public class ConstellationSegment
 
         lineRenderer.SetPosition(0, endpoint1.Position3D);
         lineRenderer.SetPosition(1, endpoint2.Position3D);
-        lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.widthMultiplier = 0.05f;
         List<Material> matList = new List<Material>();
         matList.Add(Resources.Load<Material>("Materials/Constellation"));
         lineRenderer.SetMaterials(matList);

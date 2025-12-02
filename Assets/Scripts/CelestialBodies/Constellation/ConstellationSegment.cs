@@ -35,6 +35,9 @@ public class ConstellationSegment
         go = new("ConstellationSegment");
         lineRenderer = go.AddComponent<LineRenderer>();
 
+        lineRenderer.sortingLayerName = "Constellations";
+        lineRenderer.sortingOrder = 10;
+
         lineRenderer.SetPosition(0, endpoint1.Position3D);
         lineRenderer.SetPosition(1, endpoint2.Position3D);
         lineRenderer.widthMultiplier = 0.2f;
@@ -57,6 +60,9 @@ public class ConstellationSegment
         go = new(name);
         engine = engineIn;
         lineRenderer = go.AddComponent<LineRenderer>();
+
+        lineRenderer.sortingLayerName = "Constellations";
+        lineRenderer.sortingOrder = 10;
 
         lineRenderer.SetPosition(0, endpoint1.Position3D * 1.2f);
         lineRenderer.SetPosition(1, endpoint2.Position3D * 1.2f);

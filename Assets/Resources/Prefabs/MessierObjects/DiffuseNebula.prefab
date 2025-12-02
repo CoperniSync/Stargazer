@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7276189035239099373}
   - component: {fileID: 6299619541116663555}
   m_Layer: 0
-  m_Name: M4
+  m_Name: DiffuseNebula
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0998d41348d1c4a428c1fa475725f54a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6706e2c55b87f334697f64f2c10b9cba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.60784316}
   m_FlipX: 0
   m_FlipY: 0

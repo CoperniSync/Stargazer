@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2545802493792519196}
   - component: {fileID: -6458949532550325561}
   - component: {fileID: 6389484666741560528}
+  - component: {fileID: -6945164458553239292}
   m_Layer: 0
   m_Name: SupernovaRemnant
   m_TagString: Untagged
@@ -117,3 +118,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Tooltips.MessierHoverDetector
   gameLoop: {fileID: 0}
+--- !u!135 &-6945164458553239292
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3915653853444513409}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2.91
+  m_Center: {x: 0, y: 0, z: 0}

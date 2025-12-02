@@ -1,4 +1,5 @@
 using Assets.Scripts.CelestialBodies;
+using ChargerAstronomyShared.Domain.Horizontal;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -23,9 +24,9 @@ namespace Assets.Scripts.UI.Tooltips
                 {
                     textObject.text =
                         "The Sun\n" +
-                        "Altitude: " + sun.Altitude.ToString("F") + "\n" +
-                        "Azimuth: " + sun.Azimuth.ToString("F") + "\n" +
-                        "Distance: " + sun.Distance.ToString("F") + " AU";
+                        "Altitude: " + sun.HorizontalSun.Altitude.ToString("F") + "\n" +
+                        "Azimuth: " + sun.HorizontalSun.Azimuth.ToString("F") + "\n" +
+                        "Distance: " + sun.HorizontalSun.Distance.ToString("F") + " AU";
                     StarTooltipText.Instance.ShowAtMouse();
                     return;
                 }

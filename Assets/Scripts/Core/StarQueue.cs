@@ -50,7 +50,7 @@ public class StarQueue
     private static string FindCsvPath(string fileName = "AllStars" + ".csv")
     {
 
-        var direct = Path.Combine(Path.Combine(GameLoop.GetProjectPath(), "ChargerAstronomyEngine", "ChargerAstronomyEngine", "Data"), "Star", fileName);
+        var direct = Path.Combine(GameLoop.GetProjectPath(), "Star", fileName);
         if (File.Exists(direct)) return direct;
 
         var dir = new DirectoryInfo(GameLoop.GetProjectPath());

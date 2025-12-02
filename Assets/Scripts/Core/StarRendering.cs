@@ -13,11 +13,11 @@ namespace Assets.Scripts.Rendering
         [Header("Settings")]
         public bool billboardToCamera = true;
         [Range(0.5f, 5.0f)]
-        public float brightnessMultiplier = 0.87f;
+        public float brightnessMultiplier = 4.35f;
         [Range(0.5f, 10.0f)]
-        public float sizeMultiplier = 1.29f;
+        public float sizeMultiplier = 1.97f;
         [Range(0.0f, 1.0f)]
-        public float sizeVariation = 0.7f;
+        public float sizeVariation = 0.701f;
         [Range(1.0f, 100.0f)]
         public float minDistanceClamp = 10.0f;
 

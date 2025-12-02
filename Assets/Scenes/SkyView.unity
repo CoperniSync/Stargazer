@@ -6493,7 +6493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &576236569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13040,7 +13040,7 @@ MonoBehaviour:
   m_CaptionImage: {fileID: 0}
   m_ItemText: {fileID: 1667856511}
   m_ItemImage: {fileID: 0}
-  m_Value: 11
+  m_Value: 0
   m_Options:
     m_Options:
     - m_Text: 1

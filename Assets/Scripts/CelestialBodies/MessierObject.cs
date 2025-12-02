@@ -56,30 +56,34 @@ namespace Assets.Scripts.CelestialBodies
 
             UpdateTransformFromHorizontal();
 
-            GameObject messierObjectPrefab = prefab;
+            string type = Type;
+
+            string prefabName = GetPrefabNameForType(type);
+            string resourcePath = $"Prefabs/MessierObjects/{prefabName}";
+
+            GameObject messierObjectPrefab = Resources.Load<GameObject>(resourcePath);
+
             if (messierObjectPrefab == null)
             {
-                string messierId = MessierId?.Trim() ?? "MDefault";
+                Debug.LogWarning(
+                    $"[MessierObject] Prefab not found for type '{type}' " +
+                    $"(expected at '{resourcePath}'). Falling back to DefaultMessier."
+                );
 
-                // Resource path: Assets/Resources/Prefabs/MessierObjects/M--
-                string specificPath = $"Prefabs/MessierObjects/{messierId}";
-
-                messierObjectPrefab = Resources.Load<GameObject>(specificPath);
-
-                if (messierObjectPrefab == null)
-                {
-                    Debug.LogWarning(
-                        $"[MessierObject] Prefab not found at '{specificPath}'. " +
-                        "Falling back to 'Prefabs/MessierObjects/DefaultMessier'."
-                    );
-
-                    messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObjects/DefaultMessier");
-                }
-
-                go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
-                go.name = $"Messier_{MessierId}";
+                messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObjects/DefaultMessier");
             }
+
+            if (messierObjectPrefab == null)
+            {
+                Debug.LogError("[MessierObject] No prefab could be loaded for Messier object." +
+                               " Check your Resources/Prefabs/MessierObjects setup.");
+                return;
+            }
+
+            go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            go.name = $"Messier_{MessierId}";
         }
+        
 
         /// <summary>
         /// Updates an existing Messier object's position and scale.
@@ -208,5 +212,54 @@ namespace Assets.Scripts.CelestialBodies
             }
 
         }
+        private static string GetPrefabNameForType(string type)
+        {
+            if (string.IsNullOrWhiteSpace(type))
+                return "DefaultMessier";
+
+            switch (type.Trim())
+            {
+                case "Supernova Remnant":
+                    return "SupernovaRemnant";
+
+                case "Globular Cluster":
+                    return "GlobularCluster";
+
+                case "Open Cluster":
+                    return "OpenCluster";
+
+                case "Diffuse Nebula":
+                    return "DiffuseNebula";
+
+                case "Star Cloud":
+                    return "StarCloud";
+
+                case "Spiral Galaxy":
+                    return "SpiralGalaxy";
+
+                case "Elliptical Galaxy":
+                    return "EllipticalGalaxy";
+
+                case "Lenticular (S0) Galaxy":
+                    return "LenticularGalaxy";
+
+                case "Irregular Galaxy":
+                    return "IrregularGalaxy";
+
+                case "Planetary Nebula":
+                    return "PlanetaryNebula";
+
+                case "Double Star":
+                    return "DoubleStar";
+
+                case "Group/Asterism":
+                    return "GroupAsterism";
+
+                default:
+                    Debug.LogWarning($"[MessierObject] Unrecognized Messier type '{type}', using DefaultMessier prefab.");
+                    return "DefaultMessier";
+            }
+        }
+
     }
 }

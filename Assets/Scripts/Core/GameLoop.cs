@@ -32,8 +32,6 @@ public struct InputData
     public bool labelsOn;
 
 
-
-
 }
 
 /// <summary>
@@ -88,7 +86,6 @@ public class GameLoop : MonoBehaviour
 
         // Get the calculator
         equatorialCalculator = engineService.StartServices();
-        SetLocationAndTime();
 
         // Initialize star loading
         starQueue = new StarQueue(engineService, 500, "AllStars.csv");
@@ -287,7 +284,7 @@ public class GameLoop : MonoBehaviour
 
     public static string GetProjectPath()
     {
-        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
+        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
     }
 
     IEnumerator InitializeSky()

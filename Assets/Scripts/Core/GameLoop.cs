@@ -301,6 +301,7 @@ public class GameLoop : MonoBehaviour
             0.0
         );
         Debug.Log(inputs.Time.ToString());
+        Debug.Log(inputs.Year.ToString());
         Debug.Log(time.ToString());
         equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
     }

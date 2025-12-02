@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 6d2c9e3017a73ef4fa3b068d9a29b832, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 758d61dd22cafae47b083616d6799aea, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -5142,9 +5142,9 @@ MonoBehaviour:
   starMaterial: {fileID: 2100000, guid: ca0bc847a21301c4e95d182ae533f124, type: 2}
   starMesh: {fileID: 0}
   billboardToCamera: 1
-  brightnessMultiplier: 1.5
-  sizeMultiplier: 3
-  sizeVariation: 0.3
+  brightnessMultiplier: 3.72
+  sizeMultiplier: 2.2
+  sizeVariation: 0.955
   minDistanceClamp: 10
 --- !u!114 &403726030
 MonoBehaviour:

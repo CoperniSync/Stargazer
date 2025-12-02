@@ -315,6 +315,28 @@ public class GameLoop : MonoBehaviour
         engineObserver = inputData.observer;
     }
 
+    public List<Planet> GetPlanetList()
+    {
+        return planetList;
+    }
+
+    public List<MessierObject> GetMessierList()
+    {
+        return messierList;
+    }
+
+    public Sun GetSun()
+    {
+        return sun;
+    }
+
+    public Moon GetMoon()
+    {
+        return moon;
+    }
+
+
+
     IEnumerator InitializeSky()
     {
         // Load all stars

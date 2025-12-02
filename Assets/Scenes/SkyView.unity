@@ -155,7 +155,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -300, y: -211}
-  m_SizeDelta: {x: 64.210815, y: 96.00342}
+  m_SizeDelta: {x: 64.210815, y: 93.00342}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &9872410
 MonoBehaviour:
@@ -3157,8 +3157,8 @@ GameObject:
   - component: {fileID: 256881981}
   - component: {fileID: 256881980}
   m_Layer: 5
-  m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_Name: Text Tooltip
+  m_TagString: TextTooltip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4577,6 +4577,7 @@ GameObject:
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
   - component: {fileID: 330585549}
+  - component: {fileID: 330585550}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4732,6 +4733,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnityInterface
   speedMult: 1
+--- !u!114 &330585550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7555560705d18649b84aa3c68547409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::quit
 --- !u!1 &351954692
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ namespace Assets.Scripts.CelestialBodies
         public Vector2 Position2D { get; private set; }
 
         private GameObject go;
-
+        public GameObject Go { get => go; }
         private bool enabled;
         private bool visibilityState; // if the messier object should be rendered
 

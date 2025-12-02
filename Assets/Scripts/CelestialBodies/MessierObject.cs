@@ -56,29 +56,10 @@ namespace Assets.Scripts.CelestialBodies
 
             UpdateTransformFromHorizontal();
 
-            GameObject messierObjectPrefab = prefab;
-            if (messierObjectPrefab == null)
-            {
-                string messierId = MessierId?.Trim() ?? "MDefault";
+            GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
 
-                // Resource path: Assets/Resources/Prefabs/MessierObjects/M--
-                string specificPath = $"Prefabs/MessierObjects/{messierId}";
-
-                messierObjectPrefab = Resources.Load<GameObject>(specificPath);
-
-                if (messierObjectPrefab == null)
-                {
-                    Debug.LogWarning(
-                        $"[MessierObject] Prefab not found at '{specificPath}'. " +
-                        "Falling back to 'Prefabs/MessierObjects/DefaultMessier'."
-                    );
-
-                    messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObjects/DefaultMessier");
-                }
-
-                go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
-                go.name = $"Messier_{MessierId}";
-            }
+            go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            go.name = $"Messier_{MessierId}";
         }
 
         /// <summary>
@@ -166,9 +147,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * cosAlt * sinAz,    // X = East component
-                radius * sinAlt,             // Y = Up (altitude)
-                radius * cosAlt * cosAz      // Z = North component
+                -(radius * (cosAz * cosAlt)),
+                radius * sinAlt,
+                radius * cosAlt * sinAz
             );
         }
 

@@ -48,11 +48,10 @@ namespace Assets.Scripts.UI
         public int LatitudeMin { get; set; }
 
         //time
-        private DateTime time = new DateTime(2000,1,01,0,0,0);
+        private DateTime time = DateTime.Now;
         public DateTime Time { get => time; set => time = value; } // do not use the built in year
 
-        private int year = 2000;
-        public int Year { get => year; set => year = value; }  // seperate variable for year to bypass date
+        public int Year { get; set; }  // seperate variable for year to bypass date
 
         //labels
         public bool AzimuthLines { get; set; }
@@ -64,7 +63,9 @@ namespace Assets.Scripts.UI
         public bool MessierToggle { get; set; }
 
         //speed
-        public float SecPerSec { get; set; }
+        public uint DaysPerSec {  get; set; }
+        public uint MinPerSec { get; set; }
+        public uint SecPerSec { get; set; }
 
 
         //camera

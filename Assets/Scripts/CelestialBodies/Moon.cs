@@ -123,9 +123,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                radius * cosAlt * sinAz,    // X = East component
-                radius * sinAlt,             // Y = Up (altitude)
-                radius * cosAlt * cosAz      // Z = North component
+                -(radius * (cosAz * cosAlt)),
+                radius * sinAlt,
+                radius * cosAlt * sinAz
             );
         }
 

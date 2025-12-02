@@ -64,7 +64,9 @@ namespace Assets.Scripts.UI
         public bool MessierToggle { get; set; }
 
         //speed
-        public float SecPerSec { get; set; }
+        public uint DaysPerSec {  get; set; }
+        public uint MinPerSec { get; set; }
+        public uint SecPerSec { get; set; }
 
 
         //camera

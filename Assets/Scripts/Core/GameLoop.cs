@@ -143,7 +143,7 @@ public class GameLoop : MonoBehaviour
 
         if (!starsLoaded) return;
 
-
+        inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
         inputData.time = inputData.time.AddSeconds(deltaTime);
         if (inputData.time.Year != 2000)
         {

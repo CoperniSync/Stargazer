@@ -30,9 +30,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _Brightness: 1
-    - _BrightnessMultiplier: 1.5
+    - _BrightnessMultiplier: 1.6
     - _CoreSharpness: 0.63
-    - _CoreSize: 0.43
+    - _CoreSize: 0.5
     - _GlowSize: 1.61
     - _GlowStrength: 0.9
     - _SpikeStrength: 0.289

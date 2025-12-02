@@ -15,6 +15,8 @@ namespace Assets.Scripts.CelestialBodies
 
         private GameObject go;
 
+        public GameObject Go { get => go; } 
+
         public HorizontalMoon HorizontalMoon => horizontalMoon;
         private HorizontalMoon? horizontalMoon;
         private HorizontalBody? horizontalBody;
@@ -123,9 +125,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                -(radius * (cosAz * cosAlt)),
-                radius * sinAlt,
-                radius * cosAlt * sinAz
+                radius * cosAlt * sinAz,    // X = East component
+                radius * sinAlt,             // Y = Up (altitude)
+                radius * cosAlt * cosAz      // Z = North component
             );
         }
 

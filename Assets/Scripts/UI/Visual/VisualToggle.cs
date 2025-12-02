@@ -45,7 +45,7 @@ namespace Assets.Scripts.UI.Visual
         public void ToggleLabels(Toggle toggle)
         {
             inputs.ConstellationLabel = toggle.isOn;
-
+            gameLoop.SetLabelVisibility(toggle.isOn);
         }
     }
 }

@@ -91,17 +91,18 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 if (i.visible < 0.5) discard;
-                
+    
+                if (i.color.a > 10.0) discard;
+    
                 float2 centered = i.uv * 2.0 - 1.0;
                 float dist = length(centered);
-                
-              // Tighter, brighter core when zoomed
+    
                 float coreSize = _CoreSize / (1.0 + (_ZoomFactor - 1.0) * 0.3);
                 float core = 1.0 - smoothstep(0.0, coreSize, dist);
-                core = pow(core, 0.3);; 
-                
+                core = pow(core, 0.3);
+    
                 float disk = smoothstep(_CoreSize * 0.8, _CoreSize * 0.5, dist);
-                
+    
                 float glowBoost = 1.0 + (_ZoomFactor - 1.0) * 0.3;
                 float glow = exp(-dist * 5.0) * _GlowStrength * glowBoost;
 
@@ -109,23 +110,26 @@
                 float angle = atan2(centered.y, centered.x);
                 float spikes = pow(abs(cos(angle * 2.0)), 25.0);
                 spikes *= smoothstep(0.5, 0.25, dist) * smoothstep(0.0, 0.1, dist);
-                spikes *= _SpikeStrength;
-                
+    
                 float spikeBoost = 1.0 + (_ZoomFactor - 1.0) * 0.5;
                 spikes *= _SpikeStrength * spikeBoost;
 
                 float brightness = disk * 3.0 + core * 2.0 + glow + spikes * 0.3;
                 brightness *= i.color.a; 
                 brightness *= _BrightnessMultiplier;
-                
+    
                 fixed4 col = i.color * _BaseColor;
                 col.rgb *= brightness;
-                
+    
+                col.rgb = saturate(col.rgb);
+    
                 float coreBoost = smoothstep(_CoreSize * 0.6, 0.0, dist);
                 col.rgb += coreBoost * i.color.rgb * 0.5;
-                
+    
+                col.rgb = min(col.rgb, float3(3.0, 3.0, 3.0));
+    
                 col.a = saturate(brightness);
-                
+    
                 if (brightness < 0.005) discard;
 
                 return col;

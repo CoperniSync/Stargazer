@@ -12,7 +12,7 @@ namespace Assets.Scripts.CelestialBodies
     public sealed class Planet : CelestialBodyBase
     {
         private GameObject go;
-
+        public GameObject Go { get => go; }
         public HorizontalPlanet HorizontalPlanet => horizontalPlanet;
         private HorizontalPlanet? horizontalPlanet;
         private HorizontalBody? horizontalBody;
@@ -38,8 +38,34 @@ namespace Assets.Scripts.CelestialBodies
             horizontalBody = hPlanet;
             DrawnDistance = drawnDistance;
 
-            // Load prefab from Resources (same naming pattern)
-            GameObject planetPrefab = Resources.Load<GameObject>("Prefabs/Planet");
+            string planetName = string.IsNullOrWhiteSpace(hPlanet.Name)
+               ? "Planet"
+               : hPlanet.Name;
+
+            string prefabPath = $"Prefabs/Planets/{planetName}";
+
+            // Load prefab from Resources
+            GameObject planetPrefab = Resources.Load<GameObject>(prefabPath);
+
+            // Throw Error if prefab not found
+            if (planetPrefab == null)
+            {
+                Debug.LogWarning(
+                    $"[Planet] Prefab not found at '{prefabPath}'. " +
+                    "Falling back to 'Prefabs/Planet'."
+                );
+
+                planetPrefab = Resources.Load<GameObject>("Prefabs/Planet");
+            }
+
+            if (planetPrefab == null)
+            {
+                Debug.LogError("[Planet] No planet prefab found at all! " +
+                               "Ensure you have 'Resources/Prefabs/Planet.prefab' " +
+                               "or planet-specific prefabs configured.");
+                return;
+            }
+
 
             // compute initial world position
             UpdateTransformFromHorizontal();
@@ -137,9 +163,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                -(radius * (cosAz * cosAlt)),
-                radius * sinAlt,
-                radius * cosAlt * sinAz
+                radius * cosAlt * sinAz,    // X = East component
+                radius * sinAlt,             // Y = Up (altitude)
+                radius * cosAlt * cosAz      // Z = North component
             );
         }
 

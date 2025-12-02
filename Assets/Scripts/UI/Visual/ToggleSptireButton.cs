@@ -13,8 +13,6 @@ namespace Assets.Scripts.UI.Visual
         void Start()
         {
             buttonImage = GetComponent<Image>();
-            // Set initial sprite
-            buttonImage.sprite = isOn ? spriteOn : spriteOff;
         }
 
         public void ToggleSprite()

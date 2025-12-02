@@ -16,6 +16,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public struct InputData
 {
@@ -28,6 +29,14 @@ public struct InputData
 
     // state of constellations
     public bool constellationOn;
+
+    public bool labelsOn;
+
+    public Observer observer;
+
+    public DateTime time;
+
+    public int year;
 
 
 }
@@ -71,6 +80,10 @@ public class GameLoop : MonoBehaviour
         planetList = new List<Planet>();
         inputData.messierOn = true;
         inputData.constellationOn = true;
+        inputData.observer = new Observer(0.0, 0.0, 0.0);
+        var inputs = InputContainer.Container;
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
         // set up engine service
 
         // Set up engine service with proper tile index
@@ -84,12 +97,15 @@ public class GameLoop : MonoBehaviour
 
         // Get the calculator
         equatorialCalculator = engineService.StartServices();
+        SetLocationAndTime();
 
         // Initialize star loading
         starQueue = new StarQueue(engineService, 500, "AllStars.csv");
 
         // Get local objects (planets, sun, moon)
         LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
+
+        messierList = MessierRetrieval.GetMessier(engineService);
 
         // Start initialization coroutine
         StartCoroutine(InitializeSky());
@@ -124,8 +140,16 @@ public class GameLoop : MonoBehaviour
 
     private void UpdateSimulation(float deltaTime)
     {
+
         if (!starsLoaded) return;
 
+        inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+        inputData.time = inputData.time.AddSeconds(deltaTime);
+        if (inputData.time.Year != 2000)
+        {
+            inputData.year = inputData.year + (inputData.time.Year - 2000);
+            inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+        }
         SetCameraPosition();
 
         float magnitudeCutoff = CalculateMagnitudeCutoff(Camera.main.fieldOfView);
@@ -140,9 +164,9 @@ public class GameLoop : MonoBehaviour
             speedMult
         );
 
-   
-        // important to this part first otherwise there is a verry weird visual bug for some reason
-        
+
+        // important to do this part first otherwise there is a very weird visual bug for some reason
+
         IHorizontal pulledObject;
 
         int updateCount = 0;
@@ -152,16 +176,12 @@ public class GameLoop : MonoBehaviour
             updateCount++;
         }
 
-        // process activation queue
+        // Process activation queue
         int activationCount = 0;
         while (ActivationQueue.TryTake(out pulledObject, 0))
         {
             pulledObject.SetState(true);
             activationCount++;
-        }
-        if (activationCount > 0)
-        {
-            //Debug.Log(${activationCount} stars");
         }
 
         // Process deactivation queue
@@ -171,11 +191,12 @@ public class GameLoop : MonoBehaviour
             pulledObject.SetState(false);
             deactivationCount++;
         }
-        if (deactivationCount > 0)
-        {
-            //Debug.Log($"{deactivationCount} stars");
-        }
 
+        foreach (MessierObject messier in messierList)
+        {
+            engineService.ForceStarUpdate(messier);
+            messier.UpdatePosition();
+        }
 
         // Update the sun moon and planets 
         equatorialCalculator.UpdatePositionOf(moon.HorizontalMoon);
@@ -223,6 +244,23 @@ public class GameLoop : MonoBehaviour
     }
 
     /// <summary>
+    /// sets the visibilty of conste;lations labels
+    /// </summary>
+    public void SetLabelVisibility(bool visible)
+    {
+        inputData.constellationOn = visible;
+        foreach (UnityConstellation c in constellationList)
+        {
+            c.SetLabelVisible(visible);
+        }
+    }
+
+    public void SetSpeedMultiplier(float speed)
+    {
+        speedMult = speed;
+    }
+
+    /// <summary>
     /// Updates the engine's camera position based on the Input Container
     /// </summary>
     public void SetCameraPosition()
@@ -243,7 +281,9 @@ public class GameLoop : MonoBehaviour
     public void SetLocationAndTime()
     {
         var inputs = InputContainer.Container;
-        var newTime = new CalendarDateTime(
+        inputData.time = inputs.Time;
+        inputData.year = inputs.Year;
+        var time = new CalendarDateTime(
             inputs.Year,
             inputs.Time.Month,
             inputs.Time.Day,
@@ -252,19 +292,50 @@ public class GameLoop : MonoBehaviour
             inputs.Time.Second
         );
 
-        var newObserver = new Observer(
+        inputData.observer = new Observer(
             Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin) / 60.0),
             Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
             0.0
         );
-
-        equatorialCalculator.UpdateTimeAndLocation(newTime, newObserver);
+        Debug.Log(time.ToString());
+        Debug.Log(inputData.observer.ToString());
+        equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
     }
 
     public static string GetProjectPath()
     {
-        return new DirectoryInfo(Application.streamingAssetsPath).Parent.Parent.Parent.ToString();
+        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
     }
+
+    public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)
+    {
+        camDirection = InputContainer.Container.RotationVector;
+        engineYear = inputData.year;
+        engineTime = inputData.time;
+        engineObserver = inputData.observer;
+    }
+
+    public List<Planet> GetPlanetList()
+    {
+        return planetList;
+    }
+
+    public List<MessierObject> GetMessierList()
+    {
+        return messierList;
+    }
+
+    public Sun GetSun()
+    {
+        return sun;
+    }
+
+    public Moon GetMoon()
+    {
+        return moon;
+    }
+
+
 
     IEnumerator InitializeSky()
     {
@@ -276,9 +347,9 @@ public class GameLoop : MonoBehaviour
         }
 
         // get constellation
-        ConstellationRetrieval.GetConstellations(ref constellationList, starList, inputData.constellationOn);
-        
-        
+        ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
+
+
         engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn
 
         engineService.PlaceStars();

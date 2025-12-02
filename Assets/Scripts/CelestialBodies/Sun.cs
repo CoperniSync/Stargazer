@@ -15,6 +15,7 @@ namespace Assets.Scripts.CelestialBodies
 
         public HorizontalSun HorizontalSun => horizontalSun;
         private GameObject go;
+        public GameObject Go { get => go; }
 
         private HorizontalSun? horizontalSun;
         private HorizontalBody? horizontalBody;
@@ -46,6 +47,8 @@ namespace Assets.Scripts.CelestialBodies
             // spawn prefab
             go = Object.Instantiate(sunPrefab, Position3D, Quaternion.identity);
             go.name = "Sun";
+            go.transform.localScale = new Vector3(5, 5, 5);
+
         }
 
         /// <summary>
@@ -59,7 +62,6 @@ namespace Assets.Scripts.CelestialBodies
             if (go != null)
             {
                 go.transform.position = Position3D;
-                go.transform.localScale = LocalScale;
             }
         }
 
@@ -108,6 +110,7 @@ namespace Assets.Scripts.CelestialBodies
                 DrawnDistance
             );
 
+
             // Screen-space for UI
             var cam = Camera.main;
             if (cam != null)
@@ -132,9 +135,9 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                -(radius * (cosAz * cosAlt)),
-                radius * sinAlt,
-                radius * cosAlt * sinAz
+                radius * cosAlt * sinAz,    // X = East component
+                radius * sinAlt,             // Y = Up (altitude)
+                radius * cosAlt * cosAz      // Z = North component
             );
         }
 

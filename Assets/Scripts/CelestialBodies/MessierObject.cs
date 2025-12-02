@@ -3,6 +3,7 @@ using ChargerAstronomyShared.Domain.Equatorial;
 using ChargerAstronomyShared.Domain.Horizontal;
 using ChargerAstronomyShared.Contracts.Models;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts.CelestialBodies
 {
@@ -36,7 +37,7 @@ namespace Assets.Scripts.CelestialBodies
         public Vector2 Position2D { get; private set; }
 
         private GameObject go;
-
+        public GameObject Go { get => go; }
         private bool enabled;
         private bool visibilityState; // if the messier object should be rendered
 
@@ -56,11 +57,35 @@ namespace Assets.Scripts.CelestialBodies
 
             UpdateTransformFromHorizontal();
 
-            GameObject messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObject");
+            string type = Type;
+
+            string prefabName = GetPrefabNameForType(type);
+            string resourcePath = $"Prefabs/MessierObjects/{prefabName}";
+
+            GameObject messierObjectPrefab = Resources.Load<GameObject>(resourcePath);
+
+            if (messierObjectPrefab == null)
+            {
+                Debug.LogWarning(
+                    $"[MessierObject] Prefab not found for type '{type}' " +
+                    $"(expected at '{resourcePath}'). Falling back to DefaultMessier."
+                );
+
+                messierObjectPrefab = Resources.Load<GameObject>("Prefabs/MessierObjects/DefaultMessier");
+            }
+
+            if (messierObjectPrefab == null)
+            {
+                Debug.LogError("[MessierObject] No prefab could be loaded for Messier object." +
+                               " Check your Resources/Prefabs/MessierObjects setup.");
+                return;
+            }
 
             go = Object.Instantiate(messierObjectPrefab, Position3D, Quaternion.identity);
+            UpdateVisibility();
             go.name = $"Messier_{MessierId}";
         }
+        
 
         /// <summary>
         /// Updates an existing Messier object's position and scale.
@@ -147,10 +172,18 @@ namespace Assets.Scripts.CelestialBodies
             float sinAz = Mathf.Sin(az);
 
             return new Vector3(
-                -(radius * (cosAz * cosAlt)),
-                radius * sinAlt,
-                radius * cosAlt * sinAz
+                radius * cosAlt * sinAz,    // X = East component
+                radius * sinAlt,             // Y = Up (altitude)
+                radius * cosAlt * cosAz      // Z = North component
             );
+        }
+
+        private void UpdateVisibility()
+        {
+            if (go != null)
+            {
+                go.SetActive(enabled);
+            }
         }
 
         /// <summary>
@@ -158,11 +191,7 @@ namespace Assets.Scripts.CelestialBodies
         /// </summary>
         public void SetState(bool state)
         {
-            enabled = state;
-            if (go != null)
-            {
-                go.SetActive(enabled && visibilityState);
-            }
+            // Not used anymore - Messier objects aren't part of the culling system
         }
 
         /// <summary>
@@ -171,7 +200,10 @@ namespace Assets.Scripts.CelestialBodies
         public void SetVisible(bool newVisibility)
         {
             visibilityState = newVisibility;
-            SetState(enabled);
+            if (go != null)
+            {
+                go.SetActive(visibilityState);
+            }
         }
 
         /// <summary>
@@ -179,15 +211,62 @@ namespace Assets.Scripts.CelestialBodies
         /// </summary>
         public void UpdatePosition()
         {
-
             UpdateTransformFromHorizontal();
 
-            // update GameObject transform
             if (go != null)
             {
                 go.transform.position = Position3D;
+                // Visibility is controlled solely by visibilityState now
             }
-
         }
+        private static string GetPrefabNameForType(string type)
+        {
+            if (string.IsNullOrWhiteSpace(type))
+                return "DefaultMessier";
+
+            switch (type.Trim())
+            {
+                case "Supernova Remnant":
+                    return "SupernovaRemnant";
+
+                case "Globular Cluster":
+                    return "GlobularCluster";
+
+                case "Open Cluster":
+                    return "OpenCluster";
+
+                case "Diffuse Nebula":
+                    return "DiffuseNebula";
+
+                case "Star Cloud":
+                    return "StarCloud";
+
+                case "Spiral Galaxy":
+                    return "SpiralGalaxy";
+
+                case "Elliptical Galaxy":
+                    return "EllipticalGalaxy";
+
+                case "Lenticular (S0) Galaxy":
+                    return "LenticularGalaxy";
+
+                case "Irregular Galaxy":
+                    return "IrregularGalaxy";
+
+                case "Planetary Nebula":
+                    return "PlanetaryNebula";
+
+                case "Double Star":
+                    return "DoubleStar";
+
+                case "Group/Asterism":
+                    return "GroupAsterism";
+
+                default:
+                    Debug.LogWarning($"[MessierObject] Unrecognized Messier type '{type}', using DefaultMessier prefab.");
+                    return "DefaultMessier";
+            }
+        }
+
     }
 }

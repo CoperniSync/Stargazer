@@ -243,6 +243,7 @@ public class Calendar : MonoBehaviour
                 if (buttons[column, row].button == buttonPressed)
                 {
                     inputs.Time = new(buttons[column, row].year, buttons[column, row].month, buttons[column, row].day, inputs.Time.Hour, inputs.Time.Minute, inputs.Time.Second, inputs.Time.Millisecond, inputs.Time.Kind);
+                    inputs.Year = buttons[column, row].year;
                     Debug.Log(inputs.Time.ToString() +"\n" +DateTime.Now.ToString());
                     return;
                 }

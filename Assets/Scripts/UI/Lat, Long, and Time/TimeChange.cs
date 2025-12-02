@@ -38,7 +38,7 @@ public class TimeChange : MonoBehaviour
         }
         newTime = newTime.AddMinutes(Minute.value);
         inputs.Time = newTime;
-
+        
     }
 
 }

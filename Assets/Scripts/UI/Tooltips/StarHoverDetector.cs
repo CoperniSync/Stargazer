@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.CelestialBodies;   // Star
+using Assets.Scripts.CelestialBodies;
 
 namespace Assets.Scripts.UI.Tooltips
 {

@@ -4,55 +4,59 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-// Author: Morgan Hendon FA 2025
-
-public class LatChange : MonoBehaviour
+namespace Assets.Scripts.UI.LatLongTime
 {
 
-    //get user input sigleton
-    private InputContainer inputs = InputContainer.Container;
-    
-    public void updateLatitudeDeg()
+    // Author: Morgan Hendon FA 2025
+
+    public class LatChange : MonoBehaviour
     {
-        // check if string is empty
-        if (this.gameObject.transform.GetComponent<InputField>().text == "")
+
+        //get user input sigleton
+        private InputContainer inputs = InputContainer.Container;
+
+        public void updateLatitudeDeg()
         {
-            return;
+            // check if string is empty
+            if (gameObject.transform.GetComponent<InputField>().text == "")
+            {
+                return;
+            }
+
+            int newLat = int.Parse(gameObject.transform.GetComponent<InputField>().text);
+            if (newLat > 90)
+            {
+                newLat = 90;
+            }
+            else if (newLat < -90)
+            {
+                newLat = -90;
+            }
+            gameObject.transform.GetComponent<InputField>().text = newLat.ToString();
+            inputs.LatitudeDeg = newLat;
+            Debug.Log(inputs.LatitudeDeg);
         }
 
-        int newLat = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
-        if(newLat>90)
+        public void updateLatitudeMin()
         {
-            newLat = 90;
-        }
-        else if(newLat<-90)
-        {
-            newLat = -90;
-        }
-        this.gameObject.transform.GetComponent<InputField>().text = newLat.ToString();
-        inputs.LatitudeDeg = newLat;
-        Debug.Log(inputs.LatitudeDeg);
-    }
+            // check if string is empty
+            if (gameObject.transform.GetComponent<InputField>().text == "")
+            {
+                return;
+            }
 
-    public void updateLatitudeMin()
-    {
-        // check if string is empty
-        if (this.gameObject.transform.GetComponent<InputField>().text == "")
-        {
-            return;
+            int newLat = int.Parse(gameObject.transform.GetComponent<InputField>().text);
+            if (newLat > 60)
+            {
+                newLat = 60;
+            }
+            else if (newLat < 0)
+            {
+                newLat = 0;
+            }
+            gameObject.transform.GetComponent<InputField>().text = newLat.ToString();
+            inputs.LatitudeMin = newLat;
+            Debug.Log(inputs.LatitudeMin);
         }
-
-        int newLat = Int32.Parse(this.gameObject.transform.GetComponent<InputField>().text);
-        if (newLat > 60)
-        {
-            newLat = 60;
-        }
-        else if (newLat < 0)
-        {
-            newLat = 0;
-        }
-        this.gameObject.transform.GetComponent<InputField>().text = newLat.ToString();
-        inputs.LatitudeMin = newLat;
-        Debug.Log(inputs.LatitudeMin);
     }
 }

@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class BillboardToCamera : MonoBehaviour
+namespace Assets.Scripts.Core
 {
-    void LateUpdate()
+    public class BillboardToCamera : MonoBehaviour
     {
-        if (Camera.main == null) return;
+        void LateUpdate()
+        {
+            if (Camera.main == null) return;
 
-        // Make the sprite face the camera
-        transform.forward = Camera.main.transform.forward;
+            // Make the sprite face the camera
+            transform.forward = Camera.main.transform.forward;
+        }
     }
 }

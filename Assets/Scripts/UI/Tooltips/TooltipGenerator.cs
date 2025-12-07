@@ -1,11 +1,12 @@
 using UnityEngine;
 
-public class TooltipGenerator : MonoBehaviour
+namespace Assets.Scripts.UI.Tooltips
 {
-
-
-    public GameObject generateToolTip()
+    public class TooltipGenerator : MonoBehaviour
     {
-        return null;
+        public GameObject generateToolTip()
+        {
+            return null;
+        }
     }
 }

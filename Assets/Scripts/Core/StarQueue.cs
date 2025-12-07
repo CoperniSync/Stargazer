@@ -12,94 +12,98 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-// Author: Morgan Hendon FA 2025
-
-public class StarQueue
+namespace Assets.Scripts.Core
 {
-   
 
-    private SpatialStarIndex<IHorizontal> starIndex;
-    
-    private CsvStarRepository starRepo; // repository to pull stars from
+    // Author: Morgan Hendon FA 2025
 
-    private BoundedInitializationQueue<PageResult<EquatorialStar>> queue;
-    
-    /// <summary>
-    /// Construct a new instance of StarQueue and have it start pulling data from the designated repo
-    /// </summary>
-    public StarQueue(IEngineService<IHorizontal> engineService, int amountToTake, string fileName = "AllStars" + ".csv")
-    {
-        starRepo = new(FindCsvPath(fileName));
-        queue = new(capacity: 5);
-
-        starIndex = engineService.SpatialStarIndex;
-        FillQueue(amountToTake, queue, starRepo);
-    }
-    /// <summary>
-    /// The method that stars pulling data from the repo using BoundedInitialization Queue
-    /// </summary>
-    private async Task FillQueue(int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
-    {
-        _ = Task.Run(() => starRepo.ProducePagesAsync(queue, new PageRequest(0, amountToTake), CancellationToken.None));
-        await Task.Delay(0);
-    }
-
-    /// <summary>
-    /// Gets the file for the designated repo at fileName
-    /// </summary>
-    private static string FindCsvPath(string fileName = "AllStars" + ".csv")
+    public class StarQueue
     {
 
-        var direct = Path.Combine(GameLoop.GetProjectPath(), fileName);
-        if (File.Exists(direct)) return direct;
 
-        var dir = new DirectoryInfo(GameLoop.GetProjectPath());
-        for (int i = 0; i < 8 && dir != null; i++, dir = dir.Parent)
+        private SpatialStarIndex<IHorizontal> starIndex;
+
+        private CsvStarRepository starRepo; // repository to pull stars from
+
+        private BoundedInitializationQueue<PageResult<EquatorialStar>> queue;
+
+        /// <summary>
+        /// Construct a new instance of StarQueue and have it start pulling data from the designated repo
+        /// </summary>
+        public StarQueue(IEngineService<IHorizontal> engineService, int amountToTake, string fileName = "AllStars" + ".csv")
         {
-            var candidate = Directory.EnumerateFiles(dir.FullName, fileName, SearchOption.AllDirectories)
-                .FirstOrDefault();
+            starRepo = new(FindCsvPath(fileName));
+            queue = new(capacity: 5);
 
-            if (candidate != null) return candidate;
+            starIndex = engineService.SpatialStarIndex;
+            FillQueue(amountToTake, queue, starRepo);
+        }
+        /// <summary>
+        /// The method that stars pulling data from the repo using BoundedInitialization Queue
+        /// </summary>
+        private async Task FillQueue(int amountToTake, BoundedInitializationQueue<PageResult<EquatorialStar>> queue, CsvStarRepository starRepo)
+        {
+            _ = Task.Run(() => starRepo.ProducePagesAsync(queue, new PageRequest(0, amountToTake), CancellationToken.None));
+            await Task.Delay(0);
         }
 
-        throw new FileNotFoundException($"Could not locate '{fileName}'. " +
-            "Mark it as Content -> Copy if newer, or place it next to the test binaries.");
-
-    }
-
-    /// <summary>
-    /// A star located by the Horizontal Coordinate method
-    /// </summary>
-    public bool TryDequeue(ref List<Star> starList)
-    {
-        if (queue != null && queue.TryDequeue(out var pr))
+        /// <summary>
+        /// Gets the file for the designated repo at fileName
+        /// </summary>
+        private static string FindCsvPath(string fileName = "AllStars" + ".csv")
         {
-            IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
-            foreach (EquatorialStar equatorialStar in equatorialList)
+
+            var direct = Path.Combine(GameLoop.GetProjectPath(), fileName);
+            if (File.Exists(direct)) return direct;
+
+            var dir = new DirectoryInfo(GameLoop.GetProjectPath());
+            for (int i = 0; i < 8 && dir != null; i++, dir = dir.Parent)
             {
-                HorizontalStar hstar = new HorizontalStar(equatorialStar);
+                var candidate = Directory.EnumerateFiles(dir.FullName, fileName, SearchOption.AllDirectories)
+                    .FirstOrDefault();
+
+                if (candidate != null) return candidate;
+            }
+
+            throw new FileNotFoundException($"Could not locate '{fileName}'. " +
+                "Mark it as Content -> Copy if newer, or place it next to the test binaries.");
+
+        }
+
+        /// <summary>
+        /// A star located by the Horizontal Coordinate method
+        /// </summary>
+        public bool TryDequeue(ref List<Star> starList)
+        {
+            if (queue != null && queue.TryDequeue(out var pr))
+            {
+                IReadOnlyList<EquatorialStar> equatorialList = pr.Items;
+                foreach (EquatorialStar equatorialStar in equatorialList)
+                {
+                    HorizontalStar hstar = new HorizontalStar(equatorialStar);
                     Star newStar = new(hstar, 150f);
                     starIndex.AddStar(newStar);
                     starList.Add(newStar);
                     newStar.UpdatePosition();
-                   
+
+                }
+
+                return true;
             }
-
-            return true;
+            else
+            {
+                return false;
+            }
         }
-        else
+
+        public bool IsCompleted()
         {
-            return false;
+            return queue.IsCompleted;
         }
-    }
 
-    public bool IsCompleted()
-    {
-        return queue.IsCompleted;
-    }
-
-    public void Dispose()
-    {
-        queue.Dispose();
+        public void Dispose()
+        {
+            queue.Dispose();
+        }
     }
 }

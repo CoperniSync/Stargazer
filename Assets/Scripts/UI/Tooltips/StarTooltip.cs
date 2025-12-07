@@ -1,26 +1,29 @@
 using UnityEngine;
 
-public class StarTooltip : MonoBehaviour
+namespace Assets.Scripts.UI.Tooltips
 {
-
-    private bool isMouseOver = false;
-    public GameObject canvas;
-    TooltipGenerator tt;
-
-    private void Start()
+    public class StarTooltip : MonoBehaviour
     {
-       tt = canvas.GetComponent<TooltipGenerator>();
+
+        private bool isMouseOver = false;
+        public GameObject canvas;
+        TooltipGenerator tt;
+
+        private void Start()
+        {
+            tt = canvas.GetComponent<TooltipGenerator>();
+
+        }
+        private void OnMouseOver()
+        {
+
+            isMouseOver = true;
+        }
+
+        private void OnMouseExit()
+        {
+            isMouseOver = false;
+        }
 
     }
-    private void OnMouseOver()
-    {
-        
-        isMouseOver = true;
-    }
-
-    private void OnMouseExit()
-    {
-        isMouseOver = false;
-    }
-
 }

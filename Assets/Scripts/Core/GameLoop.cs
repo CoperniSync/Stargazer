@@ -1,5 +1,5 @@
 using Assets.Scripts.CelestialBodies;
-using Assets.Scripts.Core;
+using Assets.Scripts.CelestialBodies.Constellations;
 using Assets.Scripts.UI;
 using ChargerAstronomyEngine.CosineKittyAstronomy.Enums;
 using ChargerAstronomyEngine.Streaming;
@@ -45,329 +45,333 @@ public struct InputData
 /// Main game loop controller. Updated to properly handle coordinate transformations
 /// and efficient star culling via the heat map system.
 /// </summary>
-public class GameLoop : MonoBehaviour
+
+namespace Assets.Scripts.Core
 {
-    private const int SUBDIVISIONS = 3;
-    public float speedMult = 1;
-
-    private IEquatorialCalculator equatorialCalculator;
-    private IEngineService<IHorizontal> engineService;
-    private StarQueue starQueue;
-
-    private List<Star> starList;
-    private List<MessierObject> messierList;
-    private List<Planet> planetList;
-    private List<UnityConstellation> constellationList;
-
-    private BlockingCollection<IHorizontal> ActivationQueue;
-    private BlockingCollection<IHorizontal> DeactivationQueue;
-    private BlockingCollection<IHorizontal> UpdateTransformQueue;
-
-    private Sun sun;
-    private Moon moon;
-    private InputData inputData = new();
-
-    // For debugging
-    private float debugTimer = 0f;
-    private const float DEBUG_INTERVAL = 1f;
-
-    bool starsLoaded = false;
-
-    void Start()
+    public class GameLoop : MonoBehaviour
     {
-        starList = new List<Star>();
-        constellationList = new List<UnityConstellation>();
-        planetList = new List<Planet>();
-        inputData.messierOn = true;
-        inputData.constellationOn = true;
-        inputData.observer = new Observer(0.0, 0.0, 0.0);
-        var inputs = InputContainer.Container;
-        inputData.time = inputs.Time;
-        inputData.year = inputs.Year;
-        // set up engine service
+        private const int SUBDIVISIONS = 3;
+        public float speedMult = 1;
 
-        // Set up engine service with proper tile index
-        ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
-        engineService = new EngineService<IHorizontal>(tileIndex);
+        private IEquatorialCalculator equatorialCalculator;
+        private IEngineService<IHorizontal> engineService;
+        private StarQueue starQueue;
 
-        // Get references to queues
-        ActivationQueue = engineService.ActivationQueue;
-        DeactivationQueue = engineService.DeactivationQueue;
-        UpdateTransformQueue = engineService.UpdateTransformQueue;
+        private List<Star> starList;
+        private List<MessierObject> messierList;
+        private List<Planet> planetList;
+        private List<UnityConstellation> constellationList;
 
-        // Get the calculator
-        equatorialCalculator = engineService.StartServices();
-        SetLocationAndTime();
+        private BlockingCollection<IHorizontal> ActivationQueue;
+        private BlockingCollection<IHorizontal> DeactivationQueue;
+        private BlockingCollection<IHorizontal> UpdateTransformQueue;
 
-        // Initialize star loading
-        starQueue = new StarQueue(engineService, 500, "AllStars.csv");
+        private Sun sun;
+        private Moon moon;
+        private InputData inputData = new();
 
-        // Get local objects (planets, sun, moon)
-        LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
+        // For debugging
+        private float debugTimer = 0f;
+        private const float DEBUG_INTERVAL = 1f;
 
-        messierList = MessierRetrieval.GetMessier(engineService);
+        bool starsLoaded = false;
 
-        // Start initialization coroutine
-        StartCoroutine(InitializeSky());
-    }
-
-    void Update()
-    {
-        UpdateSimulation(Time.deltaTime * speedMult);
-
-        // Debug output
-        debugTimer += Time.deltaTime;
-        if (debugTimer >= DEBUG_INTERVAL)
+        void Start()
         {
-            debugTimer = 0f;
-            if (engineService is EngineService<IHorizontal> engine)
-            {
-                var stats = engine.GetStats();
+            starList = new List<Star>();
+            constellationList = new List<UnityConstellation>();
+            planetList = new List<Planet>();
+            inputData.messierOn = true;
+            inputData.constellationOn = true;
+            inputData.observer = new Observer(0.0, 0.0, 0.0);
+            var inputs = InputContainer.Container;
+            inputData.time = inputs.Time;
+            inputData.year = inputs.Year;
+            // set up engine service
 
-                //Debug.Log($"Engine Stats: {stats}");
+            // Set up engine service with proper tile index
+            ITileIndex tileIndex = new IcosphereTileIndex(SUBDIVISIONS);
+            engineService = new EngineService<IHorizontal>(tileIndex);
+
+            // Get references to queues
+            ActivationQueue = engineService.ActivationQueue;
+            DeactivationQueue = engineService.DeactivationQueue;
+            UpdateTransformQueue = engineService.UpdateTransformQueue;
+
+            // Get the calculator
+            equatorialCalculator = engineService.StartServices();
+            SetLocationAndTime();
+
+            // Initialize star loading
+            starQueue = new StarQueue(engineService, 500, "AllStars.csv");
+
+            // Get local objects (planets, sun, moon)
+            LocalObjectRetrieval.GetLocalObjects(ref moon, ref planetList, ref sun);
+
+            messierList = MessierRetrieval.GetMessier(engineService);
+
+            // Start initialization coroutine
+            StartCoroutine(InitializeSky());
+        }
+
+        void Update()
+        {
+            UpdateSimulation(Time.deltaTime * speedMult);
+
+            // Debug output
+            debugTimer += Time.deltaTime;
+            if (debugTimer >= DEBUG_INTERVAL)
+            {
+                debugTimer = 0f;
+                if (engineService is EngineService<IHorizontal> engine)
+                {
+                    var stats = engine.GetStats();
+
+                    //Debug.Log($"Engine Stats: {stats}");
+                }
             }
         }
-    }
 
-    private float CalculateMagnitudeCutoff(float fovDegrees)
-    {
-        float baseLimit = 6.0f;
-        float zoomFactor = 60f / Mathf.Max(fovDegrees, 0.1f);
-        float magnitudeBoost = Mathf.Log(zoomFactor, 2f) * 1.5f; // ~1.5 mag per doubling of zoom
-
-        return baseLimit + magnitudeBoost;
-    }
-
-    private void UpdateSimulation(float deltaTime)
-    {
-
-        if (!starsLoaded) return;
-
-        inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
-        inputData.time = inputData.time.AddSeconds(deltaTime);
-        if (inputData.time.Year != 2000)
+        private float CalculateMagnitudeCutoff(float fovDegrees)
         {
-            inputData.year = inputData.year + (inputData.time.Year - 2000);
+            float baseLimit = 6.0f;
+            float zoomFactor = 60f / Mathf.Max(fovDegrees, 0.1f);
+            float magnitudeBoost = Mathf.Log(zoomFactor, 2f) * 1.5f; // ~1.5 mag per doubling of zoom
+
+            return baseLimit + magnitudeBoost;
+        }
+
+        private void UpdateSimulation(float deltaTime)
+        {
+
+            if (!starsLoaded) return;
+
             inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
-        }
-        SetCameraPosition();
-
-        float magnitudeCutoff = CalculateMagnitudeCutoff(Camera.main.fieldOfView);
-
-        engineService.Step(
-            deltaTime,
-            inputData.camDirHorizontal.X,
-            inputData.camDirHorizontal.Y,
-            inputData.camDirHorizontal.Z,
-            inputData.fov,
-            magnitudeCutoff,
-            speedMult
-        );
-
-
-        // important to do this part first otherwise there is a very weird visual bug for some reason
-
-        IHorizontal pulledObject;
-
-        int updateCount = 0;
-        while (UpdateTransformQueue.TryTake(out pulledObject, 0))
-        {
-            pulledObject.UpdatePosition();
-            updateCount++;
-        }
-
-        // Process activation queue
-        int activationCount = 0;
-        while (ActivationQueue.TryTake(out pulledObject, 0))
-        {
-            pulledObject.SetState(true);
-            activationCount++;
-        }
-
-        // Process deactivation queue
-        int deactivationCount = 0;
-        while (DeactivationQueue.TryTake(out pulledObject, 0))
-        {
-            pulledObject.SetState(false);
-            deactivationCount++;
-        }
-
-        foreach (MessierObject messier in messierList)
-        {
-            engineService.ForceStarUpdate(messier);
-            messier.UpdatePosition();
-        }
-
-        // Update the sun moon and planets 
-        equatorialCalculator.UpdatePositionOf(moon.HorizontalMoon);
-        moon.UpdatePosition();
-
-        equatorialCalculator.UpdatePositionOf(sun.HorizontalSun);
-        sun.UpdatePosition();
-
-        foreach (Planet planet in planetList)
-        {
-            equatorialCalculator.UpdatePositionOf(planet.HorizontalPlanet);
-            planet.UpdatePosition();
-        }
-
-        // update constellations
-        foreach (var constellation in constellationList)
-        {
-            constellation.UpdatePosition();
-        }
-    }
-
-    /// <summary>
-    /// set if the messier Objects are being forced from displaying
-    /// </summary>
-    public void SetMessierVisibility(bool visible)
-    {
-        inputData.messierOn = visible;
-        foreach (MessierObject m in messierList)
-        {
-            m.SetVisible(visible);
-        }
-    }
-
-
-    /// <summary>
-    /// sets the visibilty of constelations
-    /// </summary>
-    public void SetConstellationVisibility(bool visible)
-    {
-        inputData.constellationOn = visible;
-        foreach (UnityConstellation c in constellationList)
-        {
-            c.SetVisible(visible);
-        }
-    }
-
-    /// <summary>
-    /// sets the visibilty of conste;lations labels
-    /// </summary>
-    public void SetLabelVisibility(bool visible)
-    {
-        inputData.constellationOn = visible;
-        foreach (UnityConstellation c in constellationList)
-        {
-            c.SetLabelVisible(visible);
-        }
-    }
-
-    public void SetSpeedMultiplier(float speed)
-    {
-        speedMult = speed;
-    }
-
-    /// <summary>
-    /// Updates the engine's camera position based on the Input Container
-    /// </summary>
-    public void SetCameraPosition()
-    {
-        var inputs = InputContainer.Container;
-        inputData.fov = inputs.HorizontalFOV;
-
-
-        inputData.camDirHorizontal = new System.Numerics.Vector3(
-            inputs.RotationVector.x,
-            inputs.RotationVector.y,
-            inputs.RotationVector.z
-        );
-
-        inputData.camDirHorizontal = System.Numerics.Vector3.Normalize(inputData.camDirHorizontal);
-    }
-
-    public void SetLocationAndTime()
-    {
-        var inputs = InputContainer.Container;
-        inputData.time = inputs.Time;
-        inputData.year = inputs.Year;
-        var time = new CalendarDateTime(
-            inputs.Year,
-            inputs.Time.Month,
-            inputs.Time.Day,
-            inputs.Time.Hour,
-            inputs.Time.Minute,
-            inputs.Time.Second
-        );
-
-        inputData.observer = new Observer(
-            Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin) / 60.0),
-            Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
-            0.0
-        );
-        Debug.Log(time.ToString());
-        Debug.Log(inputData.observer.ToString());
-        equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
-    }
-
-    public static string GetProjectPath()
-    {
-        return new DirectoryInfo(Application.streamingAssetsPath).ToString();
-    }
-
-    public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)
-    {
-        camDirection = InputContainer.Container.RotationVector;
-        engineYear = inputData.year;
-        engineTime = inputData.time;
-        engineObserver = inputData.observer;
-    }
-
-    public List<Planet> GetPlanetList()
-    {
-        return planetList;
-    }
-
-    public List<MessierObject> GetMessierList()
-    {
-        return messierList;
-    }
-
-    public Sun GetSun()
-    {
-        return sun;
-    }
-
-    public Moon GetMoon()
-    {
-        return moon;
-    }
-
-
-
-    IEnumerator InitializeSky()
-    {
-        // Load all stars
-        while (!starQueue.IsCompleted())
-        {
-            starQueue.TryDequeue(ref starList);
-            yield return null;
-        }
-
-        // get constellation
-        ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
-
-
-        engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn
-
-        engineService.PlaceStars();
-        starsLoaded = true;
-
-        // After stars are loaded, in GameLoop r wherever
-        foreach (var tileId in engineService.SpatialStarIndex.TileIndex.Enumerate())
-        {
-            var starsInTile = engineService.SpatialStarIndex.GetStarsInTile(tileId);
-            if (starsInTile.Count >= 0)
+            inputData.time = inputData.time.AddSeconds(deltaTime);
+            if (inputData.time.Year != 2000)
             {
-                Debug.Log($"Tile {tileId.Index} has {starsInTile.Count} stars");
+                inputData.year = inputData.year + (inputData.time.Year - 2000);
+                inputData.time = inputData.time.AddYears(2000 - inputData.time.Year);
+            }
+            SetCameraPosition();
+
+            float magnitudeCutoff = CalculateMagnitudeCutoff(Camera.main.fieldOfView);
+
+            engineService.Step(
+                deltaTime,
+                inputData.camDirHorizontal.X,
+                inputData.camDirHorizontal.Y,
+                inputData.camDirHorizontal.Z,
+                inputData.fov,
+                magnitudeCutoff,
+                speedMult
+            );
+
+
+            // important to do this part first otherwise there is a very weird visual bug for some reason
+
+            IHorizontal pulledObject;
+
+            int updateCount = 0;
+            while (UpdateTransformQueue.TryTake(out pulledObject, 0))
+            {
+                pulledObject.UpdatePosition();
+                updateCount++;
+            }
+
+            // Process activation queue
+            int activationCount = 0;
+            while (ActivationQueue.TryTake(out pulledObject, 0))
+            {
+                pulledObject.SetState(true);
+                activationCount++;
+            }
+
+            // Process deactivation queue
+            int deactivationCount = 0;
+            while (DeactivationQueue.TryTake(out pulledObject, 0))
+            {
+                pulledObject.SetState(false);
+                deactivationCount++;
+            }
+
+            foreach (MessierObject messier in messierList)
+            {
+                engineService.ForceStarUpdate(messier);
+                messier.UpdatePosition();
+            }
+
+            // Update the sun moon and planets 
+            equatorialCalculator.UpdatePositionOf(moon.HorizontalMoon);
+            moon.UpdatePosition();
+
+            equatorialCalculator.UpdatePositionOf(sun.HorizontalSun);
+            sun.UpdatePosition();
+
+            foreach (Planet planet in planetList)
+            {
+                equatorialCalculator.UpdatePositionOf(planet.HorizontalPlanet);
+                planet.UpdatePosition();
+            }
+
+            // update constellations
+            foreach (var constellation in constellationList)
+            {
+                constellation.UpdatePosition();
             }
         }
 
-        Debug.Log($"Finished loading {starList.Count} stars");
+        /// <summary>
+        /// set if the messier Objects are being forced from displaying
+        /// </summary>
+        public void SetMessierVisibility(bool visible)
+        {
+            inputData.messierOn = visible;
+            foreach (MessierObject m in messierList)
+            {
+                m.SetVisible(visible);
+            }
+        }
 
-        // Load constellations
-        // ConstellationRetrieval.GetConstellations(ref constellationList, starList);
+
+        /// <summary>
+        /// sets the visibilty of constelations
+        /// </summary>
+        public void SetConstellationVisibility(bool visible)
+        {
+            inputData.constellationOn = visible;
+            foreach (UnityConstellation c in constellationList)
+            {
+                c.SetVisible(visible);
+            }
+        }
+
+        /// <summary>
+        /// sets the visibilty of conste;lations labels
+        /// </summary>
+        public void SetLabelVisibility(bool visible)
+        {
+            inputData.constellationOn = visible;
+            foreach (UnityConstellation c in constellationList)
+            {
+                c.SetLabelVisible(visible);
+            }
+        }
+
+        public void SetSpeedMultiplier(float speed)
+        {
+            speedMult = speed;
+        }
+
+        /// <summary>
+        /// Updates the engine's camera position based on the Input Container
+        /// </summary>
+        public void SetCameraPosition()
+        {
+            var inputs = InputContainer.Container;
+            inputData.fov = inputs.HorizontalFOV;
+
+
+            inputData.camDirHorizontal = new System.Numerics.Vector3(
+                inputs.RotationVector.x,
+                inputs.RotationVector.y,
+                inputs.RotationVector.z
+            );
+
+            inputData.camDirHorizontal = System.Numerics.Vector3.Normalize(inputData.camDirHorizontal);
+        }
+
+        public void SetLocationAndTime()
+        {
+            var inputs = InputContainer.Container;
+            inputData.time = inputs.Time;
+            inputData.year = inputs.Year;
+            var time = new CalendarDateTime(
+                inputs.Year,
+                inputs.Time.Month,
+                inputs.Time.Day,
+                inputs.Time.Hour,
+                inputs.Time.Minute,
+                inputs.Time.Second
+            );
+
+            inputData.observer = new Observer(
+                Convert.ToDouble(inputs.LatitudeDeg) + (Convert.ToDouble(inputs.LatitudeMin) / 60.0),
+                Convert.ToDouble(inputs.LongitudeDeg) + (Convert.ToDouble(inputs.LongitudeMin) / 60.0),
+                0.0
+            );
+            Debug.Log(time.ToString());
+            Debug.Log(inputData.observer.ToString());
+            equatorialCalculator.UpdateTimeAndLocation(time, inputData.observer);
+        }
+
+        public static string GetProjectPath()
+        {
+            return new DirectoryInfo(Application.streamingAssetsPath).ToString();
+        }
+
+        public void GetEngineState(out Vector3 camDirection, out int engineYear, out DateTime engineTime, out Observer engineObserver)
+        {
+            camDirection = InputContainer.Container.RotationVector;
+            engineYear = inputData.year;
+            engineTime = inputData.time;
+            engineObserver = inputData.observer;
+        }
+
+        public List<Planet> GetPlanetList()
+        {
+            return planetList;
+        }
+
+        public List<MessierObject> GetMessierList()
+        {
+            return messierList;
+        }
+
+        public Sun GetSun()
+        {
+            return sun;
+        }
+
+        public Moon GetMoon()
+        {
+            return moon;
+        }
+
+
+
+        IEnumerator InitializeSky()
+        {
+            // Load all stars
+            while (!starQueue.IsCompleted())
+            {
+                starQueue.TryDequeue(ref starList);
+                yield return null;
+            }
+
+            // get constellation
+            ConstellationRetrieval.GetConstellations(ref constellationList, starList, engineService, inputData.constellationOn);
+
+
+            engineService.SpatialStarIndex.SortAllTilesByMagnitude(); // sorting by magnitude here, there is def a better way but I can think of it rn
+
+            engineService.PlaceStars();
+            starsLoaded = true;
+
+            // After stars are loaded, in GameLoop r wherever
+            foreach (var tileId in engineService.SpatialStarIndex.TileIndex.Enumerate())
+            {
+                var starsInTile = engineService.SpatialStarIndex.GetStarsInTile(tileId);
+                if (starsInTile.Count >= 0)
+                {
+                    Debug.Log($"Tile {tileId.Index} has {starsInTile.Count} stars");
+                }
+            }
+
+            Debug.Log($"Finished loading {starList.Count} stars");
+
+            // Load constellations
+            // ConstellationRetrieval.GetConstellations(ref constellationList, starList);
+        }
     }
 }

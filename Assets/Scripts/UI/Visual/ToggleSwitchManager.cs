@@ -1,7 +1,3 @@
-
-
-
-using Assets.Scripts.UI.Visual;
 using System.Collections.Generic;
 using UnityEngine;
 

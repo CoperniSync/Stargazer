@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ChargerAstronomyEngine.Data.Constellations;
+using Assets.Scripts.CelestialBodies.Constellations;
 
 namespace Assets.Scripts.Core
 {

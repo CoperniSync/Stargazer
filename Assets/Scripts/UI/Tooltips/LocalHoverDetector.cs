@@ -1,6 +1,5 @@
 using Assets.Scripts.CelestialBodies;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using Assets.Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;   // Planet
 

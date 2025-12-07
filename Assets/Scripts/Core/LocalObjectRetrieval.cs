@@ -5,26 +5,29 @@ using Assets.Scripts.CelestialBodies;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-// Author: Morgan Hendon FA 2025
-public class LocalObjectRetrieval
+namespace Assets.Scripts.Core
 {
-    public static void GetLocalObjects(ref Moon moon,ref List<Planet> planets,ref Sun sun)
+
+    // Author: Morgan Hendon FA 2025
+    public class LocalObjectRetrieval
     {
-        HorizontalMoon hMoon = MoonSingleton.Instance.CreateMoon();
-        moon = new Moon(hMoon, 95f);
-        
-        
-        planets = new List<Planet>();
-        foreach (HorizontalPlanet hPlanet in PlanetsSingleton.Instance.CreatePlanets())
+        public static void GetLocalObjects(ref Moon moon, ref List<Planet> planets, ref Sun sun)
         {
-            Planet newPlanet = new Planet(hPlanet, 50f);
-            planets.Add(newPlanet);
+            HorizontalMoon hMoon = MoonSingleton.Instance.CreateMoon();
+            moon = new Moon(hMoon, 95f);
+
+
+            planets = new List<Planet>();
+            foreach (HorizontalPlanet hPlanet in PlanetsSingleton.Instance.CreatePlanets())
+            {
+                Planet newPlanet = new Planet(hPlanet, 50f);
+                planets.Add(newPlanet);
+            }
+
+
+            HorizontalSun hSun = SunSingleton.Instance.CreateSun();
+            sun = new Sun(hSun, 100f);
+
         }
-        
-
-        HorizontalSun hSun = SunSingleton.Instance.CreateSun();
-        sun = new Sun(hSun, 100f);
-
     }
-
 }
